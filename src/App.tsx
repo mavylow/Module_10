@@ -1,11 +1,11 @@
 import "./App.css";
+import Fallback from "./Fallback";
 import Layout from "./Layout";
-import SignUp from "./SignUp";
 
 function App() {
   return (
     <Layout>
-      <SignUp />
+      <Fallback />
     </Layout>
   );
 }

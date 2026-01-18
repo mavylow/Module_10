@@ -14,6 +14,10 @@ header {
   gap: 8px;
 }
 
+h1 {
+  text-align: center;
+}
+
 .svg-icon {
   height: 24px;
   width: 18px;
@@ -62,5 +66,19 @@ footer {
 
   footer {
     height: 56px;
+    font-size: 0.8em;
+  }
+
+  .svg-x {
+    height: 40px;
+    width: 40px;
+  }
+
+  .svg-notfound {
+    height: 80px;
+    width: 80px;
+  }
+  h1 {
+    font-size: 1em;
   }
 }

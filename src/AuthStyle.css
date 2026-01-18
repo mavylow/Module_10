@@ -39,11 +39,15 @@ label {
   gap: 0.5em;
   font-weight: 700;
 }
+input,
+button {
+  height: 3em;
+}
 
 input {
   background-color: rgba(14, 18, 35, 1);
   border: 1px solid rgba(56, 65, 98, 1);
-  height: 3em;
+
   font-size: 1.1em;
   padding: 0.5em;
   color: white;
@@ -60,7 +64,6 @@ input::placeholder {
 
 button {
   background-color: rgba(255, 136, 17, 1);
-  height: 3em;
   border: none;
   margin-top: 1em;
   font-size: 1.1em;
@@ -81,4 +84,25 @@ button {
 
 .legal-link {
   text-decoration: none;
+}
+@media (max-width: 376px) {
+  .sing-up {
+    width: 90%;
+    max-width: 22em;
+    padding: 1.2em;
+    gap: 0.6em;
+  }
+
+  .form-header h1 {
+    font-size: 1.4em;
+  }
+  label,
+  span,
+  .form-header p {
+    font-size: 0.8em;
+  }
+  input,
+  button {
+    height: 2.5em;
+  }
 }
