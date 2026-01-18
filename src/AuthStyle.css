@@ -1,0 +1,84 @@
+.sing-up {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 25em;
+  padding: 1.5em;
+  gap: 1em;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+
+.form-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-header h1 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.form-header p {
+  width: 80%;
+  text-align: center;
+  font-size: 1em;
+  margin: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 0.5em;
+  font-weight: 700;
+}
+
+input {
+  background-color: rgba(14, 18, 35, 1);
+  border: 1px solid rgba(56, 65, 98, 1);
+  height: 3em;
+  font-size: 1.1em;
+  padding: 0.5em;
+  color: white;
+}
+
+input:focus {
+  outline-color: rgba(135, 145, 183, 1);
+  border-color: rgba(56, 65, 98, 1);
+}
+
+input::placeholder {
+  color: rgba(135, 145, 183, 1);
+}
+
+button {
+  background-color: rgba(255, 136, 17, 1);
+  height: 3em;
+  border: none;
+  margin-top: 1em;
+  font-size: 1.1em;
+  padding: 0.5em;
+  color: white;
+}
+
+.legal-link,
+.nav-link {
+  color: white;
+}
+
+.legal-disclaimer {
+  font-size: 0.9em;
+  text-align: center;
+  color: rgba(135, 145, 183, 1);
+}
+
+.legal-link {
+  text-decoration: none;
+}
