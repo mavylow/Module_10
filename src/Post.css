@@ -3,6 +3,11 @@
   padding: 1em;
   border: 1px solid rgba(56, 65, 98, 1);
   border-bottom: none;
+  font-size: 20px;
+}
+
+.post h2 {
+  font-size: 24px;
 }
 
 .post:last-child {
@@ -28,17 +33,17 @@ figure img {
 }
 
 .post-header img {
-  height: 3em;
-  width: 3em;
+  height: 48px;
+  width: 48px;
   border-radius: 50%;
   object-fit: contain;
   grid-row: 1 / span 2;
 }
 
-.post-header h2,
-time {
+.post-header > h2,
+.post-header > time {
   font-size: 1em;
-  padding-left: 0.5em;
+  padding-left: min(1em, 3%);
   margin: 0;
 }
 
@@ -54,10 +59,6 @@ time {
   font-size: 16px;
 }
 
-.post-text {
-  font-size: 20px;
-}
-
 .likes,
 .comments {
   display: flex;
@@ -66,14 +67,61 @@ time {
   gap: 0.5em;
 }
 
-@media (max-width: 496px) {
+.post-comments {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-comments {
+  list-style: none;
+  padding-left: 0;
+}
+
+.post-comments li {
+  position: relative;
+  padding-left: 2em;
+  margin-bottom: 0.5em;
+}
+
+.post-comments li::before {
+  content: attr(data-number);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+  color: white;
+}
+
+.expand-button {
+  background-color: transparent;
+  border: none;
+}
+
+@media (max-width: 500px) {
   .post-info {
     font-size: 14px;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 410px) {
+  .post {
+    font-size: 14px;
+  }
+
+  .post h2 {
+    font-size: 16px;
+  }
+
   .post-info {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 350px) {
+  .post-info {
+    font-size: 10px;
+  }
+  .post-info svg {
+    height: 16px;
+    width: 16px;
   }
 }

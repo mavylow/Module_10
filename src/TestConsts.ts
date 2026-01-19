@@ -16,6 +16,7 @@ export const POSTS: IPost[] = [
       likes: 245,
       comments: [
         {
+          commentID: 1,
           user: {
             userId: "user2",
             profilePhoto: "https://i.pravatar.cc/150?img=2",
@@ -26,7 +27,9 @@ export const POSTS: IPost[] = [
           description: "Stunning view! Where was this taken?"
         },
         {
+          commentID: 2,
           user: {
+
             userId: "user3",
             profilePhoto: "https://i.pravatar.cc/150?img=3",
             username: "tom_wilson",
@@ -53,6 +56,7 @@ export const POSTS: IPost[] = [
       likes: 189,
       comments: [
         {
+          commentID: 3,
           user: {
             userId: "user1",
             profilePhoto: "https://i.pravatar.cc/150?img=1",
@@ -80,6 +84,7 @@ export const POSTS: IPost[] = [
       likes: 312,
       comments: [
         {
+          commentID: 4,
           user: {
             userId: "user4",
             profilePhoto: "https://i.pravatar.cc/150?img=4",
@@ -90,6 +95,7 @@ export const POSTS: IPost[] = [
           description: "Great motivation! What's your routine?"
         },
         {
+          commentID: 5,
           user: {
             userId: "user5",
             profilePhoto: "https://i.pravatar.cc/150?img=5",
@@ -115,7 +121,9 @@ export const POSTS: IPost[] = [
       postDescription: "Sharing some basic nutrition principles I wish I knew when I started my fitness journey. Remember: progress, not perfection!",
       likes: 421,
       comments: [
+        
         {
+          commentID: 6,
           user: {
             userId: "user6",
             profilePhoto: "https://i.pravatar.cc/150?img=6",
@@ -143,6 +151,7 @@ export const POSTS: IPost[] = [
       likes: 567,
       comments: [
         {
+          commentID: 7,
           user: {
             userId: "user3",
             profilePhoto: "https://i.pravatar.cc/150?img=3",
@@ -153,6 +162,7 @@ export const POSTS: IPost[] = [
           description: "Congratulations! That's amazing!"
         },
         {
+          commentID: 8,
           user: {
             userId: "user4",
             profilePhoto: "https://i.pravatar.cc/150?img=4",
@@ -180,6 +190,7 @@ export const POSTS: IPost[] = [
       likes: 278,
       comments: [
         {
+          commentID: 9,
           user: {
             userId: "user2",
             profilePhoto: "https://i.pravatar.cc/150?img=2",
@@ -206,6 +217,7 @@ export const POSTS: IPost[] = [
       likes: 634,
       comments: [
         {
+          commentID: 10,
           user: {
             userId: "user1",
             profilePhoto: "https://i.pravatar.cc/150?img=1",
@@ -216,6 +228,7 @@ export const POSTS: IPost[] = [
           description: "Congratulations David! What's the project about?"
         },
         {
+          commentID: 11,
           user: {
             userId: "user5",
             profilePhoto: "https://i.pravatar.cc/150?img=5",

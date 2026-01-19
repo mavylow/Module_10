@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { SvgComment } from "./assets/Comment";
+import { ExpandIcon } from "./assets/ExpandIcon";
 import { Heart } from "./assets/Heart";
+import Comment from "./Comment";
 import "./Post.css";
 
 export interface IUser {
@@ -10,6 +13,7 @@ export interface IUser {
   description?: string;
 }
 export interface IComment {
+  commentID: number;
   user: IUser;
   description: string;
 }
@@ -26,9 +30,10 @@ export interface IPost {
 
 interface PostProps {
   post: IPost;
+  isAuth: boolean;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, isAuth }: PostProps) {
   const {
     user,
     postImg,
@@ -38,6 +43,12 @@ export default function Post({ post }: PostProps) {
     comments,
     postedAt,
   }: IPost = post;
+
+  const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
+
+  const handleExpand = () => {
+    setIsCommentsExpanded((prev) => !prev);
+  };
 
   return (
     <article className="post" aria-braillelabel={`post-title-${post.postId}`}>
@@ -72,9 +83,32 @@ export default function Post({ post }: PostProps) {
         </div>
         <div className="comments">
           <SvgComment theme="night" />
-          <span>You have to login to see the comments </span>
+          {isAuth ? (
+            <span>{comments.length} comments</span>
+          ) : (
+            <span>You have to login to see the comments </span>
+          )}
+          {isAuth && (
+            <button className="expand-button" onClick={handleExpand}>
+              <ExpandIcon
+                theme="night"
+                style={
+                  isCommentsExpanded
+                    ? { transform: "rotate(180deg)" }
+                    : { transform: "none" }
+                }
+              />
+            </button>
+          )}
         </div>
       </div>
+      {isAuth && isCommentsExpanded && (
+        <ul className="post-comments">
+          {comments.map((comment, i) => (
+            <Comment key={comment.commentID} number={i + 1} comment={comment} />
+          ))}
+        </ul>
+      )}
     </article>
   );
 }

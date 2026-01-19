@@ -52,6 +52,11 @@ footer {
   font-size: 1.5em;
 }
 
+footer p {
+  margin: 0;
+  width: fit-content;
+}
+
 @media (max-width: 376px) {
   header {
     height: 24px;
