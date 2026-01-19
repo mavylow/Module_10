@@ -34,9 +34,13 @@ main {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: min(700px, 100%);
+  margin: 1em 0;
+  background-color: rgba(14, 18, 35, 1);
 }
 
 footer {
+  width: 100%;
   background-color: rgba(14, 18, 35, 1);
   height: 68px;
   margin-top: auto;
