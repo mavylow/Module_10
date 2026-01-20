@@ -1,5 +1,4 @@
 import type { ComponentType } from "react";
-import type { PropForSvg } from "../../assets/Sidekick";
 import "./Input.css";
 
 export interface InputProps {
@@ -8,7 +7,7 @@ export interface InputProps {
   name: string;
   placeholder: string;
   type: string;
-  Icon: ComponentType<PropForSvg>;
+  Icon: ComponentType;
 }
 
 export default function Input({
@@ -22,7 +21,7 @@ export default function Input({
   return (
     <>
       <label htmlFor={id} className="default-label">
-        <Icon theme="night" />
+        <Icon />
         {description}
       </label>
       <input

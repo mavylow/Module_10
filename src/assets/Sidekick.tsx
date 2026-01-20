@@ -1,7 +1,5 @@
 import "./svg.css";
 
-export type Theme = "day" | "night";
-
 export const Sidekick = () => {
   return (
     <svg

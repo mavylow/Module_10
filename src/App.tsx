@@ -1,12 +1,15 @@
-import { useEffect } from "react";
 import "./App.css";
-import Home from "./pages/Home";
+import ToggleThemeButton from "./components/ToggleTheme";
+import SignUp from "./pages/auth/SignUp";
+import ThemeProvider from "./ThemeProvider";
 
 function App() {
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", "day");
-  }, []);
-  return <Home />;
+  return (
+    <ThemeProvider>
+      <ToggleThemeButton />
+      <SignUp />
+    </ThemeProvider>
+  );
 }
 
 export default App;
