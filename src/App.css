@@ -13,18 +13,3 @@ main {
   margin: 1em 0;
   position: relative;
 }
-
-@media (max-width: 376px) {
-  .svg-x {
-    height: 40px;
-    width: 40px;
-  }
-
-  .svg-notfound {
-    height: 80px;
-    width: 80px;
-  }
-  h1 {
-    font-size: 1em;
-  }
-}

@@ -11,7 +11,7 @@ function Header({ children }: HeaderProps) {
   return (
     <header>
       <Logo />
-      <Sidekick theme="night" />
+      <Sidekick />
       {children && <div className="menu">{children}</div>}
     </header>
   );

@@ -8,7 +8,7 @@ export default function Fallback() {
     <>
       <Header />
       <main>
-        <X theme="night" />
+        <X />
         <h1>
           Oops...
           <br /> Something bad has just happened

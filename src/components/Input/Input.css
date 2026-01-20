@@ -1,18 +1,18 @@
 .default-input {
-  background-color: rgba(14, 18, 35, 1);
-  border: 1px solid rgba(56, 65, 98, 1);
+  background-color: var(--background-root);
+  border: 1px solid var(--border-color-night);
   font-size: 1.1em;
   padding: 0.5em;
-  color: white;
+  color: var(--text-color);
 }
 
 .default-input:focus {
-  outline-color: rgba(135, 145, 183, 1);
-  border-color: rgba(56, 65, 98, 1);
+  outline-color: var(--light-text-color);
+  border-color: var(--border-color);
 }
 
 .default-input::placeholder {
-  color: rgba(135, 145, 183, 1);
+  color: var(--light-text-color);
 }
 
 .default-label {

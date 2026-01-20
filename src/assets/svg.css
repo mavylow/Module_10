@@ -1,0 +1,14 @@
+.svg-x path,
+.svg-notfound path,
+.svg-pen path,
+.svg-sidekick path,
+.svg-eye path,
+.svg-expand path,
+.svg-email path {
+  fill: var(--svg-color);
+}
+
+.svg-heart path,
+.svg-comment path {
+  stroke: var(--svg-color);
+}

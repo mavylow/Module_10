@@ -84,10 +84,10 @@ export default function Post({ post, isAuth }: PostProps) {
         </div>
         <div className="post-info">
           <div className="likes">
-            <Heart theme="night" /> <span>{likes} likes</span>
+            <Heart /> <span>{likes} likes</span>
           </div>
           <div className="comments">
-            <SvgComment theme="night" />
+            <SvgComment />
             {isAuth ? (
               <span>{comments.length} comments</span>
             ) : (
@@ -96,7 +96,6 @@ export default function Post({ post, isAuth }: PostProps) {
             {isAuth && (
               <button className="expand-button" onClick={handleExpand}>
                 <ExpandIcon
-                  theme="night"
                   style={
                     isCommentsExpanded
                       ? { transform: "rotate(180deg)" }

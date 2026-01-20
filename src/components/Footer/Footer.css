@@ -1,10 +1,10 @@
 footer {
   width: 100%;
-  background-color: rgba(14, 18, 35, 1);
+  background-color: var(--background-main);
   height: 68px;
   margin-top: auto;
   text-align: center;
-  color: rgba(255, 136, 17, 1);
+  color: var(--primary-orange);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -5,12 +5,45 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: rgba(27, 32, 55, 1);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary-orange: rgb(255, 136, 17);
+
+  --background-root-night: 27, 32, 55;
+  --svg-color-night: 255, 255, 255;
+  --text-color-night: 255, 255, 255;
+  --background-main-night: 14, 18, 35;
+  --light-text-color-night: 135, 145, 183;
+  --border-color-night: 56, 65, 98;
+
+  --background-root-day: 224, 226, 231;
+  --svg-color-day: 27, 32, 55;
+  --text-color-day: 14, 18, 35;
+  --background-main-day: 250, 250, 250;
+  --light-text-color-day: 133, 141, 157;
+  --border-color-day: 163, 169, 182, 1;
+}
+
+[data-theme="night"] {
+  --background-root: rgb(var(--background-root-night));
+  --svg-color: rgb(var(--svg-color-night));
+  --text-color: rgb(var(--text-color-night));
+  --background-main: rgb(var(--background-main-night));
+  --light-text-color: rgb(var(--light-text-color-night));
+  --border-color: rgb(var(--border-color-night));
+}
+
+[data-theme="day"] {
+  --background-root: rgb(var(--background-root-day));
+  --svg-color: rgb(var(--svg-color-day));
+  --text-color: rgb(var(--text-color-day));
+  --background-main: rgb(var(--background-main-day));
+  --light-text-color: rgb(var(--light-text-color-day));
+  --border-color: rgb(var(--border-color-day));
 }
 
 * {
@@ -25,6 +58,8 @@
   min-height: 100vh;
   justify-content: center;
   align-items: center;
+  background-color: var(--background-root);
+  color: var(--text-color);
 }
 
 body {

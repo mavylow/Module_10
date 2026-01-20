@@ -1,7 +1,7 @@
 aside {
   position: absolute;
-  right: 3em;
-  top: 4em;
+  right: max(-25em, -23vw);
+  top: 0em;
   width: 20em;
   font-size: 16px;
 }

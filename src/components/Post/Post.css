@@ -1,9 +1,12 @@
 .post h2 {
   font-size: 24px;
 }
+.post .frame {
+  border-bottom: none;
+}
 
-.post:last-child {
-  border-bottom: 1px solid rgba(56, 65, 98, 1);
+.post:last-child .frame {
+  border-bottom: 1px solid var(--border-color);
 }
 
 figure {
@@ -40,7 +43,7 @@ figure img {
 }
 
 .post-header time {
-  color: rgba(135, 145, 183, 1);
+  color: var(--light-text-color);
 }
 
 .post-info {
@@ -80,7 +83,7 @@ figure img {
   position: absolute;
   left: 0;
   font-weight: bold;
-  color: white;
+  color: var(--text-color);
 }
 
 .expand-button {
