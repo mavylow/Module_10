@@ -1,0 +1,12 @@
+.default-button {
+  background-color: rgba(255, 136, 17, 1);
+  border: none;
+  margin-top: 1em;
+  font-size: 1.1em;
+  padding: 0.5em;
+  color: white;
+}
+
+.default-button:hover {
+  background-color: rgb(250, 150, 50);
+}

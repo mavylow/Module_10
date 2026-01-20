@@ -1,4 +1,4 @@
-import type { IComment } from "./Post";
+import type { IComment } from "../Post";
 
 export default function Comment({
   comment,

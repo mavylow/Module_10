@@ -1,0 +1,9 @@
+@media (max-width: 376px) {
+  .svg-notfound {
+    height: 80px;
+    width: 80px;
+  }
+  h1 {
+    font-size: 1em;
+  }
+}

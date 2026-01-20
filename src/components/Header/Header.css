@@ -1,0 +1,41 @@
+header {
+  width: 100%;
+  background-color: rgba(14, 18, 35, 1);
+  padding: 16px 16px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.svg-icon {
+  height: 24px;
+  width: 18px;
+}
+
+.svg-sidekick {
+  width: 71px;
+  height: 15px;
+}
+
+@media (max-width: 376px) {
+  header {
+    height: 24px;
+    gap: 4px;
+  }
+
+  .svg-icon {
+    height: 12px;
+    width: 9px;
+  }
+
+  .svg-sidekick {
+    width: 36px;
+    height: 7px;
+  }
+}

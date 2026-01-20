@@ -1,4 +1,88 @@
-import type { IPost } from "./Post";
+import type { IPost, IUser } from "./components/Post";
+import type { ICommunity } from "./components/SidebarElement";
+
+
+export const COMMUNITIES: ICommunity[] = [
+  {
+    name: "Frontend Masters",
+    followersCount: 54210,
+    avatarPhoto: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop"
+  },
+  {
+    name: "Backend Engineers",
+    followersCount: 32876,
+    avatarPhoto: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=100&h=100&fit=crop"
+  },
+  {
+    name: "Mobile Dev Hub",
+    followersCount: 21789,
+    avatarPhoto: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=100&h=100&fit=crop"
+  },
+  {
+    name: "DevOps & Cloud",
+    followersCount: 18943,
+    avatarPhoto: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&h=100&fit=crop"
+  },
+  {
+    name: "Open Source",
+    followersCount: 45678,
+    avatarPhoto: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=100&h=100&fit=crop"
+  }
+];
+
+export const USERS: IUser[] = [
+  {
+    userId: "user1",
+    profilePhoto: "https://i.pravatar.cc/150?img=1",
+    username: "alex_johnson",
+    email: "alex@example.com",
+    description: "Digital artist and photographer"
+  },
+  {
+    userId: "user2",
+    profilePhoto: "https://i.pravatar.cc/150?img=2",
+    username: "maria_garcia",
+    email: "maria@example.com",
+    description: "Travel enthusiast"
+  },
+  {
+
+    userId: "user3",
+    profilePhoto: "https://i.pravatar.cc/150?img=3",
+    username: "tom_wilson",
+    email: "tom@example.com",
+    description: "Outdoor adventurer"
+  },
+  {
+    userId: "user4",
+    profilePhoto: "https://i.pravatar.cc/150?img=4",
+    username: "sarah_chen",
+    email: "sarah@example.com",
+    description: "Fitness coach"
+  },
+ {
+    userId: "user5",
+    profilePhoto: "https://i.pravatar.cc/150?img=5",
+    username: "mike_roberts",
+    email: "mike@example.com",
+    description: "Marathon runner"
+  },
+  {
+    userId: "user6",
+    profilePhoto: "https://i.pravatar.cc/150?img=6",
+    username: "lisa_parker",
+    email: "lisa@example.com",
+    description: "Nutritionist"
+  },
+  {
+    userId: "user7",
+    profilePhoto: "https://i.pravatar.cc/150?img=7",
+    username: "david_kim",
+    email: "david@example.com",
+    description: "Software developer"
+  },
+
+]
 
 export const POSTS: IPost[] = [
     {

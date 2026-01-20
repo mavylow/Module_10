@@ -1,0 +1,25 @@
+.default-input {
+  background-color: rgba(14, 18, 35, 1);
+  border: 1px solid rgba(56, 65, 98, 1);
+  font-size: 1.1em;
+  padding: 0.5em;
+  color: white;
+}
+
+.default-input:focus {
+  outline-color: rgba(135, 145, 183, 1);
+  border-color: rgba(56, 65, 98, 1);
+}
+
+.default-input::placeholder {
+  color: rgba(135, 145, 183, 1);
+}
+
+.default-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 0.5em;
+  font-weight: 700;
+}

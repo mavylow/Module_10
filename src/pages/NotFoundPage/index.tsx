@@ -1,0 +1,18 @@
+import { NotFound } from "../../assets/NotFound";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import "./NotFound.css";
+
+export default function NotFoundPage() {
+  return (
+    <>
+      <Header />
+      <main>
+        <NotFound theme="night" />
+        <h1>Page not found</h1>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

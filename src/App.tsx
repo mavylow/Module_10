@@ -1,13 +1,12 @@
 import "./App.css";
-import Home from "./Home";
-import Layout from "./Layout";
+// import SignUp from "./pages/auth/SignUp";
+// import SignIn from "./pages/auth/SingIn";
+// import Fallback from "./pages/Fallback";
+// import NotFoundPage from "./pages/NotFoundPage";
+import Home from "./pages/Home";
 
 function App() {
-  return (
-    <Layout>
-      <Home />
-    </Layout>
-  );
+  return <Home />;
 }
 
 export default App;

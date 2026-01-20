@@ -3,31 +3,6 @@
   font-family: "Roboto", sans-serif;
 }
 
-header {
-  width: 100%;
-  background-color: rgba(14, 18, 35, 1);
-  padding: 16px 16px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  gap: 8px;
-}
-
-h1 {
-  text-align: center;
-}
-
-.svg-icon {
-  height: 24px;
-  width: 18px;
-}
-
-.svg-sidekick {
-  width: 71px;
-  height: 15px;
-}
-
 main {
   flex-grow: 1;
   display: flex;
@@ -36,48 +11,10 @@ main {
   flex-direction: column;
   width: min(700px, 100%);
   margin: 1em 0;
-  background-color: rgba(14, 18, 35, 1);
-}
-
-footer {
-  width: 100%;
-  background-color: rgba(14, 18, 35, 1);
-  height: 68px;
-  margin-top: auto;
-  text-align: center;
-  color: rgba(255, 136, 17, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-}
-
-footer p {
-  margin: 0;
-  width: fit-content;
+  position: relative;
 }
 
 @media (max-width: 376px) {
-  header {
-    height: 24px;
-    gap: 4px;
-  }
-
-  .svg-icon {
-    height: 12px;
-    width: 9px;
-  }
-
-  .svg-sidekick {
-    width: 36px;
-    height: 7px;
-  }
-
-  footer {
-    height: 56px;
-    font-size: 0.8em;
-  }
-
   .svg-x {
     height: 40px;
     width: 40px;

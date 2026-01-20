@@ -1,0 +1,12 @@
+aside {
+  position: absolute;
+  right: 3em;
+  top: 4em;
+  width: 20em;
+  font-size: 16px;
+}
+
+aside h3 {
+  margin: 0.5em 0;
+  font-size: 18px;
+}
