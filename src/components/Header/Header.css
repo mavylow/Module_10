@@ -1,4 +1,5 @@
-header {
+header,
+.menu-header {
   width: 100%;
   background-color: var(--background-main);
   padding: 16px 16px;
@@ -9,8 +10,28 @@ header {
   gap: 8px;
 }
 
+header > nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
 h1 {
   text-align: center;
+}
+
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
 }
 
 .svg-icon {
@@ -23,8 +44,26 @@ h1 {
   height: 15px;
 }
 
+@media (max-width: 500px) {
+  body.menu-open .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 80vw;
+    z-index: 100;
+    background-color: var(--background-root);
+    border-left: 1px solid var(--border-color);
+  }
+
+  header > nav {
+    display: none;
+  }
+}
+
 @media (max-width: 376px) {
-  header {
+  header,
+  .menu-header {
     height: 24px;
     gap: 4px;
   }

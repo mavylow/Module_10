@@ -2,12 +2,12 @@ import { useState } from "react";
 import { SvgComment } from "../../assets/Comment";
 import { ExpandIcon } from "../../assets/ExpandIcon";
 import { Heart } from "../../assets/Heart";
-import Comment from "../Comment";
+import Comment from "../../components/Comment";
 import "./Post.css";
 import { PenSvg } from "../../assets/PenSvg";
-import Input from "../Input/Input";
-import Button from "../Button/Button";
-import FrameWrapper from "../FrameWrapper/FrameWrapper";
+import FrameWrapper from "../../components/FrameWrapper/FrameWrapper";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
 
 export interface IUser {
   userId: string;

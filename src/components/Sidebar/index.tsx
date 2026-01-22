@@ -10,13 +10,13 @@ export default function Sidebar() {
         <section className="suggested-people">
           <h3>Suggested people</h3>
           {USERS.slice(0, 5).map((user) => (
-            <SidebarElement element={user} />
+            <SidebarElement key={user.userId} element={user} />
           ))}
         </section>
         <section className="suggested-communities">
           <h3>Communities you might like</h3>
           {COMMUNITIES.slice(0, 3).map((community) => (
-            <SidebarElement element={community} />
+            <SidebarElement key={community.name} element={community} />
           ))}
         </section>
       </FrameWrapper>

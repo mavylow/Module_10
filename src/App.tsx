@@ -1,13 +1,14 @@
 import "./App.css";
-import ToggleThemeButton from "./components/ToggleTheme";
-import SignUp from "./pages/auth/SignUp";
+// import ToggleThemeButton from "./components/ToggleTheme";
+
+import Home from "./pages/Home";
 import ThemeProvider from "./ThemeProvider";
 
 function App() {
   return (
     <ThemeProvider>
-      <ToggleThemeButton />
-      <SignUp />
+      {/* <ToggleThemeButton /> */}
+      <Home />
     </ThemeProvider>
   );
 }
