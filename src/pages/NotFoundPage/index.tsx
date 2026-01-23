@@ -8,7 +8,7 @@ export default function NotFoundPage() {
     <>
       <Header />
       <main>
-        <NotFound theme="night" />
+        <NotFound />
         <h1>Page not found</h1>
       </main>
 

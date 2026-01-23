@@ -1,6 +1,6 @@
 import "./App.css";
 import AuthProvider from "./AuthProvider";
-import SignIn from "./pages/auth/SingIn";
+
 // import ToggleThemeButton from "./components/ToggleTheme";
 
 import Home from "./pages/Home";
