@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { type ComponentType } from "react";
 import "./Input.css";
 
 export interface InputProps {
@@ -8,6 +8,8 @@ export interface InputProps {
   placeholder: string;
   type: string;
   Icon: ComponentType;
+  value: string;
+  onInput: (value: string) => void;
 }
 
 export default function Input({
@@ -17,6 +19,8 @@ export default function Input({
   placeholder,
   type,
   Icon,
+  value,
+  onInput,
 }: InputProps) {
   return (
     <>
@@ -30,7 +34,8 @@ export default function Input({
         name={name}
         placeholder={placeholder}
         type={type}
-        aria-label={description}
+        value={value}
+        onChange={(e) => onInput(e.target.value)}
       />
     </>
   );

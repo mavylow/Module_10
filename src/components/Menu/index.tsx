@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import "./Menu.css";
 import { Logo } from "../../assets/Logo";
 import { Sidekick } from "../../assets/Sidekick";
+import { AuthContext } from "../../AuthProvider";
+import { USERS } from "../../TestConsts";
 
 function Menu() {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isAuth, setIsAuth] = useState(true);
+  const { userId } = useContext(AuthContext);
+
+  const user = useMemo(
+    () => USERS.filter((user) => user.userId === userId)[0],
+    [userId]
+  );
 
   useEffect(() => {
     if (isExpanded) {
@@ -19,14 +26,20 @@ function Menu() {
     };
   }, [isExpanded]);
 
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 500) {
+      document.body.classList.remove("menu-open");
+    }
+  });
+
   return (
     <>
       <button
         className={`burger-button`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        {isAuth && isExpanded ? (
-          <img src="../../../public/IMG_1001.jpg" className="avatar" />
+        {userId && isExpanded ? (
+          <img src={user.profilePhoto} className="avatar" />
         ) : (
           "☰"
         )}
@@ -40,7 +53,7 @@ function Menu() {
         </div>
 
         <nav className={`mobile-nav ${isExpanded ? "expanded" : ""}`}>
-          {isAuth ? (
+          {userId ? (
             <>
               <a>Profile info</a>
               <a>Statistics</a>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SvgComment } from "../../assets/Comment";
 import { ExpandIcon } from "../../assets/ExpandIcon";
 import { Heart } from "../../assets/Heart";
@@ -8,38 +8,19 @@ import { PenSvg } from "../../assets/PenSvg";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import FrameWrapper from "../FrameWrapper/FrameWrapper";
-
-export interface IUser {
-  userId: string;
-  profilePhoto: string;
-  username: string;
-  email: string;
-  description?: string;
-}
-export interface IComment {
-  commentID: number;
-  user: IUser;
-  description: string;
-}
-export interface IPost {
-  postId: string;
-  user: IUser;
-  postImg?: string;
-  postTitle?: string;
-  postDescription?: string;
-  likes: number;
-  comments: IComment[];
-  postedAt: Date;
-}
+import { AuthContext } from "../../AuthProvider";
+import type { IComment, IPost } from "../../TestConsts";
+import React from "react";
 
 interface PostProps {
   post: IPost;
-  isAuth: boolean;
+  onAddComment: (postId: string, comment: IComment) => void;
 }
 
-export default function Post({ post, isAuth }: PostProps) {
+function Post({ post, onAddComment }: PostProps) {
   const {
     user,
+    postId,
     postImg,
     postTitle,
     postDescription,
@@ -48,10 +29,25 @@ export default function Post({ post, isAuth }: PostProps) {
     postedAt,
   }: IPost = post;
 
-  const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
+  const { userId } = useContext(AuthContext);
+
+  const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
+  const [comment, setComment] = useState("");
 
   const handleExpand = () => {
     setIsCommentsExpanded((prev) => !prev);
+  };
+
+  const handleAddComment = () => {
+    if (comment) {
+      onAddComment(postId, {
+        commentID: comments.length + 1,
+        description: comment,
+        user,
+      });
+    }
+
+    setComment("");
   };
 
   return (
@@ -88,12 +84,12 @@ export default function Post({ post, isAuth }: PostProps) {
           </div>
           <div className="comments">
             <SvgComment />
-            {isAuth ? (
+            {userId ? (
               <span>{comments.length} comments</span>
             ) : (
               <span>You have to login to see the comments </span>
             )}
-            {isAuth && (
+            {userId && (
               <button className="expand-button" onClick={handleExpand}>
                 <ExpandIcon
                   style={
@@ -106,7 +102,7 @@ export default function Post({ post, isAuth }: PostProps) {
             )}
           </div>
         </div>
-        {isAuth && isCommentsExpanded && (
+        {userId && isCommentsExpanded && (
           <ul className="post-comments">
             {comments.map((comment, i) => (
               <Comment
@@ -117,7 +113,7 @@ export default function Post({ post, isAuth }: PostProps) {
             ))}
           </ul>
         )}
-        {isAuth && (
+        {userId && (
           <div className="add-comment">
             <Input
               id="comment"
@@ -126,14 +122,21 @@ export default function Post({ post, isAuth }: PostProps) {
               placeholder="Write description here..."
               type="text"
               Icon={PenSvg}
+              value={comment}
+              onInput={(comment) => setComment(comment)}
             />
-            <Button description="Add a comment" />
+            <Button
+              description="Add a comment"
+              onButtonClick={handleAddComment}
+            />
           </div>
         )}
       </FrameWrapper>
     </article>
   );
 }
+
+export default React.memo(Post);
 
 function formattedDate(date: Date): string {
   const diffMs = Date.now() - date.getTime();

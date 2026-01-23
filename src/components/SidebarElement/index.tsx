@@ -1,11 +1,5 @@
-import type { IUser } from "../Post";
+import type { ICommunity, IUser } from "../../TestConsts";
 import "./SidebarElement.css";
-
-export interface ICommunity {
-  name: string;
-  followersCount: number;
-  avatarPhoto: string;
-}
 
 export function SidebarElement({ element }: { element: IUser | ICommunity }) {
   if ("followersCount" in element) {

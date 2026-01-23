@@ -1,328 +1,175 @@
-import type { IPost, IUser } from "./components/Post";
-import type { ICommunity } from "./components/SidebarElement";
+export interface IUser {
+  userId: string;
+  profilePhoto: string;
+  username: string;
+  email: string;
+  description?: string;
+}
+export interface IComment {
+  commentID: number;
+  user: IUser;
+  description: string;
+}
+export interface IPost {
+  postId: string;
+  user: IUser;
+  postImg?: string;
+  postTitle?: string;
+  postDescription?: string;
+  likes: number;
+  comments: IComment[];
+  postedAt: Date;
+}
+
+export interface ICommunity {
+  name: string;
+  followersCount: number;
+  avatarPhoto: string;
+}
 
 
-export const COMMUNITIES: ICommunity[] = [
-  {
-    name: "Frontend Masters",
-    followersCount: 54210,
-    avatarPhoto: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop"
-  },
-  {
-    name: "Backend Engineers",
-    followersCount: 32876,
-    avatarPhoto: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=100&h=100&fit=crop"
-  },
-  {
-    name: "Mobile Dev Hub",
-    followersCount: 21789,
-    avatarPhoto: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=100&h=100&fit=crop"
-  },
-  {
-    name: "DevOps & Cloud",
-    followersCount: 18943,
-    avatarPhoto: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&h=100&fit=crop"
-  },
-  {
-    name: "Open Source",
-    followersCount: 45678,
-    avatarPhoto: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=100&h=100&fit=crop"
-  }
-];
-
-export const USERS: IUser[] = [
-  {
-    userId: "user1",
-    profilePhoto: "https://i.pravatar.cc/150?img=1",
-    username: "alex_johnson",
-    email: "alex@example.com",
-    description: "Digital artist and photographer"
-  },
-  {
-    userId: "user2",
-    profilePhoto: "https://i.pravatar.cc/150?img=2",
-    username: "maria_garcia",
-    email: "maria@example.com",
-    description: "Travel enthusiast"
-  },
-  {
-
-    userId: "user3",
-    profilePhoto: "https://i.pravatar.cc/150?img=3",
-    username: "tom_wilson",
-    email: "tom@example.com",
-    description: "Outdoor adventurer"
-  },
-  {
-    userId: "user4",
-    profilePhoto: "https://i.pravatar.cc/150?img=4",
-    username: "sarah_chen",
-    email: "sarah@example.com",
-    description: "Fitness coach"
-  },
- {
-    userId: "user5",
-    profilePhoto: "https://i.pravatar.cc/150?img=5",
-    username: "mike_roberts",
-    email: "mike@example.com",
-    description: "Marathon runner"
-  },
-  {
-    userId: "user6",
-    profilePhoto: "https://i.pravatar.cc/150?img=6",
-    username: "lisa_parker",
-    email: "lisa@example.com",
-    description: "Nutritionist"
-  },
-  {
-    userId: "user7",
-    profilePhoto: "https://i.pravatar.cc/150?img=7",
-    username: "david_kim",
-    email: "david@example.com",
-    description: "Software developer"
-  },
-
-]
-
-export const POSTS: IPost[] = [
-    {
-      postId: "1",
-      user: {
-        userId: "user1",
-        profilePhoto: "https://i.pravatar.cc/150?img=1",
-        username: "alex_johnson",
-        email: "alex@example.com",
-        description: "Digital artist and photographer"
-      },
-      postImg: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-      postTitle: "Sunset over the mountains",
-      postDescription: "Beautiful sunset captured during my hiking trip last weekend. Nature always finds a way to amaze me!",
-      likes: 245,
-      comments: [
-        {
-          commentID: 1,
-          user: {
-            userId: "user2",
-            profilePhoto: "https://i.pravatar.cc/150?img=2",
-            username: "maria_garcia",
-            email: "maria@example.com",
-            description: "Travel enthusiast"
-          },
-          description: "Stunning view! Where was this taken?"
-        },
-        {
-          commentID: 2,
-          user: {
-
-            userId: "user3",
-            profilePhoto: "https://i.pravatar.cc/150?img=3",
-            username: "tom_wilson",
-            email: "tom@example.com",
-            description: "Outdoor adventurer"
-          },
-          description: "Great shot! The colors are amazing."
-        }
-      ],
-      postedAt: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-    },
-    {
-      postId: "2",
-      user: {
-        userId: "user2",
-        profilePhoto: "https://i.pravatar.cc/150?img=2",
-        username: "maria_garcia",
-        email: "maria@example.com",
-        description: "Travel enthusiast"
-      },
-      postImg: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
-      postTitle: "New café in town",
-      postDescription: "Tried this amazing new café downtown. Their latte art is incredible! ☕️",
-      likes: 189,
-      comments: [
-        {
-          commentID: 3,
-          user: {
-            userId: "user1",
-            profilePhoto: "https://i.pravatar.cc/150?img=1",
-            username: "alex_johnson",
-            email: "alex@example.com",
-            description: "Digital artist and photographer"
-          },
-          description: "What's the address? I need to check it out!"
-        }
-      ],
-      postedAt: new Date(Date.now() - 5 * 60 * 60 * 1000) // 5 hours ago
-    },
-    {
-      postId: "3",
-      user: {
-        userId: "user3",
-        profilePhoto: "https://i.pravatar.cc/150?img=3",
-        username: "tom_wilson",
-        email: "tom@example.com",
-        description: "Outdoor adventurer"
-      },
-      postImg: "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
-      postTitle: "Morning workout routine",
-      postDescription: "Started my day with an intense workout session. Feeling energized and ready to conquer the day! 💪",
-      likes: 312,
-      comments: [
-        {
-          commentID: 4,
-          user: {
-            userId: "user4",
-            profilePhoto: "https://i.pravatar.cc/150?img=4",
-            username: "sarah_chen",
-            email: "sarah@example.com",
-            description: "Fitness coach"
-          },
-          description: "Great motivation! What's your routine?"
-        },
-        {
-          commentID: 5,
-          user: {
-            userId: "user5",
-            profilePhoto: "https://i.pravatar.cc/150?img=5",
-            username: "mike_roberts",
-            email: "mike@example.com",
-            description: "Marathon runner"
-          },
-          description: "Keep it up! Consistency is key."
-        }
-      ],
-      postedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) // 1 day ago
-    },
-    {
-      postId: "4",
-      user: {
-        userId: "user4",
-        profilePhoto: "https://i.pravatar.cc/150?img=4",
-        username: "sarah_chen",
-        email: "sarah@example.com",
-        description: "Fitness coach"
-      },
-      postTitle: "Nutrition tips for beginners",
-      postDescription: "Sharing some basic nutrition principles I wish I knew when I started my fitness journey. Remember: progress, not perfection!",
-      likes: 421,
-      comments: [
-        
-        {
-          commentID: 6,
-          user: {
-            userId: "user6",
-            profilePhoto: "https://i.pravatar.cc/150?img=6",
-            username: "lisa_parker",
-            email: "lisa@example.com",
-            description: "Nutritionist"
-          },
-          description: "Excellent advice! Especially about hydration."
-        }
-      ],
-      postedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
-    },
-    {
-      postId: "5",
-      user: {
-        userId: "user5",
-        profilePhoto: "https://i.pravatar.cc/150?img=5",
-        username: "mike_roberts",
-        email: "mike@example.com",
-        description: "Marathon runner"
-      },
-      postImg: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64",
-      postTitle: "New personal record!",
-      postDescription: "Just completed a half marathon with my best time yet! All those early morning runs paid off. 🏃‍♂️",
-      likes: 567,
-      comments: [
-        {
-          commentID: 7,
-          user: {
-            userId: "user3",
-            profilePhoto: "https://i.pravatar.cc/150?img=3",
-            username: "tom_wilson",
-            email: "tom@example.com",
-            description: "Outdoor adventurer"
-          },
-          description: "Congratulations! That's amazing!"
-        },
-        {
-          commentID: 8,
-          user: {
-            userId: "user4",
-            profilePhoto: "https://i.pravatar.cc/150?img=4",
-            username: "sarah_chen",
-            email: "sarah@example.com",
-            description: "Fitness coach"
-          },
-          description: "So proud of you! What was your time?"
-        }
-      ],
-      postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) // 3 days ago
-    },
-    {
-      postId: "6",
-      user: {
-        userId: "user6",
-        profilePhoto: "https://i.pravatar.cc/150?img=6",
-        username: "lisa_parker",
-        email: "lisa@example.com",
-        description: "Nutritionist"
-      },
-      postImg: "https://images.unsplash.com/photo-1490818387583-1baba5e638af",
-      postTitle: "Healthy meal prep Sunday",
-      postDescription: "Spent the afternoon preparing meals for the week. These veggie bowls are packed with nutrients and flavor! 🥗",
-      likes: 278,
-      comments: [
-        {
-          commentID: 9,
-          user: {
-            userId: "user2",
-            profilePhoto: "https://i.pravatar.cc/150?img=2",
-            username: "maria_garcia",
-            email: "maria@example.com",
-            description: "Travel enthusiast"
-          },
-          description: "Looks delicious! Can you share the recipe?"
-        }
-      ],
-      postedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000) // 4 days ago
-    },
-    {
-      postId: "7",
-      user: {
-        userId: "user7",
-        profilePhoto: "https://i.pravatar.cc/150?img=7",
-        username: "david_kim",
-        email: "david@example.com",
-        description: "Software developer"
-      },
-      postTitle: "Just launched my new project!",
-      postDescription: "After months of hard work, I'm excited to announce the launch of my open-source library. Check out the GitHub repo! 🚀",
-      likes: 634,
-      comments: [
-        {
-          commentID: 10,
-          user: {
-            userId: "user1",
-            profilePhoto: "https://i.pravatar.cc/150?img=1",
-            username: "alex_johnson",
-            email: "alex@example.com",
-            description: "Digital artist and photographer"
-          },
-          description: "Congratulations David! What's the project about?"
-        },
-        {
-          commentID: 11,
-          user: {
-            userId: "user5",
-            profilePhoto: "https://i.pravatar.cc/150?img=5",
-            username: "mike_roberts",
-            email: "mike@example.com",
-            description: "Marathon runner"
-          },
-          description: "Amazing achievement! Link?"
-        }
-      ],
-      postedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
-    }
+export const generateMockPost = (index: number, users: IUser[]): IPost => {
+  const user = users[index % users.length];
+  const timeAgo = [
+    60 * 2,
+    2 * 60 * 60 * 1000,      // 2 часа
+    5 * 60 * 60 * 1000,      // 5 часов
+    1 * 24 * 60 * 60 * 1000, // 1 день
+    2 * 24 * 60 * 60 * 1000, // 2 дня
+    3 * 24 * 60 * 60 * 1000, // 3 дня
+    4 * 24 * 60 * 60 * 1000, // 4 дня
+    5 * 24 * 60 * 60 * 1000  // 5 дней
   ];
+  
+  const postTitles = [
+    "Sunset over the mountains",
+    "New café in town",
+    "Morning workout routine",
+    "Nutrition tips for beginners",
+    "New personal record!",
+    "Healthy meal prep Sunday",
+    "Just launched my new project!",
+    "Weekend hiking adventure",
+    "Learning new framework",
+    "Coffee and code ☕️"
+  ];
+  
+  const postDescriptions = [
+    "Beautiful sunset captured during my hiking trip last weekend.",
+    "Tried this amazing new café downtown. Their latte art is incredible!",
+    "Started my day with an intense workout session.",
+    "Sharing some basic nutrition principles I wish I knew.",
+    "Just completed a half marathon with my best time yet!",
+    "Spent the afternoon preparing meals for the week.",
+    "After months of hard work, I'm excited to announce the launch!",
+    "Exploring new trails and enjoying nature.",
+    "Diving deep into a new technology stack.",
+    "Perfect combination for a productive day."
+  ];
+  
+  const postImages = [
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+    "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
+    "https://images.unsplash.com/photo-1490818387583-1baba5e638af",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64",
+    undefined, 
+    undefined, 
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+    "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
+  ];
+
+  return {
+    postId: `post_${index + 1}`,
+    user,
+    postImg: postImages[index % postImages.length],
+    postTitle: postTitles[index % postTitles.length],
+    postDescription: postDescriptions[index % postDescriptions.length],
+    likes: Math.floor(Math.random() * 1000) + 100,
+    comments: generateMockComments(users, Math.floor(Math.random() * 5)),
+    postedAt: new Date(Date.now() - timeAgo[index % timeAgo.length])
+  };
+};
+
+export const generateMockComments = (users: IUser[], count: number) => {
+  const commentTexts = [
+    "Great post! Thanks for sharing.",
+    "Love this! 🔥",
+    "Interesting perspective.",
+    "Can you share more details?",
+    "This is amazing!",
+    "Keep up the good work!",
+    "Looking forward to more content.",
+    "Very helpful, thank you!",
+    "I totally agree with this.",
+    "Beautiful work!"
+  ];
+  
+  return Array.from({ length: count }, (_, i) => ({
+    commentID: i + 1,
+    user: users[Math.floor(Math.random() * users.length)],
+    description: commentTexts[Math.floor(Math.random() * commentTexts.length)]
+  }));
+};
+
+export const generateMockUser = (index: number): IUser => {
+  const usernames = [
+    "alex_johnson", "maria_garcia", "tom_wilson", "sarah_chen", 
+    "mike_roberts", "lisa_parker", "david_kim", "emma_williams",
+    "james_brown", "olivia_davis"
+  ];
+  
+  const descriptions = [
+    "Digital artist and photographer",
+    "Travel enthusiast",
+    "Outdoor adventurer",
+    "Fitness coach",
+    "Marathon runner",
+    "Nutritionist",
+    "Software developer",
+    "UI/UX Designer",
+    "Data Scientist",
+    "Product Manager"
+  ];
+  
+  return {
+    userId: `user_${index + 1}`,
+    profilePhoto: `https://i.pravatar.cc/150?img=${(index % 70) + 1}`,
+    username: usernames[index % usernames.length],
+    email: `${usernames[index % usernames.length]}@example.com`,
+    description: descriptions[index % descriptions.length]
+  };
+};
+
+export const generateMockCommunity = (index: number): ICommunity => {
+  const names = [
+    "Frontend Masters", "Backend Engineers", "Mobile Dev Hub",
+    "DevOps & Cloud", "Open Source", "AI & Machine Learning",
+    "Web3 & Blockchain", "UI/UX Design", "Data Science",
+    "Cybersecurity", "Game Development", "AR/VR Enthusiasts"
+  ];
+  
+  const photos = [
+    "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
+    "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c",
+    "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+    "https://images.unsplash.com/photo-1620336655055-bd87c5d1d73f",
+    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
+  ];
+  
+  return {
+    name: names[index % names.length],
+    followersCount: Math.floor(Math.random() * 50000) + 10000,
+    avatarPhoto: `${photos[index % photos.length]}?w=100&h=100&fit=crop`
+  };
+};
+
+const USERS = Array.from({length: 7}, (_,i) => generateMockUser(i))
+
+const POSTS = Array.from({length: 10}, (_,i) => generateMockPost(i, USERS))
+
+const COMMUNITIES =  Array.from({length: 5}, (_,i) => generateMockCommunity(i))
+ 
+export {USERS, POSTS, COMMUNITIES}

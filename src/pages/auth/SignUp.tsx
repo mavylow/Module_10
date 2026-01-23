@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import { Email } from "../../assets/Email";
 import { Eye } from "../../assets/Eye";
 import Button from "../../components/Button/Button";
@@ -5,8 +6,17 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Input from "../../components/Input/Input";
 import "./AuthStyle.css";
+import { AuthContext } from "../../AuthProvider";
 
 export default function SignUp() {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const { signUp } = useContext(AuthContext);
+
+  const handleSingUp = () => {
+    signUp(email);
+  };
   return (
     <>
       <Header />
@@ -24,6 +34,10 @@ export default function SignUp() {
               placeholder="Enter email"
               type="email"
               Icon={Email}
+              value={email}
+              onInput={(email) => {
+                setEmail(email);
+              }}
             />
           </div>
           <div className="input-container">
@@ -34,10 +48,14 @@ export default function SignUp() {
               placeholder="Enter password"
               type="password"
               Icon={Eye}
+              value={password}
+              onInput={(password) => {
+                setPassword(password);
+              }}
             />
           </div>
 
-          <Button description="Sign Up" />
+          <Button description="Sign Up" onButtonClick={handleSingUp} />
           <p className="legal-disclaimer">
             By clicking continue, you agree to our{" "}
             <a href="/terms" className="legal-link" rel="nofollow">

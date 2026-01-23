@@ -16,6 +16,7 @@ header {
   border: none;
   font-size: 24px;
   z-index: 101;
+  color: var(--text-color);
 }
 
 .burger-button .avatar-photo {
@@ -61,6 +62,7 @@ header {
   background-color: var(--background-main);
   text-decoration: none;
   color: var(--light-text-color);
+  cursor: pointer;
 }
 
 .menu-header {
@@ -104,6 +106,9 @@ header {
   body.menu-open main,
   body.menu-open footer {
     filter: blur(4px);
+    pointer-events: none;
+    width: auto;
+    overflow: hidden;
   }
 }
 
