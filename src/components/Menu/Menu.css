@@ -3,7 +3,9 @@ header {
   flex-direction: row;
   justify-content: space-between;
 }
-
+.burger-button img {
+  height: 80%;
+}
 .burger-button {
   display: none;
   position: absolute;
@@ -20,7 +22,6 @@ header {
 }
 
 .burger-button .avatar-photo {
-  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   display: block;
 }
 
@@ -33,7 +34,7 @@ header {
   height: 100vh;
   background-color: var(--background-root);
   border-left: 1px solid var(--border-color);
-  transform: translateX(80vw);
+  transform: translateX(100%);
   opacity: 0;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   z-index: 100;
@@ -109,6 +110,11 @@ header {
     pointer-events: none;
     width: auto;
     overflow: hidden;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+    height: 100vh;
   }
 }
 

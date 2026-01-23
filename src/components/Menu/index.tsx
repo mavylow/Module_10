@@ -6,7 +6,7 @@ import { AuthContext } from "../../AuthProvider";
 import { USERS } from "../../TestConsts";
 
 function Menu() {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { userId } = useContext(AuthContext);
 
   const user = useMemo(

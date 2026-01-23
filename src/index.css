@@ -67,3 +67,39 @@ body {
   min-width: 320px;
   height: 100%;
 }
+
+h3 {
+  font-size: calc(16px + 9 * (100vw / 1600));
+}
+
+h2,
+time {
+  font-size: calc(14px + 5 * (100vw / 1600));
+}
+p {
+  font-size: calc(14px + 9 * (100vw / 1600));
+}
+
+@media (min-width: 1600px) {
+  h3 {
+    font-size: 25px;
+  }
+
+  p,
+  h2,
+  time {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  h3 {
+    font-size: calc(16px + (9 + 9 * 0.7) * ((100vw - 320px) / 1600));
+  }
+
+  p,
+  h2,
+  time {
+    font-size: calc(14px + (9 + 9 * 0.7) * ((100vw - 320px) / 1600));
+  }
+}
