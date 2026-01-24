@@ -1,9 +1,7 @@
 .post {
   width: 100%;
 }
-.post h2 {
-  font-size: 24px;
-}
+
 .post .frame {
   border-bottom: none;
 }
@@ -40,7 +38,6 @@ figure img {
 
 .post-header > h2,
 .post-header > time {
-  font-size: 1em;
   padding-left: min(1em, 3%);
   margin: 0;
 }
@@ -99,13 +96,12 @@ figure img {
 .add-comment > input {
   display: block;
   width: 100%;
-  font-size: 16px;
+
   padding: 1.5em 1em 4em 1em;
 }
 
 .add-comment > button {
   width: 40%;
-  font-size: 16px;
 }
 
 .add-comment > label {
@@ -119,14 +115,6 @@ figure img {
 }
 
 @media (max-width: 410px) {
-  .post {
-    font-size: 14px;
-  }
-
-  .post h2 {
-    font-size: 16px;
-  }
-
   .post-info,
   .add-comment > button {
     font-size: 12px;
@@ -134,9 +122,6 @@ figure img {
 }
 
 @media (max-width: 350px) {
-  .post-info {
-    font-size: 10px;
-  }
   .post-info svg {
     height: 16px;
     width: 16px;
@@ -145,7 +130,6 @@ figure img {
   .add-comment > input {
     display: block;
     width: 100%;
-    font-size: 16px;
     padding: 1.5em 1em 4em 1em;
   }
 }

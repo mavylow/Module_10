@@ -10,13 +10,12 @@
 .mobile {
   width: 100%;
   background-color: var(--background-main);
-  padding: 16px 16px;
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 0 1em;
+  padding: 0 1.5em;
   position: relative;
   z-index: 1001;
 }
@@ -25,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 1em;
   height: 100%;
 }
 
