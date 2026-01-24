@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import Menu from "../../components/Menu";
 
 import Post from "../../components/Post";
 import Sidebar from "../../components/Sidebar";
@@ -30,7 +29,6 @@ function Home() {
   return (
     <>
       <Header />
-      <Menu />
       <main>
         {true && <Sidebar />}
         {posts.map((post) => (

@@ -23,7 +23,9 @@ function ThemeProvider({ children }: ThemeProviderProps) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (isInitialized) return;
+    if (isInitialized) {
+      return;
+    }
 
     const storageTheme = localStorage.getItem("theme");
 

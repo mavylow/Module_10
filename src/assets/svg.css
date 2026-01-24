@@ -4,7 +4,8 @@
 .svg-sidekick path,
 .svg-eye path,
 .svg-expand path,
-.svg-email path {
+.svg-email path,
+.svg-hamburger path {
   fill: var(--svg-color);
 }
 

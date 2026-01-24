@@ -17,6 +17,7 @@ export default function SignIn() {
   const handleSingIn = () => {
     signIn(email);
   };
+
   return (
     <>
       <Header />

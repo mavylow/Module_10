@@ -1,17 +1,15 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import { USERS } from "./TestConsts";
 
-type TUserId = string | null;
-
 interface IAuthContext {
-  userId: TUserId;
+  userId: string;
   signIn: (userId: string) => void;
   signUp: (userId: string) => void;
   logOut: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  userId: null,
+  userId: "",
   signIn: () => {},
   signUp: () => {},
   logOut: () => {},
@@ -22,7 +20,7 @@ interface AuthProviderProps {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [userId, setUserId] = useState<TUserId>(null);
+  const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -75,7 +73,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logOut = () => {
-    setUserId(null);
+    setUserId("");
     localStorage.removeItem("userId");
     console.log("Logged out");
   };
