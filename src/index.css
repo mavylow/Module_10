@@ -69,12 +69,16 @@ body {
 }
 
 h3,
-button,
 p,
 label,
 a {
   font-size: calc(14px + 6 * (100vw - 320px) / 1280);
 }
+
+button {
+  font-size: calc(12px + 8 * (100vw - 320px) / 1280);
+}
+
 h2,
 time,
 span,

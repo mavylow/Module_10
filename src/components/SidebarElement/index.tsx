@@ -1,5 +1,5 @@
 import type { ICommunity, IUser } from "../../TestConsts";
-import "./SidebarElement.css";
+import "./style.css";
 
 export function SidebarElement({ element }: { element: IUser | ICommunity }) {
   if ("followersCount" in element) {

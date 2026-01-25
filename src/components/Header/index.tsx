@@ -1,6 +1,6 @@
 import { Sidekick } from "../../assets/Sidekick";
 import { Logo } from "../../assets/Logo";
-import "./Header.css";
+import "./style.css";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "../../AuthProvider";
 import { USERS } from "../../TestConsts";

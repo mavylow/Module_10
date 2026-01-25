@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import "./FrameWrapper.css";
+import "./style.css";
 
 interface FrameWrapperProps {
   children: ReactNode;

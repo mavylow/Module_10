@@ -1,7 +1,7 @@
 import { NotFound } from "../../assets/NotFound";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import "./NotFound.css";
+import "./style.css";
 
 export default function NotFoundPage() {
   return (

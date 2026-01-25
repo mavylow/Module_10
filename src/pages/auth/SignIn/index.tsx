@@ -1,30 +1,31 @@
 import { useContext, useState } from "react";
-import { Email } from "../../assets/Email";
-import { Eye } from "../../assets/Eye";
-import Button from "../../components/Button/Button";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
-import Input from "../../components/Input/Input";
-import "./AuthStyle.css";
-import { AuthContext } from "../../AuthProvider";
+import { Email } from "../../../assets/Email";
+import { Eye } from "../../../assets/Eye";
+import Button from "../../../components/Button";
+import Footer from "../../../components/Footer";
+import Header from "../../../components/Header";
+import Input from "../../../components/Input";
+import "../style.css";
+import { AuthContext } from "../../../AuthProvider";
 
-export default function SignUp() {
+export default function SignIn() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  const { signUp } = useContext(AuthContext);
+  const { signIn, logOut } = useContext(AuthContext);
 
-  const handleSingUp = () => {
-    signUp(email);
+  const handleSingIn = () => {
+    signIn(email);
   };
+
   return (
     <>
       <Header />
       <main>
         <form className="sing-up">
           <div className="form-header">
-            <h1>Create an account</h1>
-            <p>Enter your email and password to sign up for this app</p>
+            <h1>Sign in into an account</h1>
+            <p>Enter your email and password to sign in into this app</p>
           </div>
           <div className="input-container">
             <Input
@@ -55,22 +56,13 @@ export default function SignUp() {
             />
           </div>
 
-          <Button description="Sign Up" onButtonClick={handleSingUp} />
-          <p className="legal-disclaimer">
-            By clicking continue, you agree to our{" "}
-            <a href="/terms" className="legal-link" rel="nofollow">
-              Terms of Service
-            </a>{" "}
-            and{" "}
-            <a href="/privacy" className="legal-link" rel="nofollow">
-              Privacy Policy
-            </a>
-          </p>
+          <Button description="SingIn" onButtonClick={handleSingIn} />
+          <Button description="LogOut" onButtonClick={() => logOut()} />
         </form>
         <span>
-          Already have an account?{" "}
+          Forgot to create an account?{" "}
           <a href="/login" className="nav-link" rel="nofollow">
-            Sign in
+            Sign up
           </a>
         </span>
       </main>
