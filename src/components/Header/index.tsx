@@ -1,10 +1,10 @@
-import { Sidekick } from "../../assets/Sidekick";
-import { Logo } from "../../assets/Logo";
+import { Sidekick } from "@assets/Sidekick";
+import { Logo } from "@assets/Logo";
 import "./style.css";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { AuthContext } from "../../AuthProvider";
-import { USERS } from "../../TestConsts";
-import Hamburger from "../../assets/Hamburger";
+import { AuthContext } from "@/AuthProvider";
+import { USERS } from "@/TestConsts";
+import Hamburger from "@assets/Hamburger";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);

@@ -1,6 +1,6 @@
-import { X } from "../../assets/X";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import { X } from "@assets/X";
+import Footer from "@components/Footer";
+import Header from "@components/Header";
 import "./style.css";
 
 export default function Fallback() {

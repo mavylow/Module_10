@@ -1,6 +1,6 @@
-import { COMMUNITIES, USERS } from "../../TestConsts";
-import FrameWrapper from "../FrameWrapper";
-import { SidebarElement } from "../../components/SidebarElement";
+import { COMMUNITIES, USERS } from "@/TestConsts";
+import FrameWrapper from "@components/FrameWrapper";
+import { SidebarElement } from "@components/SidebarElement";
 import "./style.css";
 
 export default function Sidebar() {

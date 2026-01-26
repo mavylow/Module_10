@@ -1,4 +1,4 @@
-import type { ICommunity, IUser } from "../../TestConsts";
+import type { ICommunity, IUser } from "@/TestConsts";
 import "./style.css";
 
 export function SidebarElement({ element }: { element: IUser | ICommunity }) {

@@ -1,13 +1,13 @@
 // import { useState } from "react";
 
 import { useState } from "react";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import Footer from "@components/Footer";
+import Header from "@components/Header";
 
-import Post from "../../components/Post";
-import Sidebar from "../../components/Sidebar";
-import { POSTS } from "../../TestConsts";
-import type { IComment, IPost } from "../../TestConsts";
+import Post from "@components/Post";
+import Sidebar from "@components/Sidebar";
+import { POSTS } from "@/TestConsts";
+import type { IComment, IPost } from "@/TestConsts";
 
 function Home() {
   const [posts, setPosts] = useState(POSTS);

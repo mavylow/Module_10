@@ -1,4 +1,4 @@
-import { type ComponentType } from "react";
+import { type ChangeEvent, type ComponentType } from "react";
 import "./style.css";
 
 export interface InputProps {
@@ -9,7 +9,7 @@ export interface InputProps {
   type: string;
   Icon: ComponentType;
   value: string;
-  onInput: (value: string) => void;
+  onInput: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
@@ -35,7 +35,7 @@ export default function Input({
         placeholder={placeholder}
         type={type}
         value={value}
-        onChange={(e) => onInput(e.target.value)}
+        onChange={(e) => onInput(e)}
       />
     </>
   );

@@ -1,7 +1,8 @@
-import "./App.css";
-import AuthProvider from "./AuthProvider";
-import Home from "./pages/Home";
-import ThemeProvider from "./ThemeProvider";
+import "@/App.css";
+import AuthProvider from "@/AuthProvider";
+// import SignIn from "@pages/auth/SignIn";
+import Home from "@/pages/Home";
+import ThemeProvider from "@/ThemeProvider";
 
 function App() {
   return (

@@ -1,10 +1,15 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { USERS } from "./TestConsts";
+import { USERS } from "@/TestConsts";
+
+interface formData {
+  email: string;
+  password: string;
+}
 
 interface IAuthContext {
   userId: string;
-  signIn: (userId: string) => void;
-  signUp: (userId: string) => void;
+  signIn: (formData: formData) => void;
+  signUp: (formData: formData) => void;
   logOut: () => void;
 }
 
@@ -44,16 +49,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(false);
   }, []);
 
-  //   window.addEventListener("storage", (e) => {
-  //     if (e.key === "userId") {
-  //       if (e.newValue === "") {
-  //         logOut();
-  //       }
-  //     }
-  //   });
-
-  const signIn = (email: string) => {
-    const userExists = USERS.filter((user) => user.email === email)[0];
+  const signIn = (form: formData) => {
+    const userExists = USERS.filter((user) => user.email === form.email)[0];
 
     if (userExists) {
       setUserId(userExists.userId);
@@ -64,8 +61,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signUp = (email: string) => {
-    const userExists = USERS.filter((user) => user.email === email)[0];
+  const signUp = (form: formData) => {
+    const userExists = USERS.filter((user) => user.email === form.email)[0];
     //логика на добавление
     setUserId(userId);
     localStorage.setItem("userId", userExists.userId);

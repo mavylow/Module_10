@@ -1,4 +1,4 @@
-import type { IComment } from "../../TestConsts";
+import type { IComment } from "@/TestConsts";
 
 export default function Comment({
   comment,

@@ -1,28 +1,36 @@
-import { useContext, useState } from "react";
-import { Email } from "../../../assets/Email";
-import { Eye } from "../../../assets/Eye";
-import Button from "../../../components/Button";
-import Footer from "../../../components/Footer";
-import Header from "../../../components/Header";
-import Input from "../../../components/Input";
+import { useContext, useState, type ChangeEvent, type FormEvent } from "react";
+import { Email } from "@assets/Email";
+import { Eye } from "@assets/Eye";
+import Button from "@components/Button";
+import Footer from "@components/Footer";
+import Header from "@components/Header";
+import Input from "@components/Input";
 import "../style.css";
-import { AuthContext } from "../../../AuthProvider";
+import { AuthContext } from "@/AuthProvider";
+
+const signInForm = {
+  email: "",
+  password: "",
+};
 
 export default function SignIn() {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState(signInForm);
+  const { signIn } = useContext(AuthContext);
 
-  const { signIn, logOut } = useContext(AuthContext);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    signIn(form);
+  };
 
-  const handleSingIn = () => {
-    signIn(email);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (
     <>
       <Header />
       <main>
-        <form className="sing-up">
+        <form className="sing-up" onSubmit={handleSubmit}>
           <div className="form-header">
             <h1>Sign in into an account</h1>
             <p>Enter your email and password to sign in into this app</p>
@@ -35,10 +43,8 @@ export default function SignIn() {
               placeholder="Enter email"
               type="email"
               Icon={Email}
-              value={email}
-              onInput={(email) => {
-                setEmail(email);
-              }}
+              value={form.email}
+              onInput={handleInputChange}
             />
           </div>
           <div className="input-container">
@@ -49,15 +55,12 @@ export default function SignIn() {
               placeholder="Enter password"
               type="password"
               Icon={Eye}
-              value={password}
-              onInput={(password) => {
-                setPassword(password);
-              }}
+              value={form.password}
+              onInput={handleInputChange}
             />
           </div>
 
-          <Button description="SingIn" onButtonClick={handleSingIn} />
-          <Button description="LogOut" onButtonClick={() => logOut()} />
+          <Button description="SingIn" type="submit" />
         </form>
         <span>
           Forgot to create an account?{" "}

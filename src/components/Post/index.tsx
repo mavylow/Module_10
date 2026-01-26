@@ -1,15 +1,15 @@
 import { useContext, useState } from "react";
-import { SvgComment } from "../../assets/Comment";
-import { ExpandIcon } from "../../assets/ExpandIcon";
-import { Heart } from "../../assets/Heart";
-import Comment from "../Comment";
+import { SvgComment } from "@assets/Comment";
+import { ExpandIcon } from "@assets/ExpandIcon";
+import { Heart } from "@assets/Heart";
+import Comment from "@components/Comment";
 import "./style.css";
-import { PenSvg } from "../../assets/PenSvg";
-import Input from "../Input";
-import Button from "../Button";
-import FrameWrapper from "../FrameWrapper";
-import { AuthContext } from "../../AuthProvider";
-import type { IComment, IPost } from "../../TestConsts";
+import { PenSvg } from "@assets/PenSvg";
+import Input from "@components/Input";
+import Button from "@components/Button";
+import FrameWrapper from "@components/FrameWrapper";
+import { AuthContext } from "@/AuthProvider";
+import type { IComment, IPost } from "@/TestConsts";
 import React from "react";
 
 interface PostProps {
@@ -123,7 +123,7 @@ function Post({ post, onAddComment }: PostProps) {
               type="text"
               Icon={PenSvg}
               value={comment}
-              onInput={(comment) => setComment(comment)}
+              onInput={(e) => setComment(e.target.value)}
             />
             <Button
               description="Add a comment"
