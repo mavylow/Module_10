@@ -7,24 +7,63 @@ import Header from "@components/Header";
 import Input from "@components/Input";
 import "../style.css";
 import { AuthContext } from "@/AuthProvider";
+import Modal from "@/components/Modal";
 
 const signInForm = {
   email: "",
   password: "",
 };
 
+const modalInitial = {
+  isOpen: false,
+  message: "",
+};
+
+type IForm = {
+  email: string;
+  password: string;
+};
+
+type IModal = {
+  isOpen: boolean;
+  message: string;
+};
+
 export default function SignIn() {
-  const [form, setForm] = useState(signInForm);
+  const [form, setForm] = useState<IForm>(signInForm);
+
+  const [modal, setModal] = useState<IModal>(modalInitial);
+
   const { signIn } = useContext(AuthContext);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signIn(form);
+    setModal(modalInitial);
+    if (validateForm(form)) {
+      signIn(form);
+    }
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const validateForm = ({ email, password }: IForm) => {
+    if (password.length < 8) {
+      showModal({
+        isOpen: true,
+        message: "Password should be more than 8 characters long",
+      });
+
+      return false;
+    }
+    return true;
+  };
+
+  function showModal(modal: IModal) {
+    setModal(modal);
+    setTimeout(() => setModal(modalInitial), 2000);
+  }
 
   return (
     <>
@@ -69,6 +108,7 @@ export default function SignIn() {
           </a>
         </span>
       </main>
+      <Modal isOpen={modal.isOpen}>{modal.message}</Modal>
       <Footer />
     </>
   );

@@ -1,15 +1,21 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { USERS } from "@/TestConsts";
+import { USERS, type IUser } from "@/TestConsts";
+import Modal from "./components/Modal";
 
-interface formData {
+interface IForm {
   email: string;
   password: string;
 }
 
+interface IModal {
+  isOpen: boolean;
+  message: string;
+}
+
 interface IAuthContext {
   userId: string;
-  signIn: (formData: formData) => void;
-  signUp: (formData: formData) => void;
+  signIn: (formData: IForm) => void;
+  signUp: (formData: IForm) => void;
   logOut: () => void;
 }
 
@@ -24,9 +30,16 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const modalInitial = {
+  isOpen: false,
+  message: "",
+};
+
 function AuthProvider({ children }: AuthProviderProps) {
   const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const [modal, setModal] = useState<IModal>(modalInitial);
 
   useEffect(() => {
     const currentUserId = localStorage.getItem("userId");
@@ -39,29 +52,43 @@ function AuthProvider({ children }: AuthProviderProps) {
     const userExists = USERS.some((user) => user.userId === currentUserId);
 
     if (userExists) {
-      console.log("User found, signing in");
+      showModal({ isOpen: true, message: "Signed in successfully" });
       setUserId(currentUserId);
     } else {
-      console.log("User not found in USERS, clearing LS");
+      showModal({ isOpen: true, message: "User not found" });
       localStorage.removeItem("userId");
     }
 
     setIsLoading(false);
   }, []);
 
-  const signIn = (form: formData) => {
-    const userExists = USERS.filter((user) => user.email === form.email)[0];
+  const signIn = async (form: IForm) => {
+    setIsLoading(true);
+    setModal(modalInitial);
+
+    const userExists: IUser = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(USERS.filter((user) => user.email === form.email)[0]);
+      }, 5000);
+    });
 
     if (userExists) {
+      showModal({ isOpen: true, message: "Signed in successfully" });
       setUserId(userExists.userId);
       localStorage.setItem("userId", userExists.userId);
-      console.log("Signed in successfully");
     } else {
+      showModal({ isOpen: true, message: "User not found" });
       console.error("User not found");
     }
+    setIsLoading(false);
   };
 
-  const signUp = (form: formData) => {
+  function showModal(modal: IModal) {
+    setModal(modal);
+    setTimeout(() => setModal(modalInitial), 2000);
+  }
+
+  const signUp = (form: IForm) => {
     const userExists = USERS.filter((user) => user.email === form.email)[0];
     //логика на добавление
     setUserId(userId);
@@ -75,12 +102,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     console.log("Logged out");
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <AuthContext.Provider value={{ userId, signIn, signUp, logOut }}>
+      {isLoading && <Modal isOpen={modal.isOpen}>In process</Modal>}
+      <Modal isOpen={modal.isOpen}>{modal.message}</Modal>
       {children}
     </AuthContext.Provider>
   );
