@@ -17,9 +17,9 @@ function App() {
         <AuthProvider>
           <ThemeProvider>
             <Routes>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/Module_10/signin" element={<SignIn />} />
+              <Route path="/Module_10/signup" element={<SignUp />} />
+              <Route path="/Module_10/home" element={<Home />} />
             </Routes>
           </ThemeProvider>
         </AuthProvider>
