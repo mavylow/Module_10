@@ -4,7 +4,7 @@ interface ExpandIconProp {
   style: { transform: string };
 }
 
-const ExpandArrowIcon = ({ style }: ExpandIconProp) => {
+const ChevronIcon = ({ style }: ExpandIconProp) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -23,4 +23,4 @@ const ExpandArrowIcon = ({ style }: ExpandIconProp) => {
   );
 };
 
-export default ExpandArrowIcon;
+export default ChevronIcon;

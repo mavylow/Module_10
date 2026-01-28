@@ -1,23 +1,38 @@
 import "./style.css";
 
-interface ButtonProps {
+interface ActionButtonProps {
   description: string;
-  onButtonClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  type?: "submit" | "reset" | "button" | undefined;
+  onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  type: "reset" | "button";
 }
 
-export default function Button({
-  description,
-  onButtonClick = () => {},
-  type = "button",
-}: ButtonProps) {
-  return (
-    <button
-      className="default-button"
-      onClick={(e) => onButtonClick(e)}
-      type={type}
-    >
-      {description}
-    </button>
-  );
+interface SubmitButtonProps {
+  description: string;
+  type: "submit";
 }
+
+type ButtonProps = ActionButtonProps | SubmitButtonProps;
+
+function Button(props: ButtonProps) {
+  const { description, type } = props;
+
+  if (type === "submit") {
+    return (
+      <button className="default-button" type={type}>
+        {description}
+      </button>
+    );
+  } else {
+    return (
+      <button
+        className="default-button"
+        onClick={props.onButtonClick}
+        type={props.type}
+      >
+        {description}
+      </button>
+    );
+  }
+}
+
+export default Button;

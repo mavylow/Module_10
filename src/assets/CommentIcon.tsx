@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const SvgComment = () => {
+const CommentIcon = () => {
   return (
     <svg
       className="svg-comment"
@@ -20,3 +20,5 @@ export const SvgComment = () => {
     </svg>
   );
 };
+
+export default CommentIcon;

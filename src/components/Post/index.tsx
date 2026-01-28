@@ -132,6 +132,7 @@ function Post({ post, onAddComment }: PostProps) {
             />
             <Button
               description="Add a comment"
+              type="button"
               onButtonClick={handleAddComment}
             />
           </div>

@@ -22,16 +22,18 @@ function Header() {
   const { userId } = useContext(AuthContext);
 
   useEffect(() => {
-    if (userId) {
-      setUser(USERS.filter((user) => user.userId === userId)[0]);
-    }
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      setUser(USERS.filter((user) => user.userId === userId)[0]);
+    }
+  }, [userId]);
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
