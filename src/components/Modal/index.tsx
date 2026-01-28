@@ -9,7 +9,9 @@ type ModalProps = {
 
 function Modal({ children, isOpen }: ModalProps) {
   const modalRoot = document.getElementById("modal");
-  if (!modalRoot) return null;
+  if (!modalRoot) {
+    return null;
+  }
 
   return createPortal(
     <div className={`modal ${isOpen ? "modal--open" : "modal--close"}`}>

@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const Heart = () => {
+const HeartIcon = () => {
   return (
     <svg
       className="svg-heart"
@@ -20,3 +20,5 @@ export const Heart = () => {
     </svg>
   );
 };
+
+export default HeartIcon;

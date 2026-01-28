@@ -1,4 +1,4 @@
-export default function Hamburger() {
+function HamburgerMenuIcon() {
   return (
     <svg
       className="svg-hamburger"
@@ -23,3 +23,5 @@ export default function Hamburger() {
     </svg>
   );
 }
+
+export default HamburgerMenuIcon;

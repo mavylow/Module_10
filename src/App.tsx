@@ -4,14 +4,15 @@ import AuthProvider from "@/AuthProvider";
 // import Home from "@/pages/Home";
 import ThemeProvider from "@/ThemeProvider";
 import ErrorBoundary from "./components/ ErrorBoundary";
-import SignIn from "./pages/auth/SignIn";
+
+import SignUp from "./pages/auth/SignUp";
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
         <ThemeProvider>
-          <SignIn />
+          <SignUp />
         </ThemeProvider>
       </AuthProvider>
     </ErrorBoundary>

@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const PenSvg = () => {
+const EditPenIcon = () => {
   return (
     <svg
       className="svg-pen"
@@ -17,3 +17,5 @@ export const PenSvg = () => {
     </svg>
   );
 };
+
+export default EditPenIcon;

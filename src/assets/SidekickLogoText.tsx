@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const Sidekick = () => {
+export const SidekickLogoText = () => {
   return (
     <svg
       className="svg-sidekick"
@@ -43,3 +43,5 @@ export const Sidekick = () => {
     </svg>
   );
 };
+
+export default SidekickLogoText;

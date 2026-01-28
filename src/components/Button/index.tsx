@@ -8,15 +8,13 @@ interface ButtonProps {
 
 export default function Button({
   description,
-  onButtonClick,
+  onButtonClick = () => {},
   type = "button",
 }: ButtonProps) {
   return (
     <button
       className="default-button"
-      onClick={(e) => {
-        onButtonClick && onButtonClick(e);
-      }}
+      onClick={(e) => onButtonClick(e)}
       type={type}
     >
       {description}

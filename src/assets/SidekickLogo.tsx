@@ -1,6 +1,5 @@
 import "./svg.css";
-
-export const Logo = () => {
+const SidekickLogo = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,3 +14,5 @@ export const Logo = () => {
     </svg>
   );
 };
+
+export default SidekickLogo;

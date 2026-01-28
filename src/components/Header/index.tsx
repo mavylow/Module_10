@@ -1,23 +1,31 @@
-import { Sidekick } from "@assets/Sidekick";
-import { Logo } from "@assets/Logo";
+import SidekickLogoText from "@/assets/SidekickLogoText";
+import SidekickLogo from "@/assets/SidekickLogo";
 import "./style.css";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/AuthProvider";
-import { USERS } from "@/TestConsts";
-import Hamburger from "@assets/Hamburger";
+import { type IUser, USERS } from "@/TestConsts";
+import Hamburger from "@/assets/HamburgerMenuIcon";
+
+const initialUser: IUser = {
+  userId: "",
+  profilePhoto: "",
+  username: "",
+  email: "",
+  description: "",
+};
 
 function Header() {
+  const [user, setUser] = useState<IUser>(initialUser);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { userId } = useContext(AuthContext);
 
-  const user = useMemo(
-    () => USERS.filter((user) => user.userId === userId)[0],
-    [userId]
-  );
-
   useEffect(() => {
+    if (userId) {
+      setUser(USERS.filter((user) => user.userId === userId)[0]);
+    }
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
@@ -47,6 +55,10 @@ function Header() {
     };
   }, [isExpanded]);
 
+  const handleChangeMenuExpanded = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
   return (
     <>
       <header
@@ -57,8 +69,8 @@ function Header() {
         }
       >
         <div className="logo">
-          <Logo />
-          <Sidekick />
+          <SidekickLogo />
+          <SidekickLogoText />
         </div>
         {userId ? (
           <nav
@@ -89,10 +101,7 @@ function Header() {
           </nav>
         )}
 
-        <button
-          className="hamburger-menu"
-          onClick={() => setIsExpanded((prev) => !prev)}
-        >
+        <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
           {userId && isExpanded ? (
             <img
               src={user.profilePhoto || "../../../public/IMG_1001.jpg"}
@@ -104,7 +113,7 @@ function Header() {
         </button>
       </header>
       {isMobile && isExpanded && (
-        <div className="overlay" onClick={() => setIsExpanded((prev) => !prev)}>
+        <div className="overlay" onClick={handleChangeMenuExpanded}>
           {" "}
         </div>
       )}

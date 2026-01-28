@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const NotFound = () => {
+const PageNotFoundIcon = () => {
   return (
     <svg
       className="svg-notfound"
@@ -17,3 +17,5 @@ export const NotFound = () => {
     </svg>
   );
 };
+
+export default PageNotFoundIcon;

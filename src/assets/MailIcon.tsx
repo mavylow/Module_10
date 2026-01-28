@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const Email = () => {
+const MailIcon = () => {
   return (
     <svg
       className="svg-email"
@@ -24,3 +24,5 @@ export const Email = () => {
     </svg>
   );
 };
+
+export default MailIcon;

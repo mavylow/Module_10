@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
-import { SvgComment } from "@assets/Comment";
-import { ExpandIcon } from "@assets/ExpandIcon";
-import { Heart } from "@assets/Heart";
+import { useContext, useState, type ChangeEvent } from "react";
+import CommentIcon from "@/assets/CommentIcon";
+import ChevronIcon from "@/assets/ChevronIcon";
+import HeartIcon from "@/assets/HeartIcon";
 import Comment from "@components/Comment";
 import "./style.css";
-import { PenSvg } from "@assets/PenSvg";
+import EditPenIcon from "@/assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
@@ -51,6 +51,10 @@ function Post({ post, onAddComment }: PostProps) {
     setComment("");
   };
 
+  const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  };
+
   return (
     <article className="post">
       <FrameWrapper>
@@ -81,10 +85,10 @@ function Post({ post, onAddComment }: PostProps) {
         </div>
         <div className="post-info">
           <div className="likes">
-            <Heart /> <span>{likes} likes</span>
+            <HeartIcon /> <span>{likes} likes</span>
           </div>
           <div className="comments">
-            <SvgComment />
+            <CommentIcon />
             {userId ? (
               <span>{comments.length} comments</span>
             ) : (
@@ -92,7 +96,7 @@ function Post({ post, onAddComment }: PostProps) {
             )}
             {userId && (
               <button className="expand-button" onClick={handleExpand}>
-                <ExpandIcon
+                <ChevronIcon
                   style={
                     isCommentsExpanded
                       ? { transform: "rotate(180deg)" }
@@ -122,9 +126,9 @@ function Post({ post, onAddComment }: PostProps) {
               name="comment"
               placeholder="Write description here..."
               type="text"
-              Icon={PenSvg}
+              Icon={EditPenIcon}
               value={comment}
-              onInput={(e) => setComment(e.target.value)}
+              onInput={handleSetComment}
             />
             <Button
               description="Add a comment"

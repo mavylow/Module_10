@@ -1,16 +1,16 @@
-// import { useState } from "react";
-
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
-
 import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
 import { POSTS } from "@/TestConsts";
 import type { IComment, IPost } from "@/TestConsts";
+import { AuthContext } from "@/AuthProvider";
 
 function Home() {
   const [posts, setPosts] = useState(POSTS);
+
+  const { userId } = useContext(AuthContext);
 
   const handleAddComment = (postId: string, comment: IComment) => {
     const newPosts = posts.map((post) => {
@@ -30,7 +30,7 @@ function Home() {
     <>
       <Header />
       <main>
-        {true && <Sidebar />}
+        {userId && <Sidebar />}
         {posts.map((post) => (
           <Post key={post.postId} post={post} onAddComment={handleAddComment} />
         ))}

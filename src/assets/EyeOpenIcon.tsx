@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const Eye = () => {
+const EyeOpenIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -28,3 +28,5 @@ export const Eye = () => {
     </svg>
   );
 };
+
+export default EyeOpenIcon;

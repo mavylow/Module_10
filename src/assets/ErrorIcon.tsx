@@ -1,6 +1,6 @@
 import "./svg.css";
 
-export const X = () => {
+const ErrorIcon = () => {
   return (
     <svg
       className="svg-x"
@@ -17,3 +17,5 @@ export const X = () => {
     </svg>
   );
 };
+
+export default ErrorIcon;

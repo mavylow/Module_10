@@ -1,6 +1,6 @@
 import { useContext, useState, type ChangeEvent, type FormEvent } from "react";
-import { Email } from "@assets/Email";
-import { Eye } from "@assets/Eye";
+import MailIcon from "@/assets/MailIcon";
+import EyeOpenIcon from "@/assets/EyeOpenIcon";
 import Button from "@components/Button";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
@@ -48,8 +48,8 @@ export default function SignIn() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const validateForm = ({ email, password }: IForm) => {
-    if (password.length < 8) {
+  const validateForm = (form: IForm) => {
+    if (form.password.length < 8) {
       showModal({
         isOpen: true,
         message: "Password should be more than 8 characters long",
@@ -81,7 +81,7 @@ export default function SignIn() {
               name="email"
               placeholder="Enter email"
               type="email"
-              Icon={Email}
+              Icon={MailIcon}
               value={form.email}
               onInput={handleInputChange}
             />
@@ -93,7 +93,7 @@ export default function SignIn() {
               name="password"
               placeholder="Enter password"
               type="password"
-              Icon={Eye}
+              Icon={EyeOpenIcon}
               value={form.password}
               onInput={handleInputChange}
             />

@@ -52,10 +52,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     const userExists = USERS.some((user) => user.userId === currentUserId);
 
     if (userExists) {
-      showModal({ isOpen: true, message: "Signed in successfully" });
+      showModal("Signed in successfully");
       setUserId(currentUserId);
     } else {
-      showModal({ isOpen: true, message: "User not found" });
+      showModal("User not found");
       localStorage.removeItem("userId");
     }
 
@@ -73,27 +73,38 @@ function AuthProvider({ children }: AuthProviderProps) {
     });
 
     if (userExists) {
-      showModal({ isOpen: true, message: "Signed in successfully" });
+      showModal("Signed in successfully");
       setUserId(userExists.userId);
       localStorage.setItem("userId", userExists.userId);
     } else {
-      showModal({ isOpen: true, message: "User not found" });
+      showModal("User not found");
       console.error("User not found");
     }
     setIsLoading(false);
   };
 
-  function showModal(modal: IModal) {
-    setModal(modal);
+  function showModal(message: string) {
+    setModal({ isOpen: true, message });
     setTimeout(() => setModal(modalInitial), 2000);
   }
 
   const signUp = (form: IForm) => {
     const userExists = USERS.filter((user) => user.email === form.email)[0];
-    //логика на добавление
-    setUserId(userId);
-    localStorage.setItem("userId", userExists.userId);
-    console.log("Signed up successfully");
+    if (userExists) {
+      showModal("This email is already taken");
+      console.log("This email is already taken");
+    } else {
+      const newUser: IUser = {
+        userId: `user_${USERS.length + 1}`,
+        ...form,
+        profilePhoto: "../public/default_avatar.jpg",
+        username: form.email.split("@")[0],
+      };
+      USERS.push(newUser);
+      setUserId(newUser.userId);
+      localStorage.setItem("userId", newUser.userId);
+      console.log("Signed up successfully");
+    }
   };
 
   const logOut = () => {
