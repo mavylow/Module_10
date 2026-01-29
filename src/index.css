@@ -67,23 +67,3 @@ body {
   min-width: 320px;
   height: 100%;
 }
-
-h3,
-p,
-label,
-a {
-  font-size: calc(14px + 6 * (100vw - 320px) / 1280);
-}
-
-button {
-  font-size: calc(12px + 8 * (100vw - 320px) / 1280);
-}
-
-h2,
-time,
-span,
-input,
-input::placeholder,
-.desktop a {
-  font-size: calc(12px + 4 * (100vw - 320px) / 1280);
-}

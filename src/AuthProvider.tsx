@@ -66,11 +66,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
     setModal(modalInitial);
 
-    const userExists: IUser = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(USERS.filter((user) => user.email === form.email)[0]);
-      }, 5000);
-    });
+    const userExists: IUser = USERS.filter(
+      (user) => user.email === form.email
+    )[0];
 
     if (userExists) {
       showModal("Signed in successfully");

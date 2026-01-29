@@ -1,13 +1,45 @@
+.without-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .post {
   width: 100%;
+  font-size: 16px;
+}
+.post h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.post h3,
+.post p {
+  font-size: clamp(14px, 3vw, 20px);
+  margin: 0;
+}
+.post svg {
+  height: 24px;
 }
 
 .post .frame {
+  display: flex;
   border-bottom: none;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .post:last-child .frame {
   border-bottom: 1px solid var(--border-color);
+}
+
+.post span {
+  font-size: clamp(12px, 1.2vw, 16px);
+}
+
+.post label,
+.post input::placeholder {
+  font-size: 14px;
 }
 
 figure {
@@ -23,7 +55,6 @@ figure img {
   display: grid;
   grid-template-rows: 24px 1fr;
   grid-template-columns: 48px 1fr;
-  margin-bottom: 1em;
   padding: 0;
 }
 
@@ -53,7 +84,6 @@ figure img {
   flex-direction: row;
   align-items: center;
   gap: 1em;
-  font-size: 16px;
 }
 
 .likes,
@@ -96,36 +126,32 @@ figure img {
 }
 
 .add-comment > input {
-  display: block;
   width: 100%;
-
-  padding: 1.5em 1em 4em 1em;
+  height: 58px;
 }
 
 .add-comment > button {
-  width: 40%;
+  width: clamp(163px, 40%, 211px);
+  height: 44px;
+  font-size: 14px;
 }
 
 .add-comment > label {
   padding: 0.5em 0;
 }
 
-@media (max-width: 500px) {
-  .post-header img {
-    height: 36px;
-    width: 36px;
+@media (max-width: 375px) {
+  .post svg {
+    height: 18px;
+  }
+
+  .post span {
+    font-size: 10px;
   }
 }
 
 @media (max-width: 350px) {
-  .post-info svg {
-    height: 16px;
-    width: 16px;
-  }
-
-  .add-comment > input {
-    display: block;
-    width: 100%;
-    padding: 1.5em 1em 4em 1em;
+  .add-comment > button {
+    height: 36px;
   }
 }

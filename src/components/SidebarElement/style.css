@@ -1,10 +1,10 @@
 .aside-element {
   display: grid;
+  width: 293px;
   grid-template-rows: 24px 1fr;
   grid-template-columns: 48px 1fr;
   font-size: 14px;
-  margin-bottom: 1em;
-  padding: 0.5em 0;
+  padding: 12px 0;
 }
 
 .aside-element img {
@@ -17,9 +17,8 @@
 
 .aside-element > h3,
 .aside-element > span {
-  font-size: 1em;
-  padding-left: min(2em, 4%);
   margin: 0;
+  padding-left: 16px;
 }
 
 .aside-element span {

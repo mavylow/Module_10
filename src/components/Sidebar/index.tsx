@@ -13,6 +13,8 @@ export default function Sidebar() {
             <SidebarElement key={user.userId} element={user} />
           ))}
         </section>
+      </FrameWrapper>
+      <FrameWrapper>
         <section className="suggested-communities">
           <h3>Communities you might like</h3>
           {COMMUNITIES.slice(0, 3).map((community) => (

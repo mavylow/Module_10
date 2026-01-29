@@ -58,55 +58,58 @@ function Post({ post, onAddComment }: PostProps) {
   return (
     <article className="post">
       <FrameWrapper>
-        <div className="post-header">
-          <img
-            src={user.profilePhoto}
-            alt={`Profile picture of ${user.username}`}
-            className="post-avatar"
-            loading="lazy"
-          />
-          <h2>{user.username}</h2>
-          <time
-            dateTime={postedAt.toISOString()}
-            className="post-timestamp"
-            title={postedAt.toLocaleString()}
-          >
-            {formattedDate(postedAt)}
-          </time>
-        </div>
-        {postImg && (
-          <figure>
-            <img src={postImg} />
-          </figure>
-        )}
-        <div className="post-text">
-          <h3>{postTitle}</h3>
-          <p> {postDescription}</p>
-        </div>
-        <div className="post-info">
-          <div className="likes">
-            <HeartIcon /> <span>{likes} likes</span>
+        <div className="without-comment">
+          <div className="post-header">
+            <img
+              src={user.profilePhoto}
+              alt={`Profile picture of ${user.username}`}
+              className="post-avatar"
+              loading="lazy"
+            />
+            <h2>{user.username}</h2>
+            <time
+              dateTime={postedAt.toISOString()}
+              className="post-timestamp"
+              title={postedAt.toLocaleString()}
+            >
+              {formattedDate(postedAt)}
+            </time>
           </div>
-          <div className="comments">
-            <CommentIcon />
-            {userId ? (
-              <span>{comments.length} comments</span>
-            ) : (
-              <span>You have to login to see the comments </span>
-            )}
-            {userId && (
-              <button className="expand-button" onClick={handleExpand}>
-                <ChevronIcon
-                  style={
-                    isCommentsExpanded
-                      ? { transform: "rotate(180deg)" }
-                      : { transform: "none" }
-                  }
-                />
-              </button>
-            )}
+          {postImg && (
+            <figure>
+              <img src={postImg} />
+            </figure>
+          )}
+          <div className="post-text">
+            <h3>{postTitle}</h3>
+            <p> {postDescription}</p>
+          </div>
+          <div className="post-info">
+            <div className="likes">
+              <HeartIcon /> <span>{likes} likes</span>
+            </div>
+            <div className="comments">
+              <CommentIcon />
+              {userId ? (
+                <span>{comments.length} comments</span>
+              ) : (
+                <span>You have to login to see the comments </span>
+              )}
+              {userId && (
+                <button className="expand-button" onClick={handleExpand}>
+                  <ChevronIcon
+                    style={
+                      isCommentsExpanded
+                        ? { transform: "rotate(180deg)" }
+                        : { transform: "none" }
+                    }
+                  />
+                </button>
+              )}
+            </div>
           </div>
         </div>
+
         {userId && isCommentsExpanded && (
           <ul className="post-comments">
             {comments.map((comment, i) => (

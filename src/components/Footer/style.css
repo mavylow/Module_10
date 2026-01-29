@@ -14,11 +14,11 @@ footer {
 footer p {
   margin: 0;
   width: fit-content;
+  font-size: clamp(14px, 1.5vw, 18px);
 }
 
 @media (max-width: 376px) {
   footer {
     height: 56px;
-    font-size: 0.8em;
   }
 }

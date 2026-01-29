@@ -1,14 +1,19 @@
+aside .frame {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
 aside {
   position: absolute;
   right: max(-25em, -23vw);
   top: 0em;
-  width: 20em;
+  width: 341px;
   font-size: 16px;
 }
 
 aside h3 {
-  margin: 0.5em 0;
-  font-size: 18px;
+  margin: 0;
+  font-size: 16px;
 }
 
 @media (max-width: 1450px) {

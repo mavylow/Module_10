@@ -38,7 +38,6 @@ function Header() {
   const handleResize = () => {
     if (window.innerWidth < 768) {
       setIsMobile(true);
-      console.log("mobile");
     } else {
       setIsMobile(false);
       setIsExpanded(false);
