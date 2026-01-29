@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { USERS, type IUser } from "@/TestConsts";
+import { type IUser } from "@/TestConsts";
+import { useNavigate } from "react-router";
 import Modal from "./components/Modal";
+import { fetchData } from "./apiUtil";
 
 interface IForm {
   email: string;
@@ -13,14 +15,14 @@ interface IModal {
 }
 
 interface IAuthContext {
-  userId: string;
+  user: IUser | null;
   signIn: (formData: IForm) => void;
   signUp: (formData: IForm) => void;
   logOut: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  userId: "",
+  user: null,
   signIn: () => {},
   signUp: () => {},
   logOut: () => {},
@@ -36,44 +38,56 @@ const modalInitial = {
 };
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  let navigate = useNavigate();
   const [modal, setModal] = useState<IModal>(modalInitial);
 
   useEffect(() => {
-    const currentUserId = localStorage.getItem("userId");
+    checkCurrentUser();
+  }, []);
 
-    if (!currentUserId) {
-      console.log("userId not in LS");
+  const checkCurrentUser = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
       setIsLoading(false);
       return;
     }
-    const userExists = USERS.some((user) => user.userId === currentUserId);
 
-    if (userExists) {
-      showModal("Signed in successfully");
-      setUserId(currentUserId);
-    } else {
-      showModal("User not found");
-      localStorage.removeItem("userId");
+    try {
+      const user = await fetchData("/api/me", "GET");
+
+      if (user) {
+        showModal("Signed in successfully");
+        setUser(user);
+        navigate("/home");
+      } else {
+        showModal("User not found");
+        localStorage.removeItem("token");
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      showModal("Authentication failed");
+      localStorage.removeItem("token");
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
-  }, []);
-
+  };
   const signIn = async (form: IForm) => {
     setIsLoading(true);
     setModal(modalInitial);
 
-    const userExists: IUser = USERS.filter(
-      (user) => user.email === form.email
-    )[0];
+    const { token, user } = await fetchData("/api/login", "POST", {
+      email: form.email,
+      password: form.password,
+    });
 
-    if (userExists) {
+    if (user) {
       showModal("Signed in successfully");
-      setUserId(userExists.userId);
-      localStorage.setItem("userId", userExists.userId);
+      setUser(user);
+      localStorage.setItem("token", token);
+      navigate("/home");
     } else {
       showModal("User not found");
       console.error("User not found");
@@ -83,36 +97,29 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   function showModal(message: string) {
     setModal({ isOpen: true, message });
-    setTimeout(() => setModal(modalInitial), 2000);
+    setTimeout(() => setModal({ isOpen: false, message }), 2000);
   }
 
-  const signUp = (form: IForm) => {
-    const userExists = USERS.filter((user) => user.email === form.email)[0];
-    if (userExists) {
-      showModal("This email is already taken");
-      console.log("This email is already taken");
+  const signUp = async (form: IForm) => {
+    const { message } = await fetchData("/api/signup", "POST", {
+      email: form.email,
+      password: form.password,
+    });
+    if (message) {
+      showModal(message);
     } else {
-      const newUser: IUser = {
-        userId: `user_${USERS.length + 1}`,
-        ...form,
-        profilePhoto: "../public/default_avatar.jpg",
-        username: form.email.split("@")[0],
-      };
-      USERS.push(newUser);
-      setUserId(newUser.userId);
-      localStorage.setItem("userId", newUser.userId);
       console.log("Signed up successfully");
     }
   };
 
   const logOut = () => {
-    setUserId("");
+    setUser(null);
     localStorage.removeItem("userId");
     console.log("Logged out");
   };
 
   return (
-    <AuthContext.Provider value={{ userId, signIn, signUp, logOut }}>
+    <AuthContext.Provider value={{ user, signIn, signUp, logOut }}>
       {isLoading && <Modal isOpen={modal.isOpen}>In process</Modal>}
       <Modal isOpen={modal.isOpen}>{modal.message}</Modal>
       {children}

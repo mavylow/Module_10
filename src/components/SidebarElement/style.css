@@ -11,7 +11,7 @@
   height: 48px;
   width: 48px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   grid-row: 1 / span 2;
 }
 

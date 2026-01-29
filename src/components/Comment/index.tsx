@@ -8,7 +8,7 @@ interface ICommentProps {
 export default function Comment({ comment, number }: ICommentProps) {
   return (
     <>
-      <li data-number={`#${number}.`}>{comment.description}</li>
+      <li data-number={`#${number}.`}>{comment.text}</li>
     </>
   );
 }

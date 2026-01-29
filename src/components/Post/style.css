@@ -125,6 +125,12 @@ figure img {
   margin: 0;
 }
 
+.add-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .add-comment > input {
   width: 100%;
   height: 58px;

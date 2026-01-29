@@ -3,23 +3,15 @@ import SidekickLogo from "@/assets/SidekickLogo";
 import "./style.css";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/AuthProvider";
-import { type IUser, USERS } from "@/TestConsts";
 import Hamburger from "@/assets/HamburgerMenuIcon";
-
-const initialUser: IUser = {
-  userId: "",
-  profilePhoto: "",
-  username: "",
-  email: "",
-  description: "",
-};
+import { useNavigate } from "react-router";
 
 function Header() {
-  const [user, setUser] = useState<IUser>(initialUser);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  let navigate = useNavigate();
 
-  const { userId } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     handleResize();
@@ -28,12 +20,6 @@ function Header() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    if (userId) {
-      setUser(USERS.filter((user) => user.userId === userId)[0]);
-    }
-  }, [userId]);
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -60,6 +46,10 @@ function Header() {
     setIsExpanded((prev) => !prev);
   };
 
+  const handleNavigate = (url: string) => {
+    navigate(url);
+  };
+
   return (
     <>
       <header
@@ -73,7 +63,7 @@ function Header() {
           <SidekickLogo />
           <SidekickLogoText />
         </div>
-        {userId ? (
+        {user ? (
           <nav
             className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
           >
@@ -86,10 +76,15 @@ function Header() {
               <>
                 {" "}
                 <img
-                  src={user.profilePhoto || "../../../public/IMG_1001.jpg"}
+                  src={
+                    user.profileImage ||
+                    "../../../public/image/default-avatar.webp"
+                  }
                   className="avatar"
                 />
-                <a>{user.username}</a>
+                <a>
+                  {user.firstName} {user.secondName}
+                </a>
               </>
             )}
           </nav>
@@ -97,15 +92,18 @@ function Header() {
           <nav
             className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
           >
-            <a>Sing In</a>
-            <a>Sing Up</a>
+            <a onClick={() => handleNavigate("/signin")}>Sing In</a>
+            <a onClick={() => handleNavigate("/signup")}>Sing Up</a>
           </nav>
         )}
 
         <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
-          {userId && isExpanded ? (
+          {user && isExpanded ? (
             <img
-              src={user.profilePhoto || "../../../public/IMG_1001.jpg"}
+              src={
+                user?.profileImage ||
+                "../../../public/image/default-avatar.webp"
+              }
               className="avatar"
             />
           ) : (

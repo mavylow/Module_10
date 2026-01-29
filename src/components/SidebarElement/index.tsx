@@ -1,22 +1,29 @@
-import type { ICommunity, IUser } from "@/TestConsts";
+import type { IGroup, ISidebarUser } from "@/TestConsts";
 import "./style.css";
 
-export function SidebarElement({ element }: { element: IUser | ICommunity }) {
-  if ("followersCount" in element) {
+interface SidebarElementProps {
+  element: IGroup | ISidebarUser;
+}
+
+export function SidebarElement({ element }: SidebarElementProps) {
+  if ("membersCount" in element) {
     return (
       <div className="aside-element">
-        <img src={element.avatarPhoto}></img>
-        <h3>{element.name}</h3>
-        <span>{element.followersCount}</span>
+        <img src={element.photo} />
+        <h3>{element.title}</h3>
+        <span>{element.membersCount}</span>
       </div>
     );
   }
   if ("username" in element) {
+    console.log(element.photo);
     return (
       <div className="aside-element">
-        <img src={element.profilePhoto}></img>
-        <h3>{element.username}</h3>
-        <span>@{element.username.toLocaleLowerCase()}</span>
+        <img src={element.photo} />
+        <h3>
+          {element.firstName} {element.secondName}
+        </h3>
+        <span>@{element.username}</span>
       </div>
     );
   }

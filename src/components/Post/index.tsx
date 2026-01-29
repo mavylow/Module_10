@@ -1,4 +1,4 @@
-import { useContext, useState, type ChangeEvent } from "react";
+import { useContext, useEffect, useState, type ChangeEvent } from "react";
 import CommentIcon from "@/assets/CommentIcon";
 import ChevronIcon from "@/assets/ChevronIcon";
 import HeartIcon from "@/assets/HeartIcon";
@@ -9,29 +9,24 @@ import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
 import { AuthContext } from "@/AuthProvider";
-import type { IComment, IPost } from "@/TestConsts";
+import type { IUser, IComment, IPost } from "@/TestConsts";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
+import { fetchData } from "@/apiUtil";
 
 interface PostProps {
   post: IPost;
-  onAddComment: (postId: string, comment: IComment) => void;
+  // onAddComment: (postId: string, comment: IComment) => void;
 }
 
-function Post({ post, onAddComment }: PostProps) {
-  const {
-    user,
-    postId,
-    postImg,
-    postTitle,
-    postDescription,
-    likes,
-    comments,
-    postedAt,
-  }: IPost = post;
+function Post({ post }: PostProps) {
+  const { id, authorId, title, content, image, likesCount, creationDate } =
+    post;
 
-  const { userId } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
+  const [author, setAuthor] = useState<IUser | null>(null);
+  const [comments, setComments] = useState<IComment[] | null>(null);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
@@ -39,17 +34,37 @@ function Post({ post, onAddComment }: PostProps) {
     setIsCommentsExpanded((prev) => !prev);
   };
 
-  const handleAddComment = () => {
-    if (comment) {
-      onAddComment(postId, {
-        commentID: comments.length + 1,
-        description: comment,
-        user,
+  useEffect(() => {
+    fetch(`/api/users/${authorId}`)
+      .then((res) => res.json())
+      .then((author) => {
+        console.log(author);
+        setAuthor(author);
       });
-    }
+  }, [authorId]);
 
-    setComment("");
+  useEffect(() => {
+    if (user) {
+      getComments();
+    }
+  }, []);
+
+  const getComments = async () => {
+    const commentsData = await fetchData(`/api/posts/${id}/comments`, "GET");
+    setComments(commentsData);
   };
+
+  // const handleAddComment = () => {
+  //   if (comment) {
+  //     onAddComment(postId, {
+  //       commentID: comments.length + 1,
+  //       description: comment,
+  //       user,
+  //     });
+  //   }
+
+  //   setComment("");
+  // };
 
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
@@ -61,41 +76,41 @@ function Post({ post, onAddComment }: PostProps) {
         <div className="without-comment">
           <div className="post-header">
             <img
-              src={user.profilePhoto}
-              alt={`Profile picture of ${user.username}`}
+              src={author?.profileImage}
+              alt={`Profile picture of ${authorId}`}
               className="post-avatar"
               loading="lazy"
             />
-            <h2>{user.username}</h2>
+            <h2>{author?.firstName}</h2>
             <time
-              dateTime={postedAt.toISOString()}
+              dateTime={creationDate}
               className="post-timestamp"
-              title={postedAt.toLocaleString()}
+              title={creationDate}
             >
-              {formattedDate(postedAt)}
+              {formattedDate(creationDate)}
             </time>
           </div>
-          {postImg && (
+          {image && (
             <figure>
-              <img src={postImg} />
+              <img src={post.image} />
             </figure>
           )}
           <div className="post-text">
-            <h3>{postTitle}</h3>
-            <p> {postDescription}</p>
+            <h3>{title}</h3>
+            <p> {content}</p>
           </div>
           <div className="post-info">
             <div className="likes">
-              <HeartIcon /> <span>{likes} likes</span>
+              <HeartIcon /> <span>{likesCount} likes</span>
             </div>
             <div className="comments">
               <CommentIcon />
-              {userId ? (
-                <span>{comments.length} comments</span>
+              {user ? (
+                <span>{comments?.length} comments</span>
               ) : (
                 <span>You have to login to see the comments </span>
               )}
-              {userId && (
+              {user && (
                 <button className="expand-button" onClick={handleExpand}>
                   <ChevronIcon
                     style={
@@ -110,18 +125,14 @@ function Post({ post, onAddComment }: PostProps) {
           </div>
         </div>
 
-        {userId && isCommentsExpanded && (
+        {user && isCommentsExpanded && (
           <ul className="post-comments">
-            {comments.map((comment, i) => (
-              <Comment
-                key={comment.commentID}
-                number={i + 1}
-                comment={comment}
-              />
+            {comments?.map((comment, i) => (
+              <Comment key={comment.id} number={i + 1} comment={comment} />
             ))}
           </ul>
         )}
-        {userId && (
+        {user && (
           <div className="add-comment">
             <Input
               id="comment"
@@ -136,7 +147,7 @@ function Post({ post, onAddComment }: PostProps) {
             <Button
               description="Add a comment"
               type="button"
-              onButtonClick={handleAddComment}
+              onButtonClick={() => {}}
             />
           </div>
         )}
