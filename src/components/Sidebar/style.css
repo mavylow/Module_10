@@ -4,9 +4,9 @@ aside .frame {
 }
 
 aside {
-  position: absolute;
-  right: max(-25em, -23vw);
-  top: 0em;
+  position: fixed;
+  right: calc(50vw - 700px);
+  top: 4em;
   width: 341px;
   font-size: 16px;
 }

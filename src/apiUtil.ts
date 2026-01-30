@@ -1,6 +1,7 @@
 
 type apiMethod = "GET" | "POST" | "PUT" | "DELETE"
-  export async function fetchData(api: string, method: apiMethod, body?: any ) {
+
+export async function fetchData(api: string, method: apiMethod, body?: any ) {
 
    const headers: Record<string, string> = {'Content-Type': 'application/json;charset=utf-8'}
 
@@ -10,17 +11,24 @@ type apiMethod = "GET" | "POST" | "PUT" | "DELETE"
     headers.Authorization = `Bearer ${token}`;
     }
 
-    let response = await fetch(api, {
-        method: method,
-        headers: {...headers},
-        body: JSON.stringify(body)
-      });
+    const options: RequestInit = {
+        method,
+        headers,
+      };
+      
+      if (body && method !== "GET") {
+        options.body = JSON.stringify(body);
+      }
+      
+      const response = await fetch(api, options);
+
 
       if(!response.ok) {
+        console.log("catch")
         throw new Error("Data fetching error")
       }
 
-      const data = response.json()
+      const data = await response.json()
       console.log(data)
       return data
   }
