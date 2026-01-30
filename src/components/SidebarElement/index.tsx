@@ -16,7 +16,6 @@ export function SidebarElement({ element }: SidebarElementProps) {
     );
   }
   if ("username" in element) {
-    console.log(element.photo);
     return (
       <div className="aside-element">
         <img src={element.photo} />

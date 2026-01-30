@@ -1,4 +1,4 @@
-import { useContext, useState, type ChangeEvent, type FormEvent } from "react";
+import { useContext } from "react";
 import MailIcon from "@/assets/MailIcon";
 import EyeOpenIcon from "@/assets/EyeOpenIcon";
 import Button from "@components/Button";
@@ -7,67 +7,50 @@ import Header from "@components/Header";
 import Input from "@components/Input";
 import "../style.css";
 import { AuthContext } from "../../../AuthProvider";
-import Modal from "@components/Modal";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
+import ThumbUpIcon from "@/assets/ThumbUpIcon";
+import { useForm } from "react-hook-form";
+import type { IForm } from "@/TestConsts";
+import { useNavigate } from "react-router";
 
-const formInitial = {
-  email: "",
-  password: "",
-};
+const FromSchema = z.object({
+  email: z.email(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(14, "Password cannot exceed 14 characters")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+});
 
-const modalInitial = {
-  isOpen: false,
-  message: "",
-};
+function SignUp() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, submitCount },
+  } = useForm<IForm>({
+    defaultValues: { email: "helena.hills@social.com" },
+    resolver: zodResolver(FromSchema),
+  });
 
-type IForm = {
-  email: string;
-  password: string;
-};
+  let navigate = useNavigate();
 
-type IModal = {
-  isOpen: boolean;
-  message: string;
-};
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
 
-export default function SignUp() {
-  const [form, setForm] = useState(formInitial);
-  const [modal, setModal] = useState<IModal>(modalInitial);
   const { signUp } = useContext(AuthContext);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setModal(modalInitial);
-    if (validateForm(form)) {
-      signUp(form);
-    }
-  };
-
-  const validateForm = (form: IForm) => {
-    if (form.password.length < 8) {
-      showModal({
-        isOpen: true,
-        message: "Password should be more than 8 characters long",
-      });
-
-      return false;
-    }
-    return true;
-  };
-
-  function showModal(modal: IModal) {
-    setModal(modal);
-    setTimeout(() => setModal(modalInitial), 2000);
-  }
+  const onSubmit = handleSubmit(async (data) => {
+    signUp(data);
+  });
 
   return (
     <>
       <Header />
       <main>
-        <form className="sing-up" onSubmit={handleSubmit}>
+        <form className="sing-up" onSubmit={onSubmit}>
           <div className="form-header">
             <h1>Create an account</h1>
             <p>Enter your email and password to sign up for this app</p>
@@ -76,28 +59,43 @@ export default function SignUp() {
             <Input
               id="email"
               description="Email"
-              name="email"
               placeholder="Enter email"
               type="email"
               Icon={MailIcon}
-              value={form.email}
-              onInput={handleInputChange}
+              register={register}
             />
+            {errors.email && (
+              <div className="input-message">
+                <ErrorWarningIcon />
+                <p className="error">Email is not valid</p>
+              </div>
+            )}
           </div>
           <div className="input-container">
             <Input
               id="password"
               description="Password"
-              name="password"
               placeholder="Enter password"
               type="password"
               Icon={EyeOpenIcon}
-              value={form.password}
-              onInput={handleInputChange}
+              register={register}
             />
+            {errors.password ? (
+              <div className="input-message">
+                <ErrorWarningIcon />
+                <p className="error">{errors.password.message}</p>
+              </div>
+            ) : (
+              submitCount > 0 && (
+                <div className="input-message">
+                  <ThumbUpIcon />
+                  <p className="correct">Your password is strong</p>
+                </div>
+              )
+            )}
           </div>
 
-          <Button description="Sign Up" type="submit" />
+          <Button description="Sing In" type="submit" />
           <p className="legal-disclaimer">
             By clicking continue, you agree to our{" "}
             <a href="/terms" className="legal-link" rel="nofollow">
@@ -109,15 +107,21 @@ export default function SignUp() {
             </a>
           </p>
         </form>
+
         <span>
           Already have an account?{" "}
-          <a href="/login" className="nav-link" rel="nofollow">
+          <a
+            onClick={() => handleNavigate("/signin")}
+            className="nav-link"
+            rel="nofollow"
+          >
             Sign in
           </a>
         </span>
       </main>
-      <Modal isOpen={modal.isOpen}>{modal.message}</Modal>
       <Footer />
     </>
   );
 }
+
+export default SignUp;
