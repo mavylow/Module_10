@@ -5,31 +5,20 @@ import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
 import type { IPost } from "@/TestConsts";
 import { AuthContext } from "@/AuthProvider";
+import { fetchData } from "@/apiUtil";
 
 function Home() {
   const [posts, setPosts] = useState<IPost[] | []>([]);
-
   const { user } = useContext(AuthContext);
 
-  // const handleAddComment = (postId: string, comment: IComment) => {
-  //   const newPosts = posts.map((post) => {
-  //     if (post.postId === postId) {
-  //       const newPost: IPost = {
-  //         ...post,
-  //         comments: [...post.comments, comment],
-  //       };
-  //       return newPost;
-  //     }
-  //     return post;
-  //   });
-  //   setPosts(newPosts);
-  // };
-
   useEffect(() => {
-    fetch("/api/posts")
-      .then((res) => res.json())
-      .then((data) => setPosts(data));
+    loadPosts();
   }, []);
+
+  const loadPosts = async () => {
+    const posts = await fetchData("/api/posts", "GET");
+    setPosts(posts);
+  };
 
   return (
     <>
@@ -37,7 +26,7 @@ function Home() {
       <main className="home">
         {user && <Sidebar />}
         {posts?.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} post={post} onLike={loadPosts} />
         ))}
       </main>
       <Footer />

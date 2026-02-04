@@ -29,6 +29,5 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
       }
 
       const data = await response.json()
-      console.log(data)
       return data
   }

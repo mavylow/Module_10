@@ -48,13 +48,19 @@ function ProfileInfo() {
   const handleLogout = () => {
     logOut();
   };
+
   return (
     <>
       <form onSubmit={formik.handleSubmit} className="profile-info">
         <section className="edit-profile">
           <h2>Edit profile</h2>
           <div className="profile-photo">
-            <img src={user?.profileImage || "/image/default-avatar.webp"}></img>
+            {user?.profileImage ? (
+              <img src={user?.profileImage} loading="lazy" />
+            ) : (
+              <img src="/image/default-avatar.webp" loading="lazy" />
+            )}
+
             <h3>
               {user?.firstName} {user?.secondName}
             </h3>

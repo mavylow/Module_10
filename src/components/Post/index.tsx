@@ -16,12 +16,20 @@ import { fetchData } from "@/apiUtil";
 
 interface PostProps {
   post: IPost;
-  // onAddComment: (postId: string, comment: IComment) => void;
+  onLike: () => void;
 }
 
-function Post({ post }: PostProps) {
-  const { id, authorId, title, content, image, likesCount, creationDate } =
-    post;
+function Post({ post, onLike }: PostProps) {
+  const {
+    id,
+    authorId,
+    title,
+    content,
+    image,
+    likesCount,
+    likedByUsers,
+    creationDate,
+  } = post;
 
   const { user } = useContext(AuthContext);
 
@@ -29,24 +37,17 @@ function Post({ post }: PostProps) {
   const [comments, setComments] = useState<IComment[] | null>(null);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleExpand = () => {
     setIsCommentsExpanded((prev) => !prev);
   };
 
   useEffect(() => {
-    fetch(`/api/users/${authorId}`)
-      .then((res) => res.json())
-      .then((author) => {
-        console.log(author);
-        setAuthor(author);
-      });
-  }, [authorId]);
-
-  useEffect(() => {
     if (user) {
       getComments();
     }
+    getAuthor();
   }, []);
 
   const getComments = async () => {
@@ -54,17 +55,31 @@ function Post({ post }: PostProps) {
     setComments(commentsData);
   };
 
-  // const handleAddComment = () => {
-  //   if (comment) {
-  //     onAddComment(postId, {
-  //       commentID: comments.length + 1,
-  //       description: comment,
-  //       user,
-  //     });
-  //   }
+  const getAuthor = async () => {
+    const postAuthor = await fetchData(`api/users/${authorId}`, "GET");
+    setAuthor(postAuthor);
+  };
 
-  //   setComment("");
-  // };
+  const handleDislike = async () => {
+    await fetchData("api/dislike", "POST", { postId: id });
+    onLike();
+  };
+
+  const handleLike = async () => {
+    await fetchData("api/like", "POST", { postId: id });
+    onLike();
+  };
+
+  const handleAddComment = async () => {
+    if (comment) {
+      await fetchData("api/comments", "POST", {
+        postId: post.id,
+        text: comment,
+      });
+    }
+    getComments();
+    setComment("");
+  };
 
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
@@ -92,7 +107,7 @@ function Post({ post }: PostProps) {
           </div>
           {image && (
             <figure>
-              <img src={post.image} />
+              <img src={image} />
             </figure>
           )}
           <div className="post-text">
@@ -101,7 +116,17 @@ function Post({ post }: PostProps) {
           </div>
           <div className="post-info">
             <div className="likes">
-              <HeartIcon /> <span>{likesCount} likes</span>
+              {user && likedByUsers.some((u) => u.email === user.email) ? (
+                <button className="like" onClick={handleDislike}>
+                  <HeartIcon fill="white" />
+                </button>
+              ) : (
+                <button className="like" onClick={handleLike}>
+                  <HeartIcon />
+                </button>
+              )}
+
+              <span>{likesCount} likes</span>
             </div>
             <div className="comments">
               <CommentIcon />
@@ -147,7 +172,7 @@ function Post({ post }: PostProps) {
             <Button
               description="Add a comment"
               type="button"
-              onButtonClick={() => {}}
+              onButtonClick={handleAddComment}
             />
           </div>
         )}

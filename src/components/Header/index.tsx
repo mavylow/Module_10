@@ -102,10 +102,8 @@ function Header() {
         <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
           {user && isExpanded ? (
             <img
-              src={
-                user?.profileImage ||
-                "../../../public/image/default-avatar.webp"
-              }
+              key={user?.profileImage}
+              src={user?.profileImage || "/image/default-avatar.webp"}
               className="avatar"
             />
           ) : (
