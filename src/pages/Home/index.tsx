@@ -6,6 +6,7 @@ import Sidebar from "@components/Sidebar";
 import type { IPost } from "@/TestConsts";
 import { AuthContext } from "@/AuthProvider";
 import { fetchData } from "@/apiUtil";
+import CreatePost from "@/components/CreatePost";
 
 function Home() {
   const [posts, setPosts] = useState<IPost[] | []>([]);
@@ -25,6 +26,7 @@ function Home() {
       <Header />
       <main className="home">
         {user && <Sidebar />}
+        {user && <CreatePost />}
         {posts?.map((post) => (
           <Post key={post.id} post={post} onLike={loadPosts} />
         ))}

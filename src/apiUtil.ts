@@ -24,8 +24,11 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
 
 
       if(!response.ok) {
-        console.log("catch")
         throw new Error("Data fetching error")
+      }
+
+      if (response.status === 204) {
+        return null;
       }
 
       const data = await response.json()

@@ -9,14 +9,19 @@
   font-size: 16px;
 }
 
-.like {
+.like,
+.delete,
+.expand-button,
+#close-modal {
   background-color: transparent;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  width: fit-content;
 }
+
 .post h2 {
   font-size: 16px;
   margin: 0;
@@ -111,12 +116,7 @@ figure img {
 .post-comments {
   list-style: none;
   padding-left: 0;
-}
-
-.post-comments li {
-  position: relative;
-  padding-left: 2em;
-  margin-bottom: 0.5em;
+  margin: 0;
 }
 
 .post-comments li::before {
@@ -125,13 +125,6 @@ figure img {
   left: 0;
   font-weight: bold;
   color: var(--text-color);
-}
-
-.expand-button {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
 }
 
 .add-comment {

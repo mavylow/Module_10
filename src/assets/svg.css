@@ -6,11 +6,18 @@
 .svg-expand path,
 .svg-email path,
 .svg-hamburger path,
-.svg-person path {
+.svg-person path,
+.svg-trash path,
+.svg-upload-file path {
   fill: var(--svg-color);
 }
 
-.svg-heart path,
+.svg-heart-disliked path,
+.svg-heart-liked path,
 .svg-comment path {
   stroke: var(--svg-color);
+}
+
+.svg-heart-liked {
+  fill: var(--svg-color);
 }

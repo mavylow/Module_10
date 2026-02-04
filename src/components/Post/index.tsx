@@ -80,6 +80,13 @@ function Post({ post, onLike }: PostProps) {
     setComment("");
   };
 
+  const handleDeleteComment = async (commentId: number) => {
+    await fetchData(`/api/comments/${commentId}`, "DELETE");
+    setComments((prev) =>
+      prev ? prev.filter((c) => c.id !== commentId) : prev
+    );
+  };
+
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
@@ -117,11 +124,11 @@ function Post({ post, onLike }: PostProps) {
             <div className="likes">
               {user && likedByUsers.some((u) => u.email === user.email) ? (
                 <button className="like" onClick={handleDislike}>
-                  <HeartIcon fill="white" />
+                  <HeartIcon className="liked" />
                 </button>
               ) : (
                 <button className="like" onClick={handleLike}>
-                  <HeartIcon />
+                  <HeartIcon className="disliked" />
                 </button>
               )}
 
@@ -152,7 +159,12 @@ function Post({ post, onLike }: PostProps) {
         {user && isCommentsExpanded && (
           <ul className="post-comments">
             {comments?.map((comment, i) => (
-              <Comment key={comment.id} number={i + 1} comment={comment} />
+              <Comment
+                key={comment.id}
+                number={i + 1}
+                comment={comment}
+                onDelete={() => handleDeleteComment(comment.id)}
+              />
             ))}
           </ul>
         )}
