@@ -26,7 +26,7 @@ function Home() {
       <Header />
       <main className="home">
         {user && <Sidebar />}
-        {user && <CreatePost />}
+        {user && <CreatePost onAdd={loadPosts} />}
         {posts?.map((post) => (
           <Post key={post.id} post={post} onLike={loadPosts} />
         ))}

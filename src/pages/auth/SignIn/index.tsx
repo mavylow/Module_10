@@ -14,7 +14,7 @@ import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
 import ThumbUpIcon from "@/assets/ThumbUpIcon";
 import { useNavigate } from "react-router";
 
-const FromSchema = Yup.object({
+const FormSchema = Yup.object({
   email: Yup.string().required().email(),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -25,7 +25,7 @@ const FromSchema = Yup.object({
 export default function SignIn() {
   const form = useFormik<IForm>({
     initialValues: { email: "helena.hills@social.com", password: "" },
-    validationSchema: FromSchema,
+    validationSchema: FormSchema,
     onSubmit: (data) => signIn(data),
   });
 

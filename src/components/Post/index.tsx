@@ -122,7 +122,7 @@ function Post({ post, onLike }: PostProps) {
           </div>
           <div className="post-info">
             <div className="likes">
-              {user && likedByUsers.some((u) => u.email === user.email) ? (
+              {user && likedByUsers?.some((u) => u.email === user.email) ? (
                 <button className="like" onClick={handleDislike}>
                   <HeartIcon className="liked" />
                 </button>
