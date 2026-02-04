@@ -37,7 +37,6 @@ function Post({ post, onLike }: PostProps) {
   const [comments, setComments] = useState<IComment[] | null>(null);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
 
   const handleExpand = () => {
     setIsCommentsExpanded((prev) => !prev);
