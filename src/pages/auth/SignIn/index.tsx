@@ -57,7 +57,7 @@ export default function SignIn() {
               type="email"
               Icon={MailIcon}
               value={form.values.email}
-              onInput={form.handleChange}
+              onChange={form.handleChange}
             />
             {form.errors.email && (
               <div className="input-message">
@@ -75,7 +75,7 @@ export default function SignIn() {
               type="password"
               Icon={EyeOpenIcon}
               value={form.values.password}
-              onInput={form.handleChange}
+              onChange={form.handleChange}
             />
             {form.errors.password ? (
               <div className="input-message">

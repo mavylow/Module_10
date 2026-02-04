@@ -59,7 +59,7 @@ function Header() {
           (isExpanded ? "expanded" : "")
         }
       >
-        <div className="logo">
+        <div className="logo" onClick={() => handleNavigate("/home")}>
           <SidekickLogo />
           <SidekickLogoText />
         </div>
@@ -69,7 +69,9 @@ function Header() {
           >
             {isExpanded ? (
               <>
-                <a>Profile info</a>
+                <a onClick={() => handleNavigate("/profile-info")}>
+                  Profile info
+                </a>
                 <a>Statistics</a>
               </>
             ) : (
@@ -82,7 +84,7 @@ function Header() {
                   }
                   className="avatar"
                 />
-                <a>
+                <a onClick={() => handleNavigate("/profile-info")}>
                   {user.firstName} {user.secondName}
                 </a>
               </>

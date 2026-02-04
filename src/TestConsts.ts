@@ -19,7 +19,7 @@ export interface IPost {
 export interface IUser {
   id: number;
   username: string;
-  email?: string;
+  email: string;
   firstName?: string;
   profileImage?: string;
   description?: string;
@@ -65,6 +65,11 @@ export interface ISidebarUser {
   description: string;
   photo: string;
 }
+
+export interface IForm {
+  email: string;
+  password: string;
+};
 
 // export const generateMockPost = (index: number, users: IUser[]): IPost => {
 //   const user = users[index % users.length];

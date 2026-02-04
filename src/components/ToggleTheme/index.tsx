@@ -3,11 +3,12 @@ import { ThemeContext } from "@/ThemeProvider";
 import "./style.css";
 
 function ToggleThemeButton() {
-  const { changeTheme } = useContext(ThemeContext);
+  const { changeTheme, theme } = useContext(ThemeContext);
   return (
-    <button onClick={changeTheme} className="toggle-theme">
-      Theme Change
-    </button>
+    <div className="theme">
+      <input onClick={changeTheme} type="checkbox" className="toggle-theme" />
+      <span> {theme.slice(0, 1).toUpperCase() + theme.slice(1)} theme</span>
+    </div>
   );
 }
 

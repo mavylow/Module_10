@@ -1,0 +1,38 @@
+.profile {
+  width: 100%;
+  min-height: calc(100vh - 48px - 68px - 2em);
+  font-size: 16px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.profile nav {
+  width: 211px;
+  height: 40px;
+  padding: 4px;
+  background-color: var(--background-main);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile a {
+  display: inline-block;
+  height: 32px;
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav .active {
+  background-color: var(--primary-orange);
+}
+
+@media (max-width: 1150px) {
+  .profile {
+    height: 100%;
+  }
+}

@@ -142,7 +142,7 @@ function Post({ post }: PostProps) {
               type="text"
               Icon={EditPenIcon}
               value={comment}
-              onInput={handleSetComment}
+              onChange={handleSetComment}
             />
             <Button
               description="Add a comment"

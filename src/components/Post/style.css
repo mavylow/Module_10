@@ -64,7 +64,7 @@ figure img {
   align-self: center;
   justify-self: center;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   grid-row: 1 / span 2;
 }
 

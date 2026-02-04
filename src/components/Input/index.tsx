@@ -4,7 +4,7 @@ import "./style.css";
 import type { IForm } from "@/TestConsts";
 
 export interface FromInputProps {
-  id: "email" | "password";
+  id: keyof IForm;
   description: string;
   placeholder: string;
   type: string;
@@ -20,7 +20,7 @@ export interface InputProps {
   type: string;
   Icon: ComponentType;
   value: string;
-  onInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input(props: InputProps | FromInputProps) {
@@ -47,7 +47,7 @@ export default function Input(props: InputProps | FromInputProps) {
       </>
     );
   } else {
-    const { id, description, name, placeholder, type, Icon, value, onInput } =
+    const { id, description, name, placeholder, type, Icon, value, onChange } =
       props;
     return (
       <>
@@ -62,7 +62,7 @@ export default function Input(props: InputProps | FromInputProps) {
           name={name}
           placeholder={placeholder}
           type={type}
-          onChange={onInput}
+          onChange={onChange}
           value={value}
         />
       </>

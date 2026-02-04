@@ -5,7 +5,8 @@
 .svg-eye path,
 .svg-expand path,
 .svg-email path,
-.svg-hamburger path {
+.svg-hamburger path,
+.svg-person path {
   fill: var(--svg-color);
 }
 

@@ -28,7 +28,7 @@
   --border-color-day: 163, 169, 182, 1;
 }
 
-[data-theme="night"] {
+[data-theme="dark"] {
   --background-root: rgb(var(--background-root-night));
   --svg-color: rgb(var(--svg-color-night));
   --text-color: rgb(var(--text-color-night));
@@ -37,7 +37,7 @@
   --border-color: rgb(var(--border-color-night));
 }
 
-[data-theme="day"] {
+[data-theme="light"] {
   --background-root: rgb(var(--background-root-day));
   --svg-color: rgb(var(--svg-color-day));
   --text-color: rgb(var(--text-color-day));

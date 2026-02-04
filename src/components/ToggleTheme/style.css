@@ -1,5 +1,40 @@
+.theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .toggle-theme {
+  appearance: none;
+  width: 48px;
+  height: 28px;
+  position: relative;
+  background-color: var(--background-main);
+  border-radius: 1.5em;
+  border: 2px solid var(--background-root);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  overflow: hidden;
+}
+
+.toggle-theme::after {
+  content: "";
   position: absolute;
-  right: 0;
-  top: 0;
+  top: 2px;
+  left: 12px;
+  transform: translateX(-10px);
+  background-color: var(--primary-orange);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.toggle-theme:checked {
+  background-color: var(--primary-orange);
+}
+
+.toggle-theme:checked::after {
+  background-color: var(--background-main);
+  transform: translateX(10px);
 }

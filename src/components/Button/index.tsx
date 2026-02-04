@@ -9,6 +9,7 @@ interface ActionButtonProps {
 interface SubmitButtonProps {
   description: string;
   type: "submit";
+  disabled?: boolean;
 }
 
 type ButtonProps = ActionButtonProps | SubmitButtonProps;
@@ -18,7 +19,7 @@ function Button(props: ButtonProps) {
 
   if (type === "submit") {
     return (
-      <button className="default-button" type={type}>
+      <button className="default-button" type={type} disabled={props.disabled}>
         {description}
       </button>
     );

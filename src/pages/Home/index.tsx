@@ -34,7 +34,7 @@ function Home() {
   return (
     <>
       <Header />
-      <main>
+      <main className="home">
         {user && <Sidebar />}
         {posts?.map((post) => (
           <Post key={post.id} post={post} />
