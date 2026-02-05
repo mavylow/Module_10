@@ -35,15 +35,16 @@ const FormSchema = Yup.object({
     .max(200, "Max 200 characters"),
 
   image: Yup.mixed<File>()
+    .nullable()
     .test(
       "fileSize",
       "Max allowed size is 10MB",
-      (value) => value && value.size <= MAX_FILE_SIZE
+      (value) => !value || value.size <= MAX_FILE_SIZE
     )
     .test(
       "fileFormat",
       "Unsupported file format",
-      (value) => value && SUPPORTED_FORMATS.includes(value.type)
+      (value) => !value || SUPPORTED_FORMATS.includes(value.type)
     ),
 });
 

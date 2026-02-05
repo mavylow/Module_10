@@ -2,32 +2,26 @@ import { AuthContext } from "@/AuthProvider";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import ToggleThemeButton from "@/components/ToggleTheme";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useFormik } from "formik";
 import PersonIcon from "@/assets/PersonIcon";
 import MailIcon from "@/assets/MailIcon";
 import EditPenIcon from "@/assets/EditPenIcon";
 import "./style.css";
 import Textarea from "@/components/Textarea";
-import { useNavigate } from "react-router";
 import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
+import * as Yup from "yup";
+import type { IProfileForm } from "@/TestConsts";
 
-interface IProfileForm {
-  image?: string;
-  username: string;
-  email: string;
-  description: string;
-}
+const IProfileSchema = Yup.object({
+  image: Yup.string().nullable(),
+  username: Yup.string().max(20, "Username is too long"),
+  email: Yup.string().email("Enter write email"),
+  description: Yup.string().max(200, "Max 200 chars").nullable(),
+});
 
 function ProfileInfo() {
-  const { logOut, user } = useContext(AuthContext);
-  let navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/home");
-    }
-  }, [user]);
+  const { logOut, user, updateUser } = useContext(AuthContext);
 
   const initialValues = useMemo(
     () => ({
@@ -41,12 +35,17 @@ function ProfileInfo() {
 
   const formik = useFormik<IProfileForm>({
     initialValues: initialValues,
+    validationSchema: IProfileSchema,
     enableReinitialize: true,
-    onSubmit: (date) => console.log(date),
+    onSubmit: (data) => changeProfile(data),
   });
 
   const handleLogout = () => {
     logOut();
+  };
+
+  const changeProfile = (data: IProfileForm) => {
+    updateUser(data);
   };
 
   return (
@@ -77,6 +76,11 @@ function ProfileInfo() {
               value={formik.values.username}
               onChange={formik.handleChange}
             />
+            {formik.errors.username && (
+              <div className="info-warning">
+                <ErrorWarningIcon /> {formik.errors.username}
+              </div>
+            )}
           </div>
           <div className="email">
             <Input
@@ -89,6 +93,11 @@ function ProfileInfo() {
               value={formik.values.email}
               onChange={formik.handleChange}
             />
+            {formik.errors.email && (
+              <div className="info-warning">
+                <ErrorWarningIcon /> {formik.errors.email}
+              </div>
+            )}
           </div>
           <div className="description">
             <Textarea
@@ -97,12 +106,12 @@ function ProfileInfo() {
               description="Description"
               placeholder="Write description"
               Icon={EditPenIcon}
-              value={formik.values.description}
+              value={formik.values.description || ""}
               onChange={formik.handleChange}
             />
-            {formik.values.description.length >= 200 && (
+            {formik.errors.description && (
               <div className="info-warning">
-                <ErrorWarningIcon /> Max 200 chars
+                <ErrorWarningIcon /> {formik.errors.description}
               </div>
             )}
           </div>

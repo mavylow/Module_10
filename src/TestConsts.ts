@@ -71,6 +71,14 @@ export interface IForm {
   password: string;
 };
 
+export interface IProfileForm {
+  image?: string;
+  username: string;
+  email: string;
+  description?: string;
+}
+
+
 // export const generateMockPost = (index: number, users: IUser[]): IPost => {
 //   const user = users[index % users.length];
 //   const timeAgo = [

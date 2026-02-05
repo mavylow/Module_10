@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { type IUser } from "@/TestConsts";
+import { type IProfileForm, type IUser } from "@/TestConsts";
 import { useNavigate } from "react-router";
 import Modal from "./components/Modal";
 import { fetchData } from "./apiUtil";
@@ -18,6 +18,7 @@ interface IAuthContext {
   user: IUser | null;
   signIn: (formData: IForm) => void;
   signUp: (formData: IForm) => void;
+  updateUser: (updatedUser: IProfileForm) => void;
   logOut: () => void;
 }
 
@@ -25,6 +26,7 @@ export const AuthContext = createContext<IAuthContext>({
   user: null,
   signIn: () => {},
   signUp: () => {},
+  updateUser: () => {},
   logOut: () => {},
 });
 
@@ -38,13 +40,19 @@ const modalInitial = {
 };
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IUser | null>(null);
   let navigate = useNavigate();
   const [modal, setModal] = useState<IModal>(modalInitial);
 
   useEffect(() => {
     checkCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/home");
+    }
+  }, [user]);
 
   const checkCurrentUser = async () => {
     try {
@@ -83,10 +91,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  function showModal(message: string) {
+  const showModal = (message: string) => {
     setModal({ isOpen: true, message });
     setTimeout(() => setModal({ isOpen: false, message }), 2000);
-  }
+  };
 
   const signUp = async (form: IForm) => {
     const { message } = await fetchData("/api/signup", "POST", {
@@ -99,13 +107,18 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const updateUser = async (updatedUser: IProfileForm) => {
+    const newUser = await fetchData("/api/profile", "PUT", updatedUser);
+    setUser(newUser);
+  };
+
   const logOut = () => {
     setUser(null);
     localStorage.removeItem("token");
   };
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signUp, logOut }}>
+    <AuthContext.Provider value={{ user, signIn, signUp, logOut, updateUser }}>
       <Modal isOpen={modal.isOpen}>{modal.message}</Modal>
       {children}
     </AuthContext.Provider>
