@@ -12,12 +12,15 @@
   fill: var(--svg-color);
 }
 
-.svg-heart-disliked path,
-.svg-heart-liked path,
 .svg-comment path {
   stroke: var(--svg-color);
 }
 
-.svg-heart-liked {
+.svg-heart-liked path {
   fill: var(--svg-color);
+  stroke: none;
+}
+.svg-heart-disliked path {
+  fill: none;
+  stroke: var(--svg-color);
 }

@@ -1,0 +1,38 @@
+.month {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(24px, 2vw, 32px);
+}
+
+.statistics .frame {
+  width: min(380px, 25vw);
+  height: 172px;
+  padding: clamp(12px, 1.2vw, 24px);
+}
+
+.likes-statistics .frame,
+.comment-statistics .frame {
+  width: 575px;
+  height: fit-content;
+}
+
+.tables {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.toggle-view {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .month {
+    flex-direction: column;
+  }
+  .statistics .frame {
+    width: 90vw;
+    height: 114px;
+  }
+}

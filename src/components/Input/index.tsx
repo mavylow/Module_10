@@ -1,7 +1,7 @@
 import { type ChangeEvent, type ComponentType } from "react";
 import { type RegisterOptions, type UseFormRegister } from "react-hook-form";
 import "./style.css";
-import type { IForm } from "@/TestConsts";
+import type { IForm } from "@/interfaces";
 
 export interface FromInputProps {
   id: keyof IForm;

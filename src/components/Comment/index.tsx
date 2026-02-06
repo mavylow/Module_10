@@ -1,5 +1,5 @@
 import TrashIcon from "@/assets/TrashIcon";
-import type { IComment } from "@/TestConsts";
+import type { IComment } from "@/interfaces";
 import "./style.css";
 
 interface ICommentProps {

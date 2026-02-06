@@ -27,7 +27,7 @@
   align-items: center;
 }
 
-nav .active {
+.profile .active {
   background-color: var(--primary-orange);
 }
 

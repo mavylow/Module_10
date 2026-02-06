@@ -2,13 +2,11 @@ import { useContext, useEffect } from "react";
 import MailIcon from "@/assets/MailIcon";
 import EyeOpenIcon from "@/assets/EyeOpenIcon";
 import Button from "@components/Button";
-import Footer from "@components/Footer";
-import Header from "@components/Header";
 import Input from "@components/Input";
 import "../style.css";
-import { AuthContext } from "@/AuthProvider";
+import { AuthContext } from "@/providers/AuthProvider";
 import { useFormik } from "formik";
-import type { IForm } from "@/TestConsts";
+import type { IForm } from "@/interfaces";
 import * as Yup from "yup";
 import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
 import ThumbUpIcon from "@/assets/ThumbUpIcon";
@@ -40,72 +38,68 @@ export default function SignIn() {
   useEffect(() => {});
 
   return (
-    <>
-      <Header />
-      <main>
-        <form className="sing-up" onSubmit={form.handleSubmit}>
-          <div className="form-header">
-            <h1>Sign in into an account</h1>
-            <p>Enter your email and password to sign in into this app</p>
-          </div>
-          <div className="input-container">
-            <Input
-              id="email"
-              description="Email"
-              name="email"
-              placeholder="Enter email"
-              type="email"
-              Icon={MailIcon}
-              value={form.values.email}
-              onChange={form.handleChange}
-            />
-            {form.errors.email && (
+    <main>
+      <form className="sing-up" onSubmit={form.handleSubmit}>
+        <div className="form-header">
+          <h1>Sign in into an account</h1>
+          <p>Enter your email and password to sign in into this app</p>
+        </div>
+        <div className="input-container">
+          <Input
+            id="email"
+            description="Email"
+            name="email"
+            placeholder="Enter email"
+            type="email"
+            Icon={MailIcon}
+            value={form.values.email}
+            onChange={form.handleChange}
+          />
+          {form.errors.email && (
+            <div className="input-message">
+              <ErrorWarningIcon />
+              <p className="error">Email is not valid</p>
+            </div>
+          )}
+        </div>
+        <div className="input-container">
+          <Input
+            id="password"
+            description="Password"
+            name="password"
+            placeholder="Enter password"
+            type="password"
+            Icon={EyeOpenIcon}
+            value={form.values.password}
+            onChange={form.handleChange}
+          />
+          {form.errors.password ? (
+            <div className="input-message">
+              <ErrorWarningIcon />
+              <p className="error">{form.errors.password}</p>
+            </div>
+          ) : (
+            form.submitCount > 0 && (
               <div className="input-message">
-                <ErrorWarningIcon />
-                <p className="error">Email is not valid</p>
+                <ThumbUpIcon />
+                <p className="correct">Your password is strong</p>
               </div>
-            )}
-          </div>
-          <div className="input-container">
-            <Input
-              id="password"
-              description="Password"
-              name="password"
-              placeholder="Enter password"
-              type="password"
-              Icon={EyeOpenIcon}
-              value={form.values.password}
-              onChange={form.handleChange}
-            />
-            {form.errors.password ? (
-              <div className="input-message">
-                <ErrorWarningIcon />
-                <p className="error">{form.errors.password}</p>
-              </div>
-            ) : (
-              form.submitCount > 0 && (
-                <div className="input-message">
-                  <ThumbUpIcon />
-                  <p className="correct">Your password is strong</p>
-                </div>
-              )
-            )}
-          </div>
+            )
+          )}
+        </div>
 
-          <Button description="Sing In" type="submit" />
-        </form>
-        <span>
-          Forgot to create an account?{" "}
-          <a
-            onClick={() => handleNavigate("/signup")}
-            className="nav-link"
-            rel="nofollow"
-          >
-            Sign up
-          </a>
-        </span>
-      </main>
-      <Footer />
-    </>
+        <Button description="Sing In" type="submit" />
+      </form>
+      <span>
+        Forgot to create an account?{" "}
+        <a
+          onClick={() => handleNavigate("/signup")}
+          className="nav-link"
+          rel="nofollow"
+        >
+          Sign up
+        </a>
+      </span>
+    </main>
   );
 }

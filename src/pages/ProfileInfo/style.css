@@ -88,6 +88,12 @@
   fill: var(--light-text-color);
 }
 
+.theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 1150px) {
   .profile {
     height: 100%;

@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { type IProfileForm, type IUser } from "@/TestConsts";
-import { useNavigate } from "react-router";
-import Modal from "./components/Modal";
-import { fetchData } from "./apiUtil";
+import { type IProfileForm, type IUser } from "@/interfaces";
+import { useLocation, useNavigate } from "react-router";
+import Modal from "../components/Modal";
+import { fetchData } from "../utils/apiUtil";
 
 interface IForm {
   email: string;
@@ -41,7 +41,9 @@ const modalInitial = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true);
   let navigate = useNavigate();
+  const location = useLocation();
   const [modal, setModal] = useState<IModal>(modalInitial);
 
   useEffect(() => {
@@ -49,27 +51,36 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   useEffect(() => {
-    if (!user) {
+    const protectedRoutes = [
+      "/profile",
+      "/profile/info",
+      "/profile/statistics",
+    ];
+    if (!loading && !user && protectedRoutes.includes(location.pathname)) {
       navigate("/home");
     }
-  }, [user]);
+  }, [user, location]);
 
   const checkCurrentUser = async () => {
     try {
+      setLoading(true);
       const user = await fetchData("/api/me", "GET");
 
       if (user) {
         showModal("Signed in successfully");
         setUser(user);
-        navigate("/home");
+        setLoading(false);
       } else {
+        navigate("/home");
         showModal("User not found");
         localStorage.removeItem("token");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Auth check failed:", error);
       showModal("Authentication failed");
       localStorage.removeItem("token");
+      setLoading(false);
     }
   };
 
@@ -109,6 +120,9 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const updateUser = async (updatedUser: IProfileForm) => {
     const newUser = await fetchData("/api/profile", "PUT", updatedUser);
+    if (newUser) {
+      showModal("Profile info updated successfully");
+    }
     setUser(newUser);
   };
 

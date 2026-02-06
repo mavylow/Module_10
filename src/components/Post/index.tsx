@@ -8,11 +8,11 @@ import EditPenIcon from "@/assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@/AuthProvider";
-import type { IUser, IComment, IPost } from "@/TestConsts";
+import { AuthContext } from "@/providers/AuthProvider";
+import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
-import { fetchData } from "@/apiUtil";
+import { fetchData } from "@/utils/apiUtil";
 
 interface PostProps {
   post: IPost;

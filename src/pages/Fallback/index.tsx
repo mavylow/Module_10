@@ -1,7 +1,7 @@
 import ErrorIcon from "@/assets/ErrorIcon";
-import Footer from "@components/Footer";
-import Header from "@components/Header";
 import "./style.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function Fallback() {
   return (

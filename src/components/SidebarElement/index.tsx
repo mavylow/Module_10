@@ -1,4 +1,4 @@
-import type { IGroup, ISidebarUser } from "@/TestConsts";
+import type { IGroup, ISidebarUser } from "@/interfaces";
 import "./style.css";
 
 interface SidebarElementProps {

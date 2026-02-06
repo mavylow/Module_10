@@ -2,13 +2,14 @@ import SidekickLogoText from "@/assets/SidekickLogoText";
 import SidekickLogo from "@/assets/SidekickLogo";
 import "./style.css";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/AuthProvider";
+import { AuthContext } from "@/providers/AuthProvider";
 import Hamburger from "@/assets/HamburgerMenuIcon";
-import { useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const location = useLocation();
   let navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
@@ -63,42 +64,47 @@ function Header() {
           <SidekickLogo />
           <SidekickLogoText />
         </div>
-        {user ? (
-          <nav
-            className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
-          >
-            {isExpanded ? (
-              <>
-                <a onClick={() => handleNavigate("/profile-info")}>
-                  Profile info
-                </a>
-                <a>Statistics</a>
-              </>
+        {location.pathname !== "/signin" && location.pathname !== "/signup" && (
+          <>
+            {user ? (
+              <nav
+                className={
+                  isMobile && isExpanded ? "mobile-nav" : "desktop-nav"
+                }
+              >
+                {isExpanded ? (
+                  <>
+                    <NavLink to={"/profile-info"}> Profile info</NavLink>
+                    <NavLink to={"/profile-info"}> Statistics</NavLink>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <img
+                      src={
+                        user.profileImage ||
+                        "../../../public/image/default-avatar.webp"
+                      }
+                      className="avatar"
+                    />
+                    <NavLink to={"/profile/info"}>
+                      {user.firstName} {user.secondName}
+                    </NavLink>
+                  </>
+                )}
+              </nav>
             ) : (
-              <>
-                {" "}
-                <img
-                  src={
-                    user.profileImage ||
-                    "../../../public/image/default-avatar.webp"
-                  }
-                  className="avatar"
-                />
-                <a onClick={() => handleNavigate("/profile-info")}>
-                  {user.firstName} {user.secondName}
-                </a>
-              </>
+              <nav
+                className={
+                  isMobile && isExpanded ? "mobile-nav" : "desktop-nav"
+                }
+              >
+                <NavLink to={"/signin"}>Sing In</NavLink>
+                <NavLink to={"/signup"}>Sing Up</NavLink>
+              </nav>
             )}
-          </nav>
-        ) : (
-          <nav
-            className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
-          >
-            <a onClick={() => handleNavigate("/signin")}>Sing In</a>
-            <a onClick={() => handleNavigate("/signup")}>Sing Up</a>
-          </nav>
+          </>
         )}
-
         <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
           {user && isExpanded ? (
             <img

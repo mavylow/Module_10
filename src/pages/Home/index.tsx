@@ -1,38 +1,30 @@
-import { useContext, useEffect, useState } from "react";
-import Footer from "@components/Footer";
-import Header from "@components/Header";
+import { useContext } from "react";
+import { useLoaderData, useRevalidator } from "react-router";
 import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
-import type { IPost } from "@/TestConsts";
-import { AuthContext } from "@/AuthProvider";
-import { fetchData } from "@/apiUtil";
+import type { IPost } from "@/interfaces";
+import { AuthContext } from "@/providers/AuthProvider";
 import CreatePost from "@/components/CreatePost";
 
 function Home() {
-  const [posts, setPosts] = useState<IPost[] | []>([]);
+  let posts = useLoaderData<IPost[]>();
+  const { revalidate } = useRevalidator();
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    loadPosts();
-  }, []);
-
-  const loadPosts = async () => {
-    const posts = await fetchData("/api/posts", "GET");
-    setPosts(posts);
-  };
-
   return (
-    <>
-      <Header />
-      <main className="home">
-        {user && <Sidebar />}
-        {user && <CreatePost onAdd={loadPosts} />}
-        {posts?.map((post) => (
-          <Post key={post.id} post={post} onLike={loadPosts} />
+    <main className="home">
+      {user && <Sidebar />}
+      {user && <CreatePost onAdd={revalidate} />}
+      {posts
+        ?.sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime()
+        )
+        .map((post) => (
+          <Post key={post.id} post={post} onLike={revalidate} />
         ))}
-      </main>
-      <Footer />
-    </>
+    </main>
   );
 }
 

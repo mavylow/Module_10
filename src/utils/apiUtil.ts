@@ -34,3 +34,8 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
       const data = await response.json()
       return data
   }
+
+  export const loadPosts = async () => {
+    const posts = await fetchData("/api/posts", "GET");
+    return posts
+  };

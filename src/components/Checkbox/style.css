@@ -1,10 +1,4 @@
-.theme {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.toggle-theme {
+.toggle {
   appearance: none;
   width: 48px;
   height: 28px;
@@ -17,7 +11,7 @@
   overflow: hidden;
 }
 
-.toggle-theme::after {
+.toggle::after {
   content: "";
   position: absolute;
   top: 2px;
@@ -30,11 +24,11 @@
   transition: transform 0.3s ease-in-out;
 }
 
-.toggle-theme:checked {
+.toggle:checked {
   background-color: var(--primary-orange);
 }
 
-.toggle-theme:checked::after {
+.toggle:checked::after {
   background-color: var(--background-main);
   transform: translateX(10px);
 }

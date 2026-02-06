@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@/AuthProvider";
+import { AuthContext } from "@/providers/AuthProvider";
 import { useFormik } from "formik";
 import "./style.css";
 import Button from "@components/Button";
@@ -11,7 +11,7 @@ import UploadFileIcon from "@/assets/UploadFileIcon";
 import ErrorIcon from "@/assets/ErrorIcon";
 import Textarea from "../Textarea";
 import * as Yup from "yup";
-import { fetchData } from "@/apiUtil";
+import { fetchData } from "@/utils/apiUtil";
 
 const postFormInitial = {
   title: "",

@@ -1,3 +1,5 @@
+import type { IComment, ILike, IPost } from "@/interfaces";
+
 export function formattedDate(date: string): string{
 
   const ms = new Date(date).getTime()
@@ -18,4 +20,11 @@ export function formattedDate(date: string): string{
 
   return new Date(date).toLocaleDateString()
 }
-  
+
+export function filterByMonth(el: ILike | IPost | IComment, month: number): boolean {
+  let creationMonth = new Date(el.creationDate).getMonth();
+  if (creationMonth === month) {
+    return true;
+  }
+  return false;
+}

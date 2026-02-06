@@ -13,3 +13,8 @@ main {
   margin: 1em 0;
   position: relative;
 }
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+}

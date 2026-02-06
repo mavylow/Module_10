@@ -1,31 +1,46 @@
 import "@/App.css";
-import AuthProvider from "@/AuthProvider";
-import ThemeProvider from "@/ThemeProvider";
-import ErrorBoundary from "./components/ ErrorBoundary";
 import SignUp from "./pages/auth/SignUp";
-import { HashRouter, Route, Routes } from "react-router";
+import { createHashRouter, RouterProvider } from "react-router";
 import SignIn from "./pages/auth/SignIn";
 import Home from "./pages/Home";
 import Profile from "./components/Profile";
+import Layout from "./Layout";
+import { loadPosts } from "./utils/apiUtil";
+import NotFoundPage from "./pages/NotFoundPage";
+import Fallback from "./pages/Fallback";
+import ProfileInfo from "./pages/ProfileInfo";
+import Statistics from "./pages/Statistics";
 
 function App() {
-  return (
-    <HashRouter>
-      <ErrorBoundary>
-        <AuthProvider>
-          <ThemeProvider>
-            <Routes>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/profile-info" element={<Profile />} />
-              <Route path="/" element={<Home />} />
-            </Routes>
-          </ThemeProvider>
-        </AuthProvider>
-      </ErrorBoundary>
-    </HashRouter>
-  );
+  const router = createHashRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        { index: true, element: <Home /> },
+        { path: "signin", element: <SignIn /> },
+        { path: "signup", element: <SignUp /> },
+        {
+          path: "home",
+          element: <Home />,
+          loader: loadPosts,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
+          children: [
+            { index: true, element: <ProfileInfo /> },
+            { path: "info", element: <ProfileInfo /> },
+            { path: "statistics", element: <Statistics /> },
+          ],
+        },
+        { path: "*", element: <NotFoundPage /> },
+      ],
+      errorElement: <Fallback />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
