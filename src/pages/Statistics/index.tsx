@@ -113,19 +113,8 @@ function Statistics() {
         />
       </div>
       <div className="tables">
-        {likesStats && (
-          <div className="likes-statistics">
-            <h2> Likes </h2>
-            <TableStats stats={likesStats} />
-          </div>
-        )}
-
-        {commentsStats && (
-          <div className="comment-statistics">
-            <h2>Comments </h2>
-            <TableStats stats={commentsStats} />
-          </div>
-        )}
+        {likesStats && <TableStats title="Likes" stats={likesStats} />}
+        {commentsStats && <TableStats title="Comments" stats={commentsStats} />}
       </div>
     </div>
   );

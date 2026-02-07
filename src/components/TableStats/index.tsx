@@ -3,6 +3,7 @@ import "./style.css";
 import FrameWrapper from "../FrameWrapper";
 
 interface ITableStats {
+  title: string;
   stats: YearStats;
 }
 
@@ -21,25 +22,27 @@ const MONTH_NAMES = [
   "Dec",
 ];
 
-function TableStats({ stats }: ITableStats) {
+function TableStats({ title, stats }: ITableStats) {
   return (
-    <FrameWrapper>
-      <table>
-        <tbody>
-          {stats &&
-            Object.entries(stats).map(([year, months]) =>
-              months.map((m: MonthStat) => (
-                <tr key={`${year}-${m.month}`}>
-                  <td>{year}</td>
-                  <td>{MONTH_NAMES[(m.month + 1) % 12]}</td>
-                  <td>{m.count}</td>
-                  <td>{m.previousCount}</td>
-                </tr>
-              ))
-            )}
-        </tbody>
-      </table>
-    </FrameWrapper>
+    <div className="table-statistics">
+      <h2> {title} </h2>
+      <FrameWrapper>
+        <table>
+          <tbody>
+            {stats &&
+              Object.entries(stats).map(([year, months]) =>
+                months.map((m: MonthStat) => (
+                  <tr key={`${year}-${m.month}`}>
+                    <td>{MONTH_NAMES[(m.month + 1) % 12]}</td>
+                    <td>{m.count}</td>
+                    <td>{m.previousCount}</td>
+                  </tr>
+                ))
+              )}
+          </tbody>
+        </table>
+      </FrameWrapper>
+    </div>
   );
 }
 

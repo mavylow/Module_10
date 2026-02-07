@@ -51,6 +51,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   useEffect(() => {
+    console.log(location.pathname);
     const protectedRoutes = [
       "/profile",
       "/profile/info",
@@ -59,7 +60,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (!loading && !user && protectedRoutes.includes(location.pathname)) {
       navigate("/home");
     }
-  }, [user, location]);
+  }, [user, location, loading]);
 
   const checkCurrentUser = async () => {
     try {
