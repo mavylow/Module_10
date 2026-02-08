@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import ErrorBoundary from "@components/ ErrorBoundary";
-import AuthProvider from "@/providers/AuthProvider";
-import ThemeProvider from "./ThemeProvider";
+import AuthProvider from "@providers/AuthProvider";
+import ThemeProvider from "@providers/ThemeProvider";
 
 interface IContextProvider {
   children: ReactNode;

@@ -1,18 +1,18 @@
-import { AuthContext } from "@/providers/AuthProvider";
-import Button from "@/components/Button";
-import Input from "@/components/Input";
+import { AuthContext } from "@providers/AuthProvider";
+import Button from "@components/Button";
+import Input from "@components/Input";
 import { useContext, useMemo } from "react";
 import { useFormik } from "formik";
-import PersonIcon from "@/assets/PersonIcon";
-import MailIcon from "@/assets/MailIcon";
-import EditPenIcon from "@/assets/EditPenIcon";
+import PersonIcon from "@assets/PersonIcon";
+import MailIcon from "@assets/MailIcon";
+import EditPenIcon from "@assets/EditPenIcon";
 import "./style.css";
-import Textarea from "@/components/Textarea";
-import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
+import Textarea from "@components/Textarea";
+import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import * as Yup from "yup";
 import type { IProfileForm } from "@/interfaces";
-import Checkbox from "@/components/Checkbox";
-import { ThemeContext } from "@/providers/ThemeProvider";
+import Checkbox from "@components/Checkbox";
+import { ThemeContext } from "@providers/ThemeProvider";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),

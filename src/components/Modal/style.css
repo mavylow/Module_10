@@ -3,9 +3,8 @@
   top: 15%;
   right: 2em;
   background-color: var(--primary-orange);
-  min-height: 6em;
-  min-width: 220px;
-  max-width: 10em;
+  height: fit-content;
+  width: fit-content;
   padding: 1em;
   border-radius: 1em;
   text-align: center;
@@ -20,6 +19,9 @@
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px;
 }
 
 .modal--close {
@@ -27,12 +29,25 @@
   opacity: 0;
 }
 
-.modal::after {
-  content: "";
-  position: absolute;
-  bottom: 1em;
-  right: -1em;
-  border: 20px solid transparent;
-  border-left: 20px solid var(--primary-orange);
-  border-bottom: 20px solid var(--primary-orange);
+.modal svg {
+  height: 8px;
+  width: 8px;
+}
+
+#modal .error {
+  background-color: var(--primary-red);
+}
+#modal .warning {
+  background-color: var(--primary-yellow);
+}
+#modal .success {
+  background-color: var(--primary-orange);
+}
+.close-modal {
+  background-color: transparent;
+  border: none;
+}
+
+.close-modal svg path {
+  fill: var(--background-main);
 }

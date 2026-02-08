@@ -1,7 +1,7 @@
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "@components/Header";
+import Footer from "@components/Footer";
 import { Outlet } from "react-router";
-import ContextProvider from "./providers/ContextProvider";
+import ContextProvider from "@providers/ContextProvider";
 
 function Layout() {
   return (

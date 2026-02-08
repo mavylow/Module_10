@@ -1,21 +1,38 @@
-import { type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import "./style.css";
+import CrossIcon from "@assets/CrossIcon";
 
 type ModalProps = {
-  children?: ReactNode;
-  isOpen: boolean;
+  message: string;
+  status: "error" | "warning" | "success";
 };
 
-function Modal({ children, isOpen }: ModalProps) {
+function Modal({ message, status }: ModalProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const modalRoot = document.getElementById("modal");
+
   if (!modalRoot) {
     return null;
   }
 
+  useEffect(() => {
+    setIsOpen(true);
+    setTimeout(() => setIsOpen(false), 3000);
+  }, [message]);
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   return createPortal(
-    <div className={`modal ${isOpen ? "modal--open" : "modal--close"}`}>
-      {children}
+    <div
+      className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
+    >
+      <span> {message}</span>
+      <button className="close-modal" onClick={handleCloseModal}>
+        <CrossIcon />
+      </button>
     </div>,
     modalRoot
   );

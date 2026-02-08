@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState, type ChangeEvent } from "react";
-import CommentIcon from "@/assets/CommentIcon";
-import ChevronIcon from "@/assets/ChevronIcon";
-import HeartIcon from "@/assets/HeartIcon";
+import CommentIcon from "@assets/CommentIcon";
+import ChevronIcon from "@assets/ChevronIcon";
+import HeartIcon from "@assets/HeartIcon";
 import Comment from "@components/Comment";
 import "./style.css";
-import EditPenIcon from "@/assets/EditPenIcon";
+import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@/providers/AuthProvider";
+import { AuthContext } from "@providers/AuthProvider";
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
-import { fetchData } from "@/utils/apiUtil";
+import { fetchData } from "@utils/apiUtil";
 
 interface PostProps {
   post: IPost;

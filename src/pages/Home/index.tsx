@@ -3,8 +3,8 @@ import { useLoaderData, useRevalidator } from "react-router";
 import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
 import type { IPost } from "@/interfaces";
-import { AuthContext } from "@/providers/AuthProvider";
-import CreatePost from "@/components/CreatePost";
+import { AuthContext } from "@providers/AuthProvider";
+import CreatePost from "@components/CreatePost";
 
 function Home() {
   let posts = useLoaderData<IPost[]>();

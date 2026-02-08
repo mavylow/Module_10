@@ -1,5 +1,5 @@
 import React from "react";
-import FrameWrapper from "../FrameWrapper";
+import FrameWrapper from "@components/FrameWrapper";
 import "./style.css";
 
 interface IStatisticCard {

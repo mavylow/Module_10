@@ -2,7 +2,7 @@ import FrameWrapper from "@components/FrameWrapper";
 import { SidebarElement } from "@components/SidebarElement";
 import "./style.css";
 import { useState, useEffect } from "react";
-import { fetchData } from "@/utils/apiUtil";
+import { fetchData } from "@utils/apiUtil";
 import type { IGroup, ISidebarUser } from "@/interfaces";
 
 export default function Sidebar() {

@@ -1,4 +1,4 @@
-import PageNotFoundIcon from "@/assets/PageNotFoundIcon";
+import PageNotFoundIcon from "@assets/PageNotFoundIcon";
 import "./style.css";
 
 export default function NotFoundPage() {

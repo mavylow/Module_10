@@ -1,6 +1,6 @@
 import type { MonthStat, YearStats } from "@/interfaces";
 import "./style.css";
-import FrameWrapper from "../FrameWrapper";
+import FrameWrapper from "@components/FrameWrapper";
 
 interface ITableStats {
   title: string;

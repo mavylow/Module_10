@@ -5,13 +5,13 @@ import { useFormik } from "formik";
 import "./style.css";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import EditPenIcon from "@/assets/EditPenIcon";
-import MailIcon from "@/assets/MailIcon";
-import UploadFileIcon from "@/assets/UploadFileIcon";
-import ErrorIcon from "@/assets/ErrorIcon";
-import Textarea from "../Textarea";
+import EditPenIcon from "@assets/EditPenIcon";
+import MailIcon from "@assets/MailIcon";
+import UploadFileIcon from "@assets/UploadFileIcon";
+import ErrorIcon from "@assets/CrossIcon";
+import Textarea from "@components/Textarea";
 import * as Yup from "yup";
-import { fetchData } from "@/utils/apiUtil";
+import { fetchData } from "@utils/apiUtil";
 
 const postFormInitial = {
   title: "",

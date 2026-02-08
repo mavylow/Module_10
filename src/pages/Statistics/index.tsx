@@ -1,9 +1,9 @@
 import "./style.css";
-import Checkbox from "@/components/Checkbox";
+import Checkbox from "@components/Checkbox";
 import { useEffect, useMemo, useState } from "react";
-import { fetchData } from "@/utils/apiUtil";
+import { fetchData } from "@utils/apiUtil";
 import type { IComment, ILike, IPost, MonthStat } from "@/interfaces";
-import StatisticCard from "@/components/StatisticCard";
+import StatisticCard from "@components/StatisticCard";
 import {
   calculateFullStats,
   getCurrentMonthStats,

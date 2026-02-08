@@ -1,9 +1,9 @@
-import SidekickLogoText from "@/assets/SidekickLogoText";
-import SidekickLogo from "@/assets/SidekickLogo";
+import SidekickLogoText from "@assets/SidekickLogoText";
+import SidekickLogo from "@assets/SidekickLogo";
 import "./style.css";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/providers/AuthProvider";
-import Hamburger from "@/assets/HamburgerMenuIcon";
+import { AuthContext } from "@providers/AuthProvider";
+import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
 
 function Header() {
@@ -74,17 +74,14 @@ function Header() {
               >
                 {isExpanded ? (
                   <>
-                    <NavLink to={"/profile-info"}> Profile info</NavLink>
-                    <NavLink to={"/profile-info"}> Statistics</NavLink>
+                    <NavLink to={"/profile/info"}> Profile info</NavLink>
+                    <NavLink to={"/profile/statistics"}> Statistics</NavLink>
                   </>
                 ) : (
                   <>
                     {" "}
                     <img
-                      src={
-                        user.profileImage ||
-                        "../../../public/image/default-avatar.webp"
-                      }
+                      src={user.profileImage || "/image/default-avatar.webp"}
                       className="avatar"
                     />
                     <NavLink to={"/profile/info"}>

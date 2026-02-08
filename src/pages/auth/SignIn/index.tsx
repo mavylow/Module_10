@@ -1,15 +1,15 @@
 import { useContext, useEffect } from "react";
-import MailIcon from "@/assets/MailIcon";
-import EyeOpenIcon from "@/assets/EyeOpenIcon";
+import MailIcon from "@assets/MailIcon";
+import EyeOpenIcon from "@assets/EyeOpenIcon";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import "../style.css";
-import { AuthContext } from "@/providers/AuthProvider";
+import "@pages/auth/style.css";
+import { AuthContext } from "@providers/AuthProvider";
 import { useFormik } from "formik";
 import type { IForm } from "@/interfaces";
 import * as Yup from "yup";
-import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
-import ThumbUpIcon from "@/assets/ThumbUpIcon";
+import ErrorWarningIcon from "@assets/ErrorWarningIcon";
+import ThumbUpIcon from "@assets/ThumbUpIcon";
 import { useNavigate } from "react-router";
 
 const FormSchema = Yup.object({
@@ -22,7 +22,7 @@ const FormSchema = Yup.object({
 
 export default function SignIn() {
   const form = useFormik<IForm>({
-    initialValues: { email: "helena.hills@social.com", password: "" },
+    initialValues: { email: "", password: "" },
     validationSchema: FormSchema,
     onSubmit: (data) => signIn(data),
   });
@@ -68,18 +68,19 @@ export default function SignIn() {
             description="Password"
             name="password"
             placeholder="Enter password"
-            type="password"
+            type={"password"}
             Icon={EyeOpenIcon}
             value={form.values.password}
             onChange={form.handleChange}
           />
-          {form.errors.password ? (
+          {form.errors.password && form.submitCount > 0 ? (
             <div className="input-message">
               <ErrorWarningIcon />
               <p className="error">{form.errors.password}</p>
             </div>
           ) : (
-            form.submitCount > 0 && (
+            form.submitCount > 0 &&
+            !form.dirty && (
               <div className="input-message">
                 <ThumbUpIcon />
                 <p className="correct">Your password is strong</p>

@@ -1,4 +1,4 @@
-import TrashIcon from "@/assets/TrashIcon";
+import TrashIcon from "@assets/TrashIcon";
 import type { IComment } from "@/interfaces";
 import "./style.css";
 
