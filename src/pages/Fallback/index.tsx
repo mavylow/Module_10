@@ -1,4 +1,4 @@
-import ErrorIcon from "@/assets/CrossIcon";
+import ErrorIcon from "@assets/ErrorIcon";
 import "./style.css";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
