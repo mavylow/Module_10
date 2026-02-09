@@ -5,7 +5,7 @@ import { startMockingSocial } from "@sidekick-monorepo/internship-backend";
 import App from "./App";
 
 async function enableMocking() {
-  await startMockingSocial("Module_10");
+  await startMockingSocial();
 }
 
 enableMocking().then(() => {

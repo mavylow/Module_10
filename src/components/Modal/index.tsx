@@ -1,40 +1,34 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useContext } from "react";
+
 import "./style.css";
 import CrossIcon from "@assets/CrossIcon";
+import { PopUpContext } from "@/providers/PopupProvider";
+import Portal from "../Portal";
+import Button from "../Button";
 
-type ModalProps = {
+export type ModalProps = {
   message: string;
-  status: "error" | "warning" | "success";
+  status: modalStatus;
 };
 
+export type modalStatus = "success" | "error" | "warning";
+
 function Modal({ message, status }: ModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const modalRoot = document.getElementById("modal");
+  const { isOpen, handleCloseModal } = useContext(PopUpContext);
 
-  if (!modalRoot) {
-    return null;
-  }
-
-  useEffect(() => {
-    setIsOpen(true);
-    setTimeout(() => setIsOpen(false), 3000);
-  }, [message]);
-
-  const handleCloseModal = () => {
-    setIsOpen(false);
-  };
-
-  return createPortal(
-    <div
-      className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
-    >
-      <span> {message}</span>
-      <button className="close-modal" onClick={handleCloseModal}>
-        <CrossIcon />
-      </button>
-    </div>,
-    modalRoot
+  return (
+    <Portal>
+      <div
+        className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
+      >
+        <span> {message}</span>
+        <Button
+          Icon={CrossIcon}
+          type="button"
+          onButtonClick={handleCloseModal}
+        />
+      </div>
+    </Portal>
   );
 }
 

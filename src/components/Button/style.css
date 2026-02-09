@@ -8,3 +8,8 @@
 .default-button:hover {
   background-color: rgb(250, 150, 50);
 }
+
+.icon-button {
+  background-color: transparent;
+  border: none;
+}

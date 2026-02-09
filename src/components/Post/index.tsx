@@ -13,6 +13,7 @@ import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
 import { fetchData } from "@utils/apiUtil";
+import ChevronIconExpanded from "@assets/ChevronIconExpanded";
 
 interface PostProps {
   post: IPost;
@@ -142,15 +143,11 @@ function Post({ post, onLike }: PostProps) {
                 <span>You have to login to see the comments </span>
               )}
               {user && (
-                <button className="expand-button" onClick={handleExpand}>
-                  <ChevronIcon
-                    style={
-                      isCommentsExpanded
-                        ? { transform: "rotate(180deg)" }
-                        : { transform: "none" }
-                    }
-                  />
-                </button>
+                <Button
+                  Icon={isCommentsExpanded ? ChevronIconExpanded : ChevronIcon}
+                  type="button"
+                  onButtonClick={handleExpand}
+                />
               )}
             </div>
           </div>

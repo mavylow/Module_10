@@ -1,8 +1,14 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { type IProfileForm, type IUser } from "@/interfaces";
 import { useLocation, useNavigate } from "react-router";
-import Modal from "@components/Modal";
 import { fetchData } from "@utils/apiUtil";
+import { PopUpContext } from "./PopupProvider";
 
 interface IForm {
   email: string;
@@ -29,24 +35,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-type modalStatus = "success" | "error" | "warning";
-
-interface IModal {
-  message: string;
-  status: modalStatus;
-}
-
-const modalInitial = {
-  message: "",
-  status: "success" as modalStatus,
-};
-
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
   let navigate = useNavigate();
   const location = useLocation();
-  const [modal, setModal] = useState<IModal>(modalInitial);
+  const { handleShowModal } = useContext(PopUpContext);
 
   useEffect(() => {
     checkCurrentUser();
@@ -69,43 +63,45 @@ function AuthProvider({ children }: AuthProviderProps) {
       const user = await fetchData("/api/me", "GET");
 
       if (user) {
-        setModal({ message: "Signed in successfully", status: "success" });
+        handleShowModal({
+          message: "Signed in successfully",
+          status: "success",
+        });
         setUser(user);
         setLoading(false);
       } else {
         navigate("/home");
-        setModal({ message: "User not found", status: "warning" });
+        handleShowModal({ message: "User not found", status: "warning" });
         localStorage.removeItem("token");
         setLoading(false);
       }
     } catch (error) {
       console.error("Auth check failed:", error);
-      setModal({ message: "Authentication failed", status: "error" });
+      handleShowModal({ message: "Authentication failed", status: "error" });
       localStorage.removeItem("token");
       setLoading(false);
     }
   };
 
   const signIn = async (form: IForm) => {
-    setModal(modalInitial);
     try {
       const { token, user } = await fetchData("/api/login", "POST", {
         email: form.email,
         password: form.password,
       });
+
       if (user) {
-        showModal({ message: "Signed in successfully", status: "success" });
+        handleShowModal({
+          message: "Signed in successfully",
+          status: "success",
+        });
         setUser(user);
         localStorage.setItem("token", token);
         navigate("/home");
       }
     } catch {
-      showModal({ message: "Authentication failed", status: "error" });
+      handleShowModal({ message: "Authentication failed", status: "error" });
     }
-  };
-
-  const showModal = (modal: IModal) => {
-    setModal(modal);
   };
 
   const signUp = async (form: IForm) => {
@@ -114,7 +110,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       password: form.password,
     });
     if (message) {
-      showModal(modal);
+      handleShowModal({ message, status: "warning" });
       navigate("/home");
     }
   };
@@ -122,7 +118,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const updateUser = async (updatedUser: IProfileForm) => {
     const newUser = await fetchData("/api/profile", "PUT", updatedUser);
     if (newUser) {
-      showModal({
+      handleShowModal({
         message: "Profile info updated successfully",
         status: "success",
       });
@@ -137,7 +133,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider value={{ user, signIn, signUp, logOut, updateUser }}>
-      <Modal {...modal} />
       {children}
     </AuthContext.Provider>
   );

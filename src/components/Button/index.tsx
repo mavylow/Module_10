@@ -1,21 +1,24 @@
+import type { ComponentType } from "react";
 import "./style.css";
 
 interface ActionButtonProps {
-  description: string;
+  description?: string;
   onButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type: "reset" | "button";
+  Icon?: ComponentType;
 }
 
 interface SubmitButtonProps {
   description: string;
   type: "submit";
   disabled?: boolean;
+  Icon?: ComponentType;
 }
 
 type ButtonProps = ActionButtonProps | SubmitButtonProps;
 
 function Button(props: ButtonProps) {
-  const { description, type } = props;
+  const { description, type, Icon } = props;
 
   if (type === "submit") {
     return (
@@ -26,11 +29,11 @@ function Button(props: ButtonProps) {
   } else {
     return (
       <button
-        className="default-button"
+        className={Icon ? "icon-button" : "default-button"}
         onClick={props.onButtonClick}
         type={props.type}
       >
-        {description}
+        {Icon ? <Icon /> : description}
       </button>
     );
   }
