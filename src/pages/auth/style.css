@@ -83,7 +83,7 @@ form button {
   gap: 6px;
 }
 
-.error {
+.sing-up .error {
   margin: 0;
   color: #ff554a;
 }
