@@ -9,6 +9,8 @@ import { NavLink, useLocation, useNavigate } from "react-router";
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const [isPageAuth, setIsPageAuth] = useState(false);
   const location = useLocation();
   let navigate = useNavigate();
 
@@ -21,6 +23,16 @@ function Header() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setIsExpanded(false);
+    if (location.pathname !== "/signin" && location.pathname !== "/signup") {
+      setIsPageAuth(true);
+    } else {
+      setIsPageAuth(false);
+    }
+    console.log(isPageAuth);
+  }, [location]);
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -64,7 +76,7 @@ function Header() {
           <SidekickLogo />
           <SidekickLogoText />
         </div>
-        {location.pathname !== "/signin" && location.pathname !== "/signup" && (
+        {isPageAuth && (
           <>
             {user ? (
               <nav
@@ -79,7 +91,6 @@ function Header() {
                   </>
                 ) : (
                   <>
-                    {" "}
                     <img
                       src={user.profileImage || "/image/default-avatar.webp"}
                       className="avatar"
@@ -102,17 +113,19 @@ function Header() {
             )}
           </>
         )}
-        <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
-          {user && isExpanded ? (
-            <img
-              key={user?.profileImage}
-              src={user?.profileImage || "/image/default-avatar.webp"}
-              className="avatar"
-            />
-          ) : (
-            <Hamburger />
-          )}
-        </button>
+        {isPageAuth && (
+          <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
+            {user && isExpanded ? (
+              <img
+                key={user?.profileImage}
+                src={user?.profileImage || "/image/default-avatar.webp"}
+                className="avatar"
+              />
+            ) : (
+              <Hamburger />
+            )}
+          </button>
+        )}
       </header>
       {isMobile && isExpanded && (
         <div className="overlay" onClick={handleChangeMenuExpanded}>

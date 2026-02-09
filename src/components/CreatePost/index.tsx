@@ -152,9 +152,9 @@ function CreatePost({ onAdd }: ICreatePostProps) {
         <div className="create-post">
           <div>
             {user?.profileImage ? (
-              <img src={user?.profileImage} loading="lazy" />
+              <img src={user?.profileImage} />
             ) : (
-              <img src="/image/default-avatar.webp" loading="lazy" />
+              <img src="/image/default-avatar.webp" />
             )}
             <span>What’s happening?</span>
           </div>
