@@ -53,7 +53,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       "/profile/statistics",
     ];
     if (!loading && !user && protectedRoutes.includes(location.pathname)) {
-      navigate("/home");
+      navigate("/");
     }
   }, [user, location, loading]);
 
@@ -70,7 +70,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         setUser(user);
         setLoading(false);
       } else {
-        navigate("/home");
+        navigate("/");
         handleShowModal({ message: "User not found", status: "warning" });
         localStorage.removeItem("token");
         setLoading(false);
@@ -97,7 +97,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         });
         setUser(user);
         localStorage.setItem("token", token);
-        navigate("/home");
+        navigate("/");
       }
     } catch {
       handleShowModal({ message: "Authentication failed", status: "error" });
@@ -111,7 +111,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     });
     if (message) {
       handleShowModal({ message, status: "warning" });
-      navigate("/home");
+      navigate("/");
     }
   };
 

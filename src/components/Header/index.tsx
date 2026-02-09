@@ -60,7 +60,7 @@ function Header() {
           (isExpanded ? "expanded" : "")
         }
       >
-        <div className="logo" onClick={() => handleNavigate("/home")}>
+        <div className="logo" onClick={() => handleNavigate("/")}>
           <SidekickLogo />
           <SidekickLogoText />
         </div>

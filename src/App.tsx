@@ -1,6 +1,6 @@
 import "@/App.css";
 import SignUp from "@pages/auth/SignUp";
-import { createHashRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import SignIn from "@pages/auth/SignIn";
 import Home from "@pages/Home";
 import Profile from "@components/Profile";
@@ -12,24 +12,23 @@ import ProfileInfo from "@pages/ProfileInfo";
 import Statistics from "@pages/Statistics";
 
 function App() {
-  const router = createHashRouter([
+  const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
       children: [
-        { index: true, element: <Home /> },
+        { index: true, element: <Home />, loader: loadPosts },
         { path: "signin", element: <SignIn /> },
         { path: "signup", element: <SignUp /> },
-        {
-          path: "home",
-          element: <Home />,
-          loader: loadPosts,
-        },
+        {},
         {
           path: "profile",
           element: <Profile />,
           children: [
-            { index: true, element: <ProfileInfo /> },
+            {
+              index: true,
+              element: <Navigate to="info" replace />,
+            },
             { path: "info", element: <ProfileInfo /> },
             { path: "statistics", element: <Statistics /> },
           ],
