@@ -15,6 +15,7 @@ export function SidebarElement({ element }: SidebarElementProps) {
       </div>
     );
   }
+
   if ("username" in element) {
     return (
       <div className="aside-element">
