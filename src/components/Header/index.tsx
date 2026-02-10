@@ -12,7 +12,7 @@ function Header() {
 
   const [isPageAuth, setIsPageAuth] = useState(false);
   const location = useLocation();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
 

@@ -8,9 +8,9 @@
 }
 
 .comment span {
-  display: inline-flex;
-  justify-content: center;
-  align-items: end;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .comment button {

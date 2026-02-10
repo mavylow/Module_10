@@ -7,7 +7,7 @@ export interface IPost {
   likesCount: number;
   commentsCount: number;
   creationDate: string;
-  modifiedDate: Date;
+  modifiedDate: string;
   authorPhoto: string;
   likedByUsers: IUser[];
 }

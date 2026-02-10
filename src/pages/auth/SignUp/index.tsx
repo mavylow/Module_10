@@ -32,7 +32,7 @@ function SignUp() {
     resolver: zodResolver(FromSchema),
   });
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleNavigate = (path: string) => {
     navigate(path);

@@ -125,6 +125,8 @@ figure img {
   left: 0;
   font-weight: bold;
   color: var(--text-color);
+  margin: 0;
+  top: 0.2vw;
 }
 
 .add-comment {

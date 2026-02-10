@@ -63,3 +63,5 @@ export const getCurrentMonthStats = (
     data[currentYear]?.find((month) => month.month === currentMonth) ?? null
   );
 };
+
+

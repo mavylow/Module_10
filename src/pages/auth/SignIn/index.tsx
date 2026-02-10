@@ -29,7 +29,7 @@ export default function SignIn() {
 
   const { signIn } = useContext(AuthContext);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleNavigate = (path: string) => {
     navigate(path);
