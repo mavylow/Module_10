@@ -55,12 +55,7 @@ function ProfileInfo() {
       <section className="edit-profile">
         <h2>Edit profile</h2>
         <div className="profile-photo">
-          {user?.profileImage ? (
-            <img src={user?.profileImage} loading="lazy" />
-          ) : (
-            <img src="/image/default-avatar.webp" loading="lazy" />
-          )}
-
+          <img src={user?.profileImage} />
           <h3>
             {user?.firstName} {user?.secondName}
           </h3>

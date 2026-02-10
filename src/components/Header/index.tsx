@@ -91,10 +91,7 @@ function Header() {
                   </>
                 ) : (
                   <>
-                    <img
-                      src={user.profileImage || "/image/default-avatar.webp"}
-                      className="avatar"
-                    />
+                    <img src={user.profileImage} className="avatar" />
                     <NavLink to={"/profile/info"}>
                       {user.firstName} {user.secondName}
                     </NavLink>

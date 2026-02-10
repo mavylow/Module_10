@@ -151,11 +151,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
       <FrameWrapper>
         <div className="create-post">
           <div>
-            {user?.profileImage ? (
-              <img src={user?.profileImage} />
-            ) : (
-              <img src="/image/default-avatar.webp" />
-            )}
+            <img src={user?.profileImage} />
             <span>What’s happening?</span>
           </div>
 

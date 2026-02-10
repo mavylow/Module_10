@@ -39,3 +39,4 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
     const posts = await fetchData("/api/posts", "GET");
     return posts
   };
+
