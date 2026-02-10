@@ -30,8 +30,8 @@ function Statistics() {
       try {
         const [likesRes, commentsRes, postsRes] = await Promise.all([
           fetchData(`/api/me/likes`, "GET"),
-          fetchData(`api/me/comments`, "GET"),
-          fetchData(`api/me/posts`, "GET"),
+          fetchData(`/api/me/comments`, "GET"),
+          fetchData(`/api/me/posts`, "GET"),
         ]);
         setLikes(likesRes);
         setComments(commentsRes);

@@ -7,7 +7,7 @@ import { AuthContext } from "@providers/AuthProvider";
 import CreatePost from "@components/CreatePost";
 
 function Home() {
-  let posts = useLoaderData<IPost[]>();
+  const posts = useLoaderData<IPost[]>();
   const { revalidate } = useRevalidator();
   const { user } = useContext(AuthContext);
 

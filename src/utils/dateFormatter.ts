@@ -22,7 +22,7 @@ export function formattedDate(date: string): string{
 }
 
 export function filterByMonth(el: ILike | IPost | IComment, month: number): boolean {
-  let creationMonth = new Date(el.creationDate).getMonth();
+  const creationMonth = new Date(el.creationDate).getMonth();
   if (creationMonth === month) {
     return true;
   }

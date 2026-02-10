@@ -26,7 +26,7 @@ export interface InputProps {
 export default function Input(props: InputProps | FromInputProps) {
   if ("register" in props) {
     const { id, description, placeholder, type, Icon, register } = props;
-    let registerOptions: RegisterOptions<IForm, "email" | "password"> = {
+    const registerOptions: RegisterOptions<IForm, "email" | "password"> = {
       required: true,
     };
 
