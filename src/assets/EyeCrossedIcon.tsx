@@ -6,6 +6,7 @@ function EyeCrossedIcon() {
       height="16"
       viewBox="0 0 16 16"
       fill="none"
+      className="svg-eye-closed"
     >
       <g clip-path="url(#clip0_26252_2471)">
         <path

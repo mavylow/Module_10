@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import MailIcon from "@assets/MailIcon";
 import EyeOpenIcon from "@assets/EyeOpenIcon";
 import Button from "@components/Button";
@@ -11,6 +11,9 @@ import * as Yup from "yup";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
 import { useNavigate } from "react-router";
+import CheckIcon from "@/assets/CheckIcon";
+import CrossIcon from "@/assets/CrossIcon";
+import EyeCrossedIcon from "@/assets/EyeCrossedIcon";
 
 const FormSchema = Yup.object({
   email: Yup.string().required().email(),
@@ -26,6 +29,11 @@ export default function SignIn() {
     validationSchema: FormSchema,
     onSubmit: (data) => signIn(data),
   });
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+
+  const handleShowPassword = () => {
+    setIsPasswordOpen((prev) => !prev);
+  };
 
   const { signIn } = useContext(AuthContext);
 
@@ -55,37 +63,54 @@ export default function SignIn() {
             value={form.values.email}
             onChange={form.handleChange}
           />
-          {form.errors.email && (
-            <div className="input-message">
-              <ErrorWarningIcon />
-              <p className="error">Email is not valid</p>
-            </div>
+          {form.values.email && (
+            <>
+              {form.errors.email ? (
+                <>
+                  <div className="input-message">
+                    <ErrorWarningIcon />
+                    <p className="error">Email is not valid</p>
+                  </div>
+                  <div className="error email-warning">
+                    <CrossIcon />
+                  </div>
+                </>
+              ) : (
+                <div className="correct email-warning">
+                  <CheckIcon />
+                </div>
+              )}
+            </>
           )}
         </div>
         <div className="input-container">
+          <div className="password-icon" onClick={handleShowPassword}>
+            {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+          </div>
           <Input
             id="password"
             description="Password"
             name="password"
             placeholder="Enter password"
-            type={"password"}
+            type={isPasswordOpen ? "text" : "password"}
             Icon={EyeOpenIcon}
             value={form.values.password}
             onChange={form.handleChange}
           />
-          {form.errors.password && form.submitCount > 0 ? (
-            <div className="input-message">
-              <ErrorWarningIcon />
-              <p className="error">{form.errors.password}</p>
-            </div>
-          ) : (
-            form.submitCount > 0 &&
-            !form.dirty && (
-              <div className="input-message">
-                <ThumbUpIcon />
-                <p className="correct">Your password is strong</p>
-              </div>
-            )
+          {form.values.password && (
+            <>
+              {form.errors.password ? (
+                <div className="input-message">
+                  <ErrorWarningIcon />
+                  <p className="error">{form.errors.password}</p>
+                </div>
+              ) : (
+                <div className="input-message">
+                  <ThumbUpIcon />
+                  <p className="correct">Your password is strong</p>
+                </div>
+              )}
+            </>
           )}
         </div>
 
