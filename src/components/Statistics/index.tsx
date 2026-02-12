@@ -16,11 +16,18 @@ const monthStatInitial: MonthStat = {
   previousCount: 0,
 };
 
+const yearStatInitial: MonthStat[] = Array.from({ length: 12 }, (_, i) => {
+  return {
+    month: i,
+    count: 0,
+    previousCount: 0,
+  };
+});
+
 type ITabView = "table" | "chart";
 
 function Statistics() {
   const [tabView, setTabView] = useState<ITabView>("table");
-
   const [posts, setPosts] = useState<IPost[]>();
   const [likes, setLikes] = useState<ILike[]>();
   const [comments, setComments] = useState<IComment[]>();
@@ -113,8 +120,26 @@ function Statistics() {
         />
       </div>
       <div className="tables">
-        {likesStats && <TableStats title="Likes" stats={likesStats} />}
-        {commentsStats && <TableStats title="Comments" stats={commentsStats} />}
+        {likesStats && (
+          <TableStats
+            title="Likes"
+            stats={
+              likesStats[`${new Date().getFullYear()}`]
+                ? likesStats[`${new Date().getFullYear()}`]
+                : yearStatInitial
+            }
+          />
+        )}
+        {commentsStats && (
+          <TableStats
+            title="Comments"
+            stats={
+              commentsStats[`${new Date().getFullYear()}`]
+                ? commentsStats[`${new Date().getFullYear()}`]
+                : yearStatInitial
+            }
+          />
+        )}
       </div>
     </div>
   );

@@ -90,3 +90,5 @@ export interface MonthStat {
   count: number;
   previousCount: number;
 }
+
+export type TProfilePages = "info" | "statistics";

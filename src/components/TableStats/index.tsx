@@ -1,10 +1,10 @@
-import type { MonthStat, YearStats } from "@/interfaces";
+import type { MonthStat } from "@/interfaces";
 import "./style.css";
 import FrameWrapper from "@components/FrameWrapper";
 
 interface ITableStats {
   title: string;
-  stats: YearStats;
+  stats: MonthStat[];
 }
 
 const MONTH_NAMES = [
@@ -30,15 +30,13 @@ function TableStats({ title, stats }: ITableStats) {
         <table>
           <tbody>
             {stats &&
-              Object.entries(stats).map(([year, months]) =>
-                months.map((m: MonthStat) => (
-                  <tr key={`${year}-${m.month}`}>
-                    <td>{MONTH_NAMES[(m.month + 1) % 12]}</td>
-                    <td>{m.count}</td>
-                    <td>{m.previousCount}</td>
-                  </tr>
-                ))
-              )}
+              stats.map((m: MonthStat) => (
+                <tr key={`${m.month}`}>
+                  <td>{MONTH_NAMES[m.month]}</td>
+                  <td>{m.count}</td>
+                  <td>{m.previousCount}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </FrameWrapper>
