@@ -5,16 +5,17 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@providers/AuthProvider";
 import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
+import { ProfilePageContext } from "@providers/ProfilePageProvider";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-
   const [isPageAuth, setIsPageAuth] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
+  const { changePage } = useContext(ProfilePageContext);
 
   useEffect(() => {
     handleResize();
@@ -86,13 +87,22 @@ function Header() {
               >
                 {isExpanded ? (
                   <>
-                    <NavLink to={"/profile/info"}> Profile info</NavLink>
-                    <NavLink to={"/profile/statistics"}> Statistics</NavLink>
+                    <NavLink to={"/profile"} onClick={() => changePage("info")}>
+                      {" "}
+                      Profile info
+                    </NavLink>
+                    <NavLink
+                      to={"/profile"}
+                      onClick={() => changePage("statistics")}
+                    >
+                      {" "}
+                      Statistics
+                    </NavLink>
                   </>
                 ) : (
                   <>
                     <img src={user.profileImage} className="avatar" />
-                    <NavLink to={"/profile/info"}>
+                    <NavLink to={"/profile"}>
                       {user.firstName} {user.secondName}
                     </NavLink>
                   </>

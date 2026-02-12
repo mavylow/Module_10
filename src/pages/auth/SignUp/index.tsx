@@ -16,7 +16,7 @@ import CrossIcon from "@/assets/CrossIcon";
 import CheckIcon from "@/assets/CheckIcon";
 
 const FormSchema = z.object({
-  email: z.string().email("Email is not valid"),
+  email: z.email("Email is not valid"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")

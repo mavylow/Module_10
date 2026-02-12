@@ -21,16 +21,8 @@ interface PostProps {
 }
 
 function Post({ post, onLike }: PostProps) {
-  const {
-    id,
-    authorId,
-    title,
-    content,
-    image,
-    likesCount,
-    likedByUsers,
-    creationDate,
-  } = post;
+  const { id, authorId, title, content, image, likedByUsers, creationDate } =
+    post;
 
   const { user } = useContext(AuthContext);
 
@@ -48,7 +40,7 @@ function Post({ post, onLike }: PostProps) {
       getComments();
     }
     getAuthor();
-  }, []);
+  }, [user]);
 
   const getComments = async () => {
     const commentsData = await fetchData(`/api/posts/${id}/comments`, "GET");
@@ -133,7 +125,7 @@ function Post({ post, onLike }: PostProps) {
                 </button>
               )}
 
-              <span>{likesCount} likes</span>
+              <span>{likedByUsers.length} likes</span>
             </div>
             <div className="comments">
               <CommentIcon />
