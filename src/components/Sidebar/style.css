@@ -1,0 +1,18 @@
+aside {
+  position: absolute;
+  right: max(-25em, -23vw);
+  top: 0em;
+  width: 20em;
+  font-size: 16px;
+}
+
+aside h3 {
+  margin: 0.5em 0;
+  font-size: 18px;
+}
+
+@media (max-width: 1450px) {
+  aside {
+    display: none;
+  }
+}

@@ -1,0 +1,9 @@
+@media (max-width: 376px) {
+  .svg-x {
+    height: 40px;
+    width: 40px;
+  }
+  h1 {
+    font-size: 1em;
+  }
+}

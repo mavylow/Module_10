@@ -1,0 +1,27 @@
+.aside-element {
+  display: grid;
+  grid-template-rows: 24px 1fr;
+  grid-template-columns: 48px 1fr;
+  font-size: 14px;
+  margin-bottom: 1em;
+  padding: 0.5em 0;
+}
+
+.aside-element img {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  object-fit: contain;
+  grid-row: 1 / span 2;
+}
+
+.aside-element > h3,
+.aside-element > span {
+  font-size: 1em;
+  padding-left: min(2em, 4%);
+  margin: 0;
+}
+
+.aside-element span {
+  color: var(--light-text-color);
+}
