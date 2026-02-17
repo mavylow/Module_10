@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import MailIcon from "@assets/MailIcon";
 import EyeOpenIcon from "@assets/EyeOpenIcon";
 import Button from "@components/Button";
@@ -10,13 +10,13 @@ import type { IForm } from "@/interfaces";
 import * as Yup from "yup";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
-import { useNavigate } from "react-router";
-import CheckIcon from "@/assets/CheckIcon";
-import CrossIcon from "@/assets/CrossIcon";
-import EyeCrossedIcon from "@/assets/EyeCrossedIcon";
+import { NavLink } from "react-router";
+import CheckIcon from "@assets/CheckIcon";
+import CrossIcon from "@assets/CrossIcon";
+import EyeCrossedIcon from "@assets/EyeCrossedIcon";
 
 const FormSchema = Yup.object({
-  email: Yup.string().required().email(),
+  email: Yup.string().required().email("Write correct email"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .max(14, "Password cannot exceed 14 characters")
@@ -36,14 +36,6 @@ export default function SignIn() {
   };
 
   const { signIn } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
-  const handleNavigate = (path: string) => {
-    navigate(path);
-  };
-
-  useEffect(() => {});
 
   return (
     <main>
@@ -84,7 +76,11 @@ export default function SignIn() {
           )}
         </div>
         <div className="input-container">
-          <div className="password-icon" onClick={handleShowPassword}>
+          <div
+            data-testid="password-icon"
+            className="password-icon"
+            onClick={handleShowPassword}
+          >
             {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
           </div>
           <Input
@@ -118,13 +114,9 @@ export default function SignIn() {
       </form>
       <span>
         Forgot to create an account?{" "}
-        <a
-          onClick={() => handleNavigate("/signup")}
-          className="nav-link"
-          rel="nofollow"
-        >
+        <NavLink className={"nav-link"} to={"/signup"}>
           Sign up
-        </a>
+        </NavLink>
       </span>
     </main>
   );

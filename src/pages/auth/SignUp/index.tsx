@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import CrossIcon from "@/assets/CrossIcon";
 import CheckIcon from "@/assets/CheckIcon";
 
@@ -42,7 +42,6 @@ function SignUp() {
   });
 
   const { signUp } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
 
@@ -92,6 +91,7 @@ function SignUp() {
 
         <div className="input-container">
           <div
+            data-testid="password-icon"
             className="password-icon"
             onClick={() => setIsPasswordOpen((p) => !p)}
           >
@@ -137,13 +137,9 @@ function SignUp() {
 
       <span>
         Already have an account?{" "}
-        <a
-          onClick={() => navigate("/signin")}
-          className="nav-link"
-          rel="nofollow"
-        >
+        <NavLink to={"/signin"} className="nav-link">
           Sign in
-        </a>
+        </NavLink>
       </span>
     </main>
   );
