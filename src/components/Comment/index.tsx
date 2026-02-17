@@ -1,7 +1,7 @@
 import TrashIcon from "@assets/TrashIcon";
 import type { IComment } from "@/interfaces";
 import "./style.css";
-import Button from "../Button";
+import Button from "@components/Button";
 
 interface ICommentProps {
   comment: IComment;

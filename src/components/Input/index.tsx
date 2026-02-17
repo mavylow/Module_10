@@ -3,7 +3,7 @@ import { type RegisterOptions, type UseFormRegister } from "react-hook-form";
 import "./style.css";
 import type { IForm } from "@/interfaces";
 
-export interface FromInputProps {
+export interface FormInputProps {
   id: keyof IForm;
   description: string;
   placeholder: string;
@@ -23,7 +23,7 @@ export interface InputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input(props: InputProps | FromInputProps) {
+export default function Input(props: InputProps | FormInputProps) {
   if ("register" in props) {
     const { id, description, placeholder, type, Icon, register } = props;
     const registerOptions: RegisterOptions<IForm, "email" | "password"> = {
@@ -38,6 +38,7 @@ export default function Input(props: InputProps | FromInputProps) {
         </label>
 
         <input
+          data-testid="input"
           className="default-input"
           id={id}
           placeholder={placeholder}
@@ -57,6 +58,7 @@ export default function Input(props: InputProps | FromInputProps) {
         </label>
 
         <input
+          data-testid="input"
           className="default-input"
           id={id}
           name={name}

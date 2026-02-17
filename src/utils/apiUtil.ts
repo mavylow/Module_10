@@ -1,5 +1,5 @@
 
-type apiMethod = "GET" | "POST" | "PUT" | "DELETE"
+export type apiMethod = "GET" | "POST" | "PUT" | "DELETE"
 
 export async function fetchData(api: string, method: apiMethod, body?: any ) {
 

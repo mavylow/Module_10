@@ -120,10 +120,10 @@
   display: none;
 }
 
-#close-modal {
+.post-form-header button {
   height: clamp(24px, 3vw, 52px);
+  width: clamp(24px, 3vw, 52px);
   align-items: start;
-  width: 24px;
 }
 
 @media (max-width: 700px) {

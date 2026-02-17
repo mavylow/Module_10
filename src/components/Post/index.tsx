@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState, type ChangeEvent } from "react";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
-import HeartIcon from "@assets/HeartIcon";
 import Comment from "@components/Comment";
 import "./style.css";
 import EditPenIcon from "@assets/EditPenIcon";
@@ -14,6 +13,8 @@ import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
 import { fetchData } from "@utils/apiUtil";
 import ChevronIconExpanded from "@assets/ChevronIconExpanded";
+import HeartLikeIcon from "@assets/HeartLikeIcon";
+import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 
 interface PostProps {
   post: IPost;
@@ -91,7 +92,7 @@ function Post({ post, onLike }: PostProps) {
           <div className="post-header">
             <img
               src={author?.profileImage}
-              alt={`Profile picture of ${authorId}`}
+              alt={`Profile picture of ${author?.username}`}
               className="post-avatar"
               loading="lazy"
             />
@@ -116,13 +117,17 @@ function Post({ post, onLike }: PostProps) {
           <div className="post-info">
             <div className="likes">
               {user && likedByUsers?.some((u) => u.email === user.email) ? (
-                <button className="like" onClick={handleDislike}>
-                  <HeartIcon className="liked" />
-                </button>
+                <Button
+                  type="button"
+                  Icon={HeartLikeIcon}
+                  onButtonClick={handleDislike}
+                />
               ) : (
-                <button className="like" onClick={handleLike}>
-                  <HeartIcon className="disliked" />
-                </button>
+                <Button
+                  type="button"
+                  Icon={HeartDislikeIcon}
+                  onButtonClick={handleLike}
+                />
               )}
 
               <span>{likedByUsers.length} likes</span>

@@ -9,8 +9,17 @@ interface ICheckbox {
 function Checkbox({ id, description, onToggle }: ICheckbox) {
   return (
     <>
-      <input onClick={onToggle} type="checkbox" className="toggle" id={id} />
-      <label htmlFor={id}> {description} </label>
+      <input
+        onClick={onToggle}
+        type="checkbox"
+        className="toggle"
+        id={id}
+        data-testid="checkbox"
+      />
+      <label data-testid="checkbox-label" htmlFor={id}>
+        {" "}
+        {description}{" "}
+      </label>
     </>
   );
 }

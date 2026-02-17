@@ -87,16 +87,18 @@ function CreatePost({ onAdd }: ICreatePostProps) {
   return (
     <>
       {isModalOpen && (
-        <form className="add-post" onSubmit={postForm.handleSubmit}>
+        <form
+          data-testid="add-post-form"
+          className="add-post"
+          onSubmit={postForm.handleSubmit}
+        >
           <div className="post-form-header">
             <h2>Create a new post</h2>{" "}
-            <button
-              id="close-modal"
+            <Button
               type="button"
-              onClick={handleDisplayAddMenu}
-            >
-              <ErrorIcon />
-            </button>
+              Icon={ErrorIcon}
+              onButtonClick={handleDisplayAddMenu}
+            />
           </div>
 
           <Input
@@ -140,7 +142,6 @@ function CreatePost({ onAdd }: ICreatePostProps) {
               if (!file) {
                 return;
               }
-              console.log(file);
               postForm.setFieldValue("image", file);
             }}
           />

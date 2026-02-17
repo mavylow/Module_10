@@ -28,6 +28,7 @@ function Textarea({
       </label>
 
       <textarea
+        data-testid="textarea"
         className="default-textarea"
         id={id}
         name={name}

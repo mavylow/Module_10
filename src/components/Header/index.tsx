@@ -32,7 +32,6 @@ function Header() {
     } else {
       setIsPageAuth(false);
     }
-    console.log(isPageAuth);
   }, [location]);
 
   const handleResize = () => {
@@ -72,6 +71,7 @@ function Header() {
           " " +
           (isExpanded ? "expanded" : "")
         }
+        data-testid="header"
       >
         <div className="logo" onClick={() => handleNavigate("/")}>
           <SidekickLogo />
@@ -88,20 +88,22 @@ function Header() {
                 {isExpanded ? (
                   <>
                     <NavLink to={"/profile"} onClick={() => changePage("info")}>
-                      {" "}
                       Profile info
                     </NavLink>
                     <NavLink
                       to={"/profile"}
                       onClick={() => changePage("statistics")}
                     >
-                      {" "}
                       Statistics
                     </NavLink>
                   </>
                 ) : (
                   <>
-                    <img src={user.profileImage} className="avatar" />
+                    <img
+                      src={user.profileImage}
+                      className="avatar"
+                      alt="profile-image"
+                    />
                     <NavLink to={"/profile"}>
                       {user.firstName} {user.secondName}
                     </NavLink>
@@ -127,6 +129,7 @@ function Header() {
                 key={user?.profileImage}
                 src={user?.profileImage || "/image/default-avatar.webp"}
                 className="avatar"
+                alt="Hide menu profile image"
               />
             ) : (
               <Hamburger />
@@ -135,7 +138,11 @@ function Header() {
         )}
       </header>
       {isMobile && isExpanded && (
-        <div className="overlay" onClick={handleChangeMenuExpanded}>
+        <div
+          className="overlay"
+          data-testid="overlay"
+          onClick={handleChangeMenuExpanded}
+        >
           {" "}
         </div>
       )}

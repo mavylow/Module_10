@@ -3,8 +3,8 @@ import { useContext } from "react";
 import "./style.css";
 import CrossIcon from "@assets/CrossIcon";
 import { PopUpContext } from "@/providers/PopupProvider";
-import Portal from "../Portal";
-import Button from "../Button";
+import Portal from "@components/Portal";
+import Button from "@components/Button";
 
 export type ModalProps = {
   message: string;
@@ -19,6 +19,7 @@ function Modal({ message, status }: ModalProps) {
   return (
     <Portal>
       <div
+        data-testid="modal-message"
         className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
       >
         <span> {message}</span>
