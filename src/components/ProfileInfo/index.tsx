@@ -30,7 +30,6 @@ const ProfileInfo = observer(() => {
   const { updateUser } = useContext(AuthContext);
 
   const dispatch = useDispatch<AppDispatch>();
-  //const { changeTheme, theme } = useContext(ThemeContext);
 
   const initialValues = useMemo(
     () => ({

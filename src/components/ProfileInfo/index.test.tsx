@@ -3,7 +3,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProfileInfo from "@components/ProfileInfo";
 import { AuthContext } from "@providers/AuthProvider";
-import { ThemeContext } from "@providers/ThemeProvider";
+
 import "@testing-library/jest-dom/vitest";
 import authReducer, { logOut } from "@/slices/authSlice";
 import { Provider } from "react-redux";
@@ -11,6 +11,15 @@ import { configureStore } from "@reduxjs/toolkit";
 
 const mockUpdateUser = vi.fn();
 const mockChangeTheme = vi.fn();
+
+vi.mock("@/store/themeStore", () => ({
+  default: {
+    value: "dark",
+    changeTheme: () => mockChangeTheme(),
+    setTheme: vi.fn(),
+    resetTheme: vi.fn(),
+  },
+}));
 
 const mockUser = {
   id: 1,
@@ -72,15 +81,7 @@ const renderComponent = (store = createTestStore()) => {
           updateUser: mockUpdateUser,
         }}
       >
-        <ThemeContext.Provider
-          value={{
-            theme: "light",
-            changeTheme: mockChangeTheme,
-            resetTheme: vi.fn(),
-          }}
-        >
-          <ProfileInfo />
-        </ThemeContext.Provider>
+        <ProfileInfo />
       </AuthContext.Provider>
     </Provider>
   );
@@ -151,7 +152,7 @@ describe("ProfileInfo", () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
-    await user.click(screen.getByText("Light theme"));
+    await user.click(screen.getByText("Dark theme"));
 
     expect(mockChangeTheme).toHaveBeenCalledTimes(1);
   });
