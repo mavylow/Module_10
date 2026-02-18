@@ -13,6 +13,9 @@ import * as Yup from "yup";
 import type { IProfileForm } from "@/interfaces";
 import Checkbox from "@components/Checkbox";
 import { ThemeContext } from "@providers/ThemeProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { type AppDispatch, type RootState } from "@/store";
+import { logOut } from "@/slices/authSlice";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),
@@ -22,7 +25,10 @@ const IProfileSchema = Yup.object({
 });
 
 function ProfileInfo() {
-  const { logOut, user, updateUser } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const { updateUser } = useContext(AuthContext);
+
+  const dispatch = useDispatch<AppDispatch>();
   const { changeTheme, theme } = useContext(ThemeContext);
 
   const initialValues = useMemo(
@@ -43,7 +49,7 @@ function ProfileInfo() {
   });
 
   const handleLogout = () => {
-    logOut();
+    dispatch(logOut());
   };
 
   const changeProfile = (data: IProfileForm) => {

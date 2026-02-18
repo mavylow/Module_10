@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@/providers/AuthProvider";
 import { useFormik } from "formik";
 import "./style.css";
 import Button from "@components/Button";
@@ -12,6 +11,8 @@ import ErrorIcon from "@assets/CrossIcon";
 import Textarea from "@components/Textarea";
 import * as Yup from "yup";
 import { fetchData } from "@utils/apiUtil";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 const postFormInitial = {
   title: "",
@@ -59,7 +60,7 @@ interface ICreatePostProps {
 }
 
 function CreatePost({ onAdd }: ICreatePostProps) {
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

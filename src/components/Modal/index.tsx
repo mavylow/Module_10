@@ -5,15 +5,9 @@ import CrossIcon from "@assets/CrossIcon";
 import { PopUpContext } from "@/providers/PopupProvider";
 import Portal from "@components/Portal";
 import Button from "@components/Button";
+import type { IModal } from "@/interfaces";
 
-export type ModalProps = {
-  message: string;
-  status: modalStatus;
-};
-
-export type modalStatus = "success" | "error" | "warning";
-
-function Modal({ message, status }: ModalProps) {
+function Modal({ message, status }: IModal) {
   const { isOpen, handleCloseModal } = useContext(PopUpContext);
 
   return (

@@ -2,10 +2,11 @@ import SidekickLogoText from "@assets/SidekickLogoText";
 import SidekickLogo from "@assets/SidekickLogo";
 import "./style.css";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@providers/AuthProvider";
 import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
 import { ProfilePageContext } from "@providers/ProfilePageProvider";
+import { useSelector } from "react-redux";
+import { type RootState } from "@/store";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
@@ -14,7 +15,7 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
   const { changePage } = useContext(ProfilePageContext);
 
   useEffect(() => {

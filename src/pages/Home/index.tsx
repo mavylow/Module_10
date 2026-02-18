@@ -1,15 +1,15 @@
-import { useContext } from "react";
 import { useLoaderData, useRevalidator } from "react-router";
 import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
 import type { IPost } from "@/interfaces";
-import { AuthContext } from "@providers/AuthProvider";
 import CreatePost from "@components/CreatePost";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 function Home() {
   const posts = useLoaderData<IPost[]>();
   const { revalidate } = useRevalidator();
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   return (
     <main className="home">

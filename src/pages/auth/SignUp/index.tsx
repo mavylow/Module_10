@@ -1,19 +1,22 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import MailIcon from "@assets/MailIcon";
 import EyeOpenIcon from "@assets/EyeOpenIcon";
 import EyeCrossedIcon from "@/assets/EyeCrossedIcon";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import "../style.css";
-import { AuthContext } from "@providers/AuthProvider";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import CrossIcon from "@/assets/CrossIcon";
 import CheckIcon from "@/assets/CheckIcon";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { signUp } from "@/slices/authSlice";
 
 const FormSchema = z.object({
   email: z.email("Email is not valid"),
@@ -41,18 +44,23 @@ function SignUp() {
     reValidateMode: "onChange",
   });
 
-  const { signUp } = useContext(AuthContext);
-
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuth = useSelector<RootState>((state) => state.auth.isAuth);
+  const navigate = useNavigate();
   const showEmailValidation = touchedFields.email || submitCount > 0;
 
   const showPasswordValidation = touchedFields.password || submitCount > 0;
 
   const onSubmit = handleSubmit((data) => {
-    signUp(data);
+    dispatch(signUp(data));
   });
 
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
   return (
     <main>
       <form className="sing-up" onSubmit={onSubmit}>

@@ -1,19 +1,21 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import MailIcon from "@assets/MailIcon";
 import EyeOpenIcon from "@assets/EyeOpenIcon";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import "@pages/auth/style.css";
-import { AuthContext } from "@providers/AuthProvider";
 import { useFormik } from "formik";
 import type { IForm } from "@/interfaces";
 import * as Yup from "yup";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import CheckIcon from "@assets/CheckIcon";
 import CrossIcon from "@assets/CrossIcon";
 import EyeCrossedIcon from "@assets/EyeCrossedIcon";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { signIn } from "@/slices/authSlice";
 
 const FormSchema = Yup.object({
   email: Yup.string().required().email("Write correct email"),
@@ -24,18 +26,26 @@ const FormSchema = Yup.object({
 });
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuth = useSelector<RootState>((state) => state.auth.isAuth);
   const form = useFormik<IForm>({
     initialValues: { email: "", password: "" },
     validationSchema: FormSchema,
-    onSubmit: (data) => signIn(data),
+    onSubmit: (data) => dispatch(signIn(data)),
   });
+
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
 
   const handleShowPassword = () => {
     setIsPasswordOpen((prev) => !prev);
   };
 
-  const { signIn } = useContext(AuthContext);
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
 
   return (
     <main>

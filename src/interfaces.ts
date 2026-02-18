@@ -92,3 +92,10 @@ export interface MonthStat {
 }
 
 export type TProfilePages = "info" | "statistics";
+
+export type IModal = {
+  message: string;
+  status: modalStatus;
+};
+
+export type modalStatus = "success" | "error" | "warning" | null;

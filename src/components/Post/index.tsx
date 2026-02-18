@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
 import Comment from "@components/Comment";
@@ -7,7 +7,7 @@ import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@providers/AuthProvider";
+
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
@@ -15,6 +15,8 @@ import { fetchData } from "@utils/apiUtil";
 import ChevronIconExpanded from "@assets/ChevronIconExpanded";
 import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 interface PostProps {
   post: IPost;
@@ -25,7 +27,7 @@ function Post({ post, onLike }: PostProps) {
   const { id, authorId, title, content, image, likedByUsers, creationDate } =
     post;
 
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [author, setAuthor] = useState<IUser | null>(null);
   const [comments, setComments] = useState<IComment[] | null>(null);

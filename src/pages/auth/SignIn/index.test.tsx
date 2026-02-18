@@ -58,10 +58,9 @@ const renderComponent = () => {
     <AuthContext.Provider
       value={{
         user: null,
-        logOut: vi.fn(),
+
         updateUser: vi.fn(),
         signIn: mockSignIn,
-        signUp: vi.fn(),
       }}
     >
       <SignIn />
