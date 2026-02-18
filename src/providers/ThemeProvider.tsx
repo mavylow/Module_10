@@ -1,25 +1,12 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
-
-export type ThemeType = "light" | "dark";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState, type ReactNode } from "react";
+import theme from "@/store/themeStore";
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-interface IThemeContext {
-  theme: ThemeType;
-  changeTheme: () => void;
-  resetTheme: () => void;
-}
-
-export const ThemeContext = createContext<IThemeContext>({
-  theme: "dark",
-  changeTheme: () => {},
-  resetTheme: () => {},
-});
-
-function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeType>("dark");
+const ThemeProvider = observer(({ children }: ThemeProviderProps) => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -30,34 +17,23 @@ function ThemeProvider({ children }: ThemeProviderProps) {
     const storageTheme = localStorage.getItem("theme");
 
     if (storageTheme === "light" || storageTheme === "dark") {
-      setTheme(storageTheme);
+      theme.setTheme(storageTheme);
     } else {
       localStorage.setItem("theme", "dark");
     }
 
     setIsInitialized(true);
+    console.log(theme.value);
   }, []);
 
   useEffect(() => {
     if (!isInitialized) return;
 
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme, isInitialized]);
+    document.documentElement.setAttribute("data-theme", theme.value);
+    localStorage.setItem("theme", theme.value);
+  }, [theme.value, isInitialized]);
 
-  const changeTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
-  const resetTheme = () => {
-    setTheme("dark");
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, changeTheme, resetTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
+  return <>{children}</>;
+});
 
 export default ThemeProvider;

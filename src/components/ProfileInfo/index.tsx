@@ -12,10 +12,11 @@ import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import * as Yup from "yup";
 import type { IProfileForm } from "@/interfaces";
 import Checkbox from "@components/Checkbox";
-import { ThemeContext } from "@providers/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "@/store";
 import { logOut } from "@/slices/authSlice";
+import { observer } from "mobx-react-lite";
+import theme from "@/store/themeStore";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),
@@ -24,12 +25,12 @@ const IProfileSchema = Yup.object({
   description: Yup.string().max(200, "Max 200 chars").nullable(),
 });
 
-function ProfileInfo() {
+const ProfileInfo = observer(() => {
   const user = useSelector((state: RootState) => state.auth.user);
   const { updateUser } = useContext(AuthContext);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { changeTheme, theme } = useContext(ThemeContext);
+  //const { changeTheme, theme } = useContext(ThemeContext);
 
   const initialValues = useMemo(
     () => ({
@@ -124,10 +125,12 @@ function ProfileInfo() {
           <h2>Preferences</h2>
           <div className="theme">
             <Checkbox
-              onToggle={changeTheme}
+              onToggle={() => theme.changeTheme()}
               id="theme"
               description={
-                theme.slice(0, 1).toUpperCase() + theme.slice(1) + " theme"
+                theme.value.slice(0, 1).toUpperCase() +
+                theme.value.slice(1) +
+                " theme"
               }
             />
           </div>
@@ -143,6 +146,6 @@ function ProfileInfo() {
       </div>
     </form>
   );
-}
+});
 
 export default ProfileInfo;
