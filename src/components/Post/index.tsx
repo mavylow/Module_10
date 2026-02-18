@@ -7,7 +7,6 @@ import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FrameWrapper from "@components/FrameWrapper";
-
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";

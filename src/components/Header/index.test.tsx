@@ -2,12 +2,13 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import Header from "@components/Header";
-import { AuthContext } from "@/providers/AuthProvider";
-import type { IUser } from "@/interfaces";
+import authReducer from "@/slices/authSlice";
 
 import { ProfilePageContext } from "@/providers/ProfilePageProvider";
 import type { ReactNode } from "react";
 import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 vi.mock("@assets/SidekickLogoText", () => ({
   default: () => <svg data-testid="logo-text-icon" />,
@@ -51,12 +52,6 @@ const mockUser = {
   modifiedDate: "2025-10-02T12:00:00Z",
 };
 
-const mockAuthContext = {
-  signIn: vi.fn(),
-  signUp: vi.fn(),
-  updateUser: vi.fn(),
-  logOut: vi.fn(),
-};
 const mockChangePage = vi.fn();
 
 const mockedProfilePageContext = {
@@ -64,13 +59,40 @@ const mockedProfilePageContext = {
   changePage: mockChangePage,
 };
 
-const renderWithProvider = (user: IUser | null) => {
-  render(
-    <AuthContext.Provider value={{ user, ...mockAuthContext }}>
+const mockUseSelector = vi.fn();
+
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => mockUseSelector(),
+  };
+});
+
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
+        user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
+};
+
+const renderComponent = (store = createTestStore()) => {
+  return render(
+    <Provider store={store}>
       <ProfilePageContext.Provider value={{ ...mockedProfilePageContext }}>
         <Header />
       </ProfilePageContext.Provider>
-    </AuthContext.Provider>
+    </Provider>
   );
 };
 
@@ -82,7 +104,8 @@ describe("Header", () => {
 
   it("header without auth", () => {
     vi.stubGlobal("innerWidth", 769);
-    renderWithProvider(null);
+    vi.mocked(mockUseSelector).mockReturnValue(null);
+    renderComponent();
 
     expect(screen.getByTestId("logo-text-icon")).toBeInTheDocument();
     expect(screen.getByTestId("logo-icon")).toBeInTheDocument();
@@ -93,7 +116,8 @@ describe("Header", () => {
 
   it("header with auth", () => {
     vi.spyOn(window.screen, "width", "get").mockReturnValue(769);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     expect(screen.getByTestId("logo-text-icon")).toBeInTheDocument();
     expect(screen.getByTestId("logo-icon")).toBeInTheDocument();
@@ -107,19 +131,21 @@ describe("Header", () => {
 
   it("changing desktop top mobile class", () => {
     vi.stubGlobal("innerWidth", 769);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
     expect(screen.getByTestId(`header`).className).toMatch(/desktop.+/);
 
     cleanup();
     vi.stubGlobal("innerWidth", 767);
-    renderWithProvider(mockUser);
+    renderComponent();
 
     expect(screen.getByTestId(`header`).className).toMatch(/mobile.+/);
   });
 
   it("expand and hide mobile menu", async () => {
     vi.stubGlobal("innerWidth", 767);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const expandedButton = screen
       .getByTestId("hamburger-icon")
@@ -150,7 +176,8 @@ describe("Header", () => {
 
   it("navigating to profile page", async () => {
     vi.stubGlobal("innerWidth", 767);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const expandedButton = screen
       .getByTestId("hamburger-icon")
@@ -168,7 +195,8 @@ describe("Header", () => {
 
   it("navigating to statistics", async () => {
     vi.stubGlobal("innerWidth", 767);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const expandedButton = screen
       .getByTestId("hamburger-icon")

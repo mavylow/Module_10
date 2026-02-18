@@ -1,10 +1,11 @@
-import { AuthContext } from "@providers/AuthProvider";
 import { cleanup, render, screen } from "@testing-library/react";
 import { vi, describe, expect, it, afterEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import Home from ".";
-import type { IUser } from "@/interfaces";
+import authReducer from "@/slices/authSlice";
 import { useLoaderData } from "react-router";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 vi.mock("@components/Sidebar", () => ({
   default: () => <aside data-testid="sidebar" />,
@@ -30,7 +31,15 @@ vi.mock("react-router", async () => {
     }),
   };
 });
-const mockUser = {
+const mockUseSelector = vi.fn();
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => mockUseSelector(),
+  };
+});
+let mockUser = {
   id: 1,
   username: "helenahills",
   firstName: "Helena",
@@ -124,19 +133,30 @@ const mockPosts = [
   },
 ];
 
-const mockAuthContext = {
-  signIn: vi.fn(),
-  signUp: vi.fn(),
-  updateUser: vi.fn(),
-  logOut: vi.fn(),
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
+        user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
 };
 
-const renderWithProvider = (user: IUser | null) =>
-  render(
-    <AuthContext.Provider value={{ user, ...mockAuthContext }}>
+const renderComponent = (store = createTestStore()) => {
+  return render(
+    <Provider store={store}>
       <Home />
-    </AuthContext.Provider>
+    </Provider>
   );
+};
 
 describe("Home", () => {
   afterEach(() => {
@@ -145,8 +165,8 @@ describe("Home", () => {
 
   it("homepage without auth", () => {
     vi.mocked(useLoaderData).mockReturnValue(mockPosts);
-
-    renderWithProvider(null);
+    vi.mocked(mockUseSelector).mockReturnValue(null);
+    renderComponent();
 
     const posts = screen.getAllByTestId("post");
     expect(posts).toHaveLength(mockPosts.length);
@@ -160,7 +180,8 @@ describe("Home", () => {
 
   it("homepage with auth", () => {
     vi.mocked(useLoaderData).mockReturnValue(mockPosts);
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const posts = screen.getAllByTestId("post");
     expect(posts).toHaveLength(mockPosts.length);

@@ -2,9 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import SignIn from "@pages/auth/SignIn";
 import { userEvent } from "@testing-library/user-event";
-import { AuthContext } from "@providers/AuthProvider";
+import authReducer from "@/slices/authSlice";
 import "@testing-library/jest-dom/vitest";
 import type { ReactNode } from "react";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 vi.mock("@assets/MailIcon", () => ({
   default: () => <svg data-testid="mail-icon" />,
@@ -49,22 +51,55 @@ vi.mock("react-router", () => {
         {children}
       </a>
     ),
+    useNavigate: () => {
+      navigate: vi.fn();
+    },
   };
 });
-const mockSignIn = vi.fn();
 
-const renderComponent = () => {
-  return render(
-    <AuthContext.Provider
-      value={{
+const mockDispatch = vi.fn();
+
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useDispatch: () => mockDispatch,
+    useSelector: () => false,
+  };
+});
+
+const mockSignInAction = vi.fn();
+
+vi.mock("@/slices/authSlice", async () => {
+  const actual = await vi.importActual("@/slices/authSlice");
+  return {
+    ...actual,
+    signIn: vi.fn(() => mockSignInAction),
+  };
+});
+
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
         user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
+};
 
-        updateUser: vi.fn(),
-        signIn: mockSignIn,
-      }}
-    >
+const renderComponent = (store = createTestStore()) => {
+  return render(
+    <Provider store={store}>
       <SignIn />
-    </AuthContext.Provider>
+    </Provider>
   );
 };
 
@@ -106,13 +141,8 @@ describe("SignIn", () => {
     expect(await screen.findByTestId("thumb-up-icon")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /sing in/i }));
 
-    expect(mockSignIn).toHaveBeenCalledTimes(1);
-    expect(mockSignIn).toHaveBeenCalledWith(
-      expect.objectContaining({
-        email: "newusername@gmail.com",
-        password: "password128",
-      })
-    );
+    expect(mockDispatch).toHaveBeenCalledTimes(1);
+    expect(mockDispatch).toHaveBeenCalledWith(mockSignInAction);
   });
 
   it("shows validation error when email is too wrong", async () => {
@@ -126,7 +156,7 @@ describe("SignIn", () => {
 
     expect(await screen.findByText("Email is not valid")).toBeInTheDocument();
 
-    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("shows validation error when email is too wrong", async () => {
@@ -141,7 +171,7 @@ describe("SignIn", () => {
       await screen.findByText("Password must contain at least one number")
     ).toBeInTheDocument();
 
-    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("change password visibility", async () => {

@@ -2,10 +2,11 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import CreatePost from "@components/CreatePost";
-import type { IUser } from "@/interfaces";
-import { AuthContext } from "@/providers/AuthProvider";
+import authReducer from "@/slices/authSlice";
 import userEvent from "@testing-library/user-event";
 import { fetchData } from "@utils/apiUtil";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 vi.mock("@assets/EditPenIcon", () => ({
   default: () => <svg data-testid={"edit-pen-icon"} />,
@@ -26,45 +27,50 @@ vi.mock("@utils/apiUtil", () => ({
 
 const mockedFetchData = vi.mocked(fetchData);
 
-const mockAuthContext = {
-  signIn: vi.fn(),
-  signUp: vi.fn(),
-  updateUser: vi.fn(),
-  logOut: vi.fn(),
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
+        user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
 };
 
-const mockUser = {
-  id: 1,
-  username: "helenahills",
-  firstName: "Helena",
-  secondName: "Hills",
-  email: "helena.hills@social.com",
-  description: "Travel and design enthusiast.",
-  profileImage: "/assets/user-helena.png",
-  lastLogin: "2025-10-02T12:00:00Z",
-  creationDate: "2023-11-01T09:00:00Z",
-  modifiedDate: "2025-10-02T12:00:00Z",
-};
-
-const renderWithProvider = (user: IUser | null) => {
+const renderComponent = (store = createTestStore()) => {
   const onAdd = vi.fn();
-  render(
-    <AuthContext.Provider value={{ user, ...mockAuthContext }}>
+  return render(
+    <Provider store={store}>
       <CreatePost onAdd={onAdd} />
-    </AuthContext.Provider>
+    </Provider>
   );
 };
+
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => false,
+  };
+});
 
 describe("CreatePost", () => {
   afterEach(() => {
     cleanup();
   });
   it("create post with close modal", () => {
-    renderWithProvider(mockUser);
+    renderComponent();
   });
 
   it("handle show add post modal", async () => {
-    renderWithProvider(mockUser);
+    renderComponent();
 
     const tellEveryoneButton = screen.getByTestId("button");
 
@@ -80,7 +86,7 @@ describe("CreatePost", () => {
   });
 
   it("closes modal when close button is clicked", async () => {
-    renderWithProvider(mockUser);
+    renderComponent();
 
     const tellEveryoneButton = screen.getByTestId("button");
     await userEvent.click(tellEveryoneButton);
@@ -95,7 +101,7 @@ describe("CreatePost", () => {
   });
 
   it("add new post", async () => {
-    renderWithProvider(mockUser);
+    renderComponent();
 
     const tellEveryoneButton = screen.getByTestId("button");
     await userEvent.click(tellEveryoneButton);

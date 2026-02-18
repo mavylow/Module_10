@@ -3,9 +3,10 @@ import { vi, describe, expect, it, afterEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import Post from "@components/Post";
 import userEvent from "@testing-library/user-event";
-import type { IUser } from "@/interfaces";
-import { AuthContext } from "@providers/AuthProvider";
+import authReducer from "@/slices/authSlice";
 import type { apiMethod } from "@/utils/apiUtil";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 vi.mock("@assets/HeartDislikeIcon", () => ({
   default: () => <svg data-testid="heart-dislike-icon" />,
@@ -128,18 +129,38 @@ vi.mock("@utils/apiUtil", () => ({
 
 const onLike = vi.fn();
 
-const mockAuthContext = {
-  signIn: vi.fn(),
-  signUp: vi.fn(),
-  updateUser: vi.fn(),
-  logOut: vi.fn(),
+const mockUseSelector = vi.fn();
+
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => mockUseSelector(),
+  };
+});
+
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
+        user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
 };
 
-const renderWithProvider = (user: IUser | null) => {
-  render(
-    <AuthContext.Provider value={{ user, ...mockAuthContext }}>
+const renderComponent = (store = createTestStore()) => {
+  return render(
+    <Provider store={store}>
       <Post post={mockPost} onLike={onLike} />
-    </AuthContext.Provider>
+    </Provider>
   );
 };
 
@@ -149,7 +170,8 @@ describe("Post", () => {
     vi.clearAllMocks();
   });
   it("ui of a post with auth", async () => {
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
     expect(await screen.findByText("Helena")).toBeInTheDocument();
     expect(
       await screen.findByAltText("Profile picture of helenahills")
@@ -164,7 +186,8 @@ describe("Post", () => {
   });
 
   it("ui of a post with auth", async () => {
-    renderWithProvider(null);
+    vi.mocked(mockUseSelector).mockReturnValue(null);
+    renderComponent();
     expect(await screen.findByText("Helena")).toBeInTheDocument();
     expect(
       await screen.findByAltText("Profile picture of helenahills")
@@ -179,7 +202,8 @@ describe("Post", () => {
   });
 
   it("expand comment section", async () => {
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const expandButton = screen
       .queryByTestId("chevron-icon")
@@ -195,7 +219,8 @@ describe("Post", () => {
   });
 
   it("like and dislike post", async () => {
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const likeSvg = screen.queryByTestId("heart-like-icon");
 
@@ -215,7 +240,8 @@ describe("Post", () => {
   it("add not empty comment", async () => {
     const user = userEvent.setup();
 
-    renderWithProvider(mockUser);
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    renderComponent();
 
     const expandButton = screen
       .queryByTestId("chevron-icon")

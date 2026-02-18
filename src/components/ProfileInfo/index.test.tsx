@@ -5,8 +5,10 @@ import ProfileInfo from "@components/ProfileInfo";
 import { AuthContext } from "@providers/AuthProvider";
 import { ThemeContext } from "@providers/ThemeProvider";
 import "@testing-library/jest-dom/vitest";
+import authReducer, { logOut } from "@/slices/authSlice";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 
-const mockLogOut = vi.fn();
 const mockUpdateUser = vi.fn();
 const mockChangeTheme = vi.fn();
 
@@ -23,27 +25,64 @@ const mockUser = {
   modifiedDate: "2025-10-02T12:00:00Z",
 };
 
-const renderComponent = () => {
+const mockUseSelector = vi.fn();
+
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => mockUseSelector(),
+    useDispatch: () => logOut(),
+  };
+});
+
+const mockLogOutAction = vi.fn();
+
+vi.mock("@/slices/authSlice", async () => {
+  const actual = await vi.importActual("@/slices/authSlice");
+  return {
+    ...actual,
+    logOut: vi.fn(() => mockLogOutAction),
+  };
+});
+
+const createTestStore = (initialState = {}) => {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+    },
+    preloadedState: {
+      auth: {
+        user: null,
+        isAuth: false,
+        isLoading: false,
+        error: null,
+        ...initialState,
+      },
+    },
+  });
+};
+
+const renderComponent = (store = createTestStore()) => {
   return render(
-    <AuthContext.Provider
-      value={{
-        user: mockUser,
-        logOut: mockLogOut,
-        updateUser: mockUpdateUser,
-        signIn: vi.fn(),
-        signUp: vi.fn(),
-      }}
-    >
-      <ThemeContext.Provider
+    <Provider store={store}>
+      <AuthContext.Provider
         value={{
-          theme: "light",
-          changeTheme: mockChangeTheme,
-          resetTheme: vi.fn(),
+          user: mockUser,
+          updateUser: mockUpdateUser,
         }}
       >
-        <ProfileInfo />
-      </ThemeContext.Provider>
-    </AuthContext.Provider>
+        <ThemeContext.Provider
+          value={{
+            theme: "light",
+            changeTheme: mockChangeTheme,
+            resetTheme: vi.fn(),
+          }}
+        >
+          <ProfileInfo />
+        </ThemeContext.Provider>
+      </AuthContext.Provider>
+    </Provider>
   );
 };
 
@@ -54,6 +93,7 @@ describe("ProfileInfo", () => {
   });
 
   it("renders user data correctly", () => {
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
     expect(screen.getByText("Edit profile")).toBeInTheDocument();
@@ -70,8 +110,8 @@ describe("ProfileInfo", () => {
 
   it("allows user to change profile data and submit form", async () => {
     const user = userEvent.setup();
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
-
     const usernameInput = screen.getByPlaceholderText("Write your username");
 
     await user.clear(usernameInput);
@@ -92,6 +132,7 @@ describe("ProfileInfo", () => {
 
   it("shows validation error when username is too long", async () => {
     const user = userEvent.setup();
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
     const usernameInput = screen.getByPlaceholderText("Write your username");
@@ -107,6 +148,7 @@ describe("ProfileInfo", () => {
 
   it("calls changeTheme when theme checkbox is toggled", async () => {
     const user = userEvent.setup();
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
     await user.click(screen.getByText("Light theme"));
@@ -116,10 +158,11 @@ describe("ProfileInfo", () => {
 
   it("calls logout when Logout button is clicked", async () => {
     const user = userEvent.setup();
+    vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
     await user.click(screen.getByRole("button", { name: /logout/i }));
 
-    expect(mockLogOut).toHaveBeenCalledTimes(1);
+    expect(mockLogOutAction).toHaveBeenCalledTimes(1);
   });
 });
