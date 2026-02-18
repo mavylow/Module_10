@@ -9,13 +9,15 @@ import { type IProfileForm, type IUser } from "@/interfaces";
 import { useLocation, useNavigate } from "react-router";
 import { fetchData } from "@utils/apiUtil";
 import { PopUpContext } from "./PopupProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { type AppDispatch, type RootState } from "@/store";
+import { restoreAuth } from "@/slices/authSlice";
 
 interface IForm {
   email: string;
   password: string;
 }
-
-interface IAuthContext {
+export interface IAuthContext {
   user: IUser | null;
   signIn: (formData: IForm) => void;
   signUp: (formData: IForm) => void;
@@ -42,8 +44,11 @@ function AuthProvider({ children }: AuthProviderProps) {
   const location = useLocation();
   const { handleShowModal } = useContext(PopUpContext);
 
+  const newUser = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     checkCurrentUser();
+    dispatch(restoreAuth());
   }, []);
 
   useEffect(() => {

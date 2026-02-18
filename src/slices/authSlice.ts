@@ -1,0 +1,228 @@
+import type { IForm, IUser } from "@/interfaces";
+import { fetchData } from "@/utils/apiUtil";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { modalSlice } from "./modalSlice";
+
+interface IAuthState {
+  user: IUser | null;
+  isAuth: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: IAuthState = {
+  user: null,
+  isAuth: false,
+  isLoading: false,
+  error: null,
+};
+
+export const signIn = createAsyncThunk(
+  "auth/signin",
+  async (form: IForm, { dispatch, rejectWithValue }) => {
+    try {
+      const { token, user } = await fetchData("/api/login", "POST", {
+        email: form.email,
+        password: form.password,
+      });
+
+      if (!user || !token) {
+        throw new Error("Invalid credentials");
+      }
+
+      dispatch(
+        modalSlice.actions.setModal({
+          message: "Signed in successfully",
+          status: "success",
+        })
+      );
+      
+      localStorage.setItem("token", token);
+      return user;
+      
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Authentication failed";
+      
+      dispatch(
+        modalSlice.actions.setModal({
+          message,
+          status: "error",
+        })
+      );
+      
+      return rejectWithValue(message);
+    }
+  }
+);
+
+
+export const restoreAuth = createAsyncThunk(
+  "auth/restoreAuth",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        return rejectWithValue("No token found");
+      }
+
+      const user = await fetchData("/api/me", "GET");
+
+      if (user) {
+        dispatch(
+          modalSlice.actions.setModal({
+            message: "Welcome back!",
+            status: "success",
+          })
+        );
+        return user;
+      } else {
+        localStorage.removeItem("token");
+        dispatch(
+          modalSlice.actions.setModal({
+            message: "Session expired",
+            status: "warning",
+          })
+        );
+        return rejectWithValue("User not found");
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      
+      dispatch(
+        modalSlice.actions.setModal({
+          message: "Authentication failed",
+          status: "error",
+        })
+      );
+      
+      localStorage.removeItem("token");
+      return rejectWithValue("Auth check failed");
+    }
+  }
+);
+
+
+export const signUp = createAsyncThunk(
+  "auth/signup",
+  async (form: IForm, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await fetchData("/api/signup", "POST", {
+        email: form.email,
+        password: form.password,
+      });
+
+      if (response.message) {
+        dispatch(
+          modalSlice.actions.setModal({
+            message: response.message,
+            status: response.status || "info",
+          })
+        );
+      }
+      
+      return response;
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Signup failed";
+      
+      dispatch(
+        modalSlice.actions.setModal({
+          message,
+          status: "error",
+        })
+      );
+      
+      return rejectWithValue(message);
+    }
+  }
+);
+
+
+export const logOut = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    localStorage.removeItem("token");
+    
+    dispatch(
+      modalSlice.actions.setModal({
+        message: "Logged out successfully",
+        status: "info",
+      })
+    );
+    
+    return null;
+  }
+);
+
+export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    clearAuth: (state) => {
+      state.user = null;
+      state.isAuth = false;
+      state.error = null;
+      state.isLoading = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signIn.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuth = true;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(signIn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuth = false;
+        state.user = null;
+        state.error = action.payload as string;
+      })
+      
+      .addCase(signUp.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(signUp.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      
+
+      .addCase(restoreAuth.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(restoreAuth.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuth = true;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(restoreAuth.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuth = false; 
+        state.user = null;
+        state.error = action.payload as string;
+      })
+      
+
+      .addCase(logOut.fulfilled, (state) => {
+        state.user = null;
+        state.isAuth = false;
+        state.error = null;
+        state.isLoading = false;
+      });
+  },
+});
+
+export const { clearAuth } = authSlice.actions;
+export default authSlice.reducer;
