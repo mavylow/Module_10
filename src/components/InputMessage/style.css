@@ -1,0 +1,24 @@
+.input-message {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.warning svg path {
+  fill: var(--light-text-color);
+}
+
+.error-text {
+  margin: 0;
+  color: var(--primary-red);
+}
+.success-text {
+  margin: 0;
+  color: var(--primary-orange);
+}
+.warning-text {
+  margin: 0;
+  color: var(--light-text-color);
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import FrameWrapper from "@components/FrameWrapper";
 import { useFormik } from "formik";
 import "./style.css";
@@ -56,7 +56,7 @@ interface IPostForm {
 }
 
 interface ICreatePostProps {
-  onAdd?: () => void;
+  onAdd: () => void;
 }
 
 function CreatePost({ onAdd }: ICreatePostProps) {
@@ -83,7 +83,15 @@ function CreatePost({ onAdd }: ICreatePostProps) {
     await fetchData("/api/posts", "POST", newPost);
     postForm.resetForm();
     handleDisplayAddMenu();
-    onAdd && onAdd();
+    onAdd();
+  };
+
+  const addFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0];
+    if (!file) {
+      return;
+    }
+    postForm.setFieldValue("image", file);
   };
 
   return (
@@ -137,13 +145,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             type="file"
             accept="image/*"
             hidden
-            onChange={(event) => {
-              const file = event.currentTarget.files?.[0];
-              if (!file) {
-                return;
-              }
-              postForm.setFieldValue("image", file);
-            }}
+            onChange={addFile}
           />
           {postForm.errors.image && <span>{postForm.errors.image}</span>}
           <Button type="submit" description="Create" />

@@ -17,6 +17,7 @@ import { type AppDispatch, type RootState } from "@/store";
 import { logOut } from "@/slices/authSlice";
 import { observer } from "mobx-react-lite";
 import theme from "@/store/themeStore";
+import InputMessage from "../InputMessage";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),
@@ -67,7 +68,7 @@ const ProfileInfo = observer(() => {
           </h3>
           <p> Change profile photo</p>
         </div>
-        <div className="username">
+        <div className="username input-container">
           <Input
             id="username"
             description="Username"
@@ -78,13 +79,22 @@ const ProfileInfo = observer(() => {
             value={formik.values.username}
             onChange={formik.handleChange}
           />
-          {formik.errors.username && (
-            <div className="info-warning">
-              <ErrorWarningIcon /> {formik.errors.username}
-            </div>
+
+          {formik.errors.username ? (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={formik.errors.username}
+            />
+          ) : (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="warning"
+              message="Max 20 chars"
+            />
           )}
         </div>
-        <div className="email">
+        <div className="email input-container">
           <Input
             id="email"
             description="Email"
@@ -95,13 +105,21 @@ const ProfileInfo = observer(() => {
             value={formik.values.email}
             onChange={formik.handleChange}
           />
-          {formik.errors.email && (
-            <div className="info-warning">
-              <ErrorWarningIcon /> {formik.errors.email}
-            </div>
+          {formik.errors.email ? (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={formik.errors.email}
+            />
+          ) : (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="warning"
+              message="example@emai.com"
+            />
           )}
         </div>
-        <div className="description">
+        <div className="description input-container">
           <Textarea
             id="description"
             name="description"
@@ -111,10 +129,18 @@ const ProfileInfo = observer(() => {
             value={formik.values.description || ""}
             onChange={formik.handleChange}
           />
-          {formik.errors.description && (
-            <div className="info-warning">
-              <ErrorWarningIcon /> {formik.errors.description}
-            </div>
+          {formik.errors.description ? (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={formik.errors.description}
+            />
+          ) : (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="warning"
+              message="Max 200 chars"
+            />
           )}
         </div>
         <Button description="Save changes" type="submit" />

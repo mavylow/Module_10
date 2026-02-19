@@ -16,6 +16,7 @@ import EyeCrossedIcon from "@assets/EyeCrossedIcon";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { signIn } from "@/slices/authSlice";
+import InputMessage from "@/components/InputMessage";
 
 const FormSchema = Yup.object({
   email: Yup.string().required().email("Write correct email"),
@@ -69,10 +70,12 @@ export default function SignIn() {
             <>
               {form.errors.email ? (
                 <>
-                  <div className="input-message">
-                    <ErrorWarningIcon />
-                    <p className="error">Email is not valid</p>
-                  </div>
+                  <InputMessage
+                    message="Email is not valid"
+                    Icon={ErrorWarningIcon}
+                    status="error"
+                  />
+
                   <div className="error email-warning">
                     <CrossIcon />
                   </div>
@@ -106,15 +109,17 @@ export default function SignIn() {
           {form.values.password && (
             <>
               {form.errors.password ? (
-                <div className="input-message">
-                  <ErrorWarningIcon />
-                  <p className="error">{form.errors.password}</p>
-                </div>
+                <InputMessage
+                  message={form.errors.password}
+                  Icon={ErrorWarningIcon}
+                  status="error"
+                />
               ) : (
-                <div className="input-message">
-                  <ThumbUpIcon />
-                  <p className="correct">Your password is strong</p>
-                </div>
+                <InputMessage
+                  message="Your password is strong"
+                  Icon={ThumbUpIcon}
+                  status="success"
+                />
               )}
             </>
           )}

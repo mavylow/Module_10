@@ -78,17 +78,6 @@
   grid-row: 1 / span 2;
 }
 
-.info-warning {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--light-text-color);
-  padding-top: 8px;
-}
-.info-warning svg path {
-  fill: var(--light-text-color);
-}
-
 .theme {
   display: flex;
   align-items: center;

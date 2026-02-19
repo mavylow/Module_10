@@ -17,6 +17,7 @@ import CheckIcon from "@/assets/CheckIcon";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { signUp } from "@/slices/authSlice";
+import InputMessage from "@/components/InputMessage";
 
 const FormSchema = z.object({
   email: z.email("Email is not valid"),
@@ -85,6 +86,11 @@ function SignUp() {
                 <div className="input-message">
                   <ErrorWarningIcon />
                   <p className="error">{errors.email.message}</p>
+                  <InputMessage
+                    message={errors.email.message!}
+                    Icon={ErrorWarningIcon}
+                    status="error"
+                  />
                 </div>
                 <div className="error email-warning">
                   <CrossIcon />
@@ -117,15 +123,17 @@ function SignUp() {
 
           {showPasswordValidation &&
             (errors.password ? (
-              <div className="input-message">
-                <ErrorWarningIcon />
-                <p className="error">{errors.password.message}</p>
-              </div>
+              <InputMessage
+                message={errors.password.message!}
+                Icon={ErrorWarningIcon}
+                status="error"
+              />
             ) : (
-              <div className="input-message">
-                <ThumbUpIcon />
-                <p className="correct">Your password is strong</p>
-              </div>
+              <InputMessage
+                message="Your password is strong"
+                Icon={ThumbUpIcon}
+                status="success"
+              />
             ))}
         </div>
 
