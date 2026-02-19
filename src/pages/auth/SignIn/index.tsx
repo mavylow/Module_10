@@ -120,7 +120,7 @@ export default function SignIn() {
           )}
         </div>
 
-        <Button description="Sing In" type="submit" />
+        <Button description="Sign In" type="submit" />
       </form>
       <span>
         Forgot to create an account?{" "}

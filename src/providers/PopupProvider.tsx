@@ -31,7 +31,9 @@ function PopUpProvider({ children }: IPopUpProvider) {
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    handleShowModal();
+    if (modal.message) {
+      handleShowModal();
+    }
   }, [modal]);
 
   const handleShowModal = () => {

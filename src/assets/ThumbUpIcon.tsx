@@ -6,6 +6,7 @@ function ThumbUpIcon() {
       height="16"
       viewBox="0 0 16 16"
       fill="none"
+      className="thumb-up-icon"
     >
       <g clip-path="url(#clip0_26252_1728)">
         <path

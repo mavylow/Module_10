@@ -16,7 +16,7 @@ import type { RootState } from "@/store";
 
 const postFormInitial = {
   title: "",
-  description: "",
+  content: "",
 };
 const MAX_FILE_SIZE = 1_048_576;
 const SUPPORTED_FORMATS = [
@@ -31,7 +31,7 @@ const FormSchema = Yup.object({
     .required("Title is required")
     .max(20, "Max 20 characters"),
 
-  description: Yup.string()
+  content: Yup.string()
     .required("Description is required")
     .max(200, "Max 200 characters"),
 
@@ -51,7 +51,7 @@ const FormSchema = Yup.object({
 
 interface IPostForm {
   title: string;
-  description?: string;
+  content?: string;
   image?: Blob;
 }
 
@@ -75,6 +75,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
   };
 
   const addPost = async (data: IPostForm) => {
+    console.log(data);
     const newPost = {
       ...data,
       image: data.image ? URL.createObjectURL(data.image) : null,
@@ -116,15 +117,13 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           <Textarea
             id="post-description"
             description="Description"
-            name="description"
+            name="content"
             placeholder="Write description here..."
             Icon={EditPenIcon}
-            value={postForm.values.description || ""}
+            value={postForm.values.content || ""}
             onChange={postForm.handleChange}
           />
-          {postForm.errors.description && (
-            <span>{postForm.errors.description}</span>
-          )}
+          {postForm.errors.content && <span>{postForm.errors.content}</span>}
           <label htmlFor="image" className="postImg-label">
             <UploadFileIcon />
             <div>
@@ -164,7 +163,11 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           />
         </div>
       </FrameWrapper>
-      {isModalOpen && <div className="overlay"> </div>}
+      {isModalOpen && (
+        <div className="overlay" onClick={handleDisplayAddMenu}>
+          {" "}
+        </div>
+      )}
     </>
   );
 }

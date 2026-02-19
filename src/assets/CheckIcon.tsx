@@ -6,6 +6,7 @@ function CheckIcon() {
       height="16"
       viewBox="0 0 16 16"
       fill="none"
+      className="check-icon"
     >
       <g clipPath="url(#clip0_26252_1711)">
         <path
