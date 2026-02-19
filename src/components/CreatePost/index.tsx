@@ -56,7 +56,7 @@ interface IPostForm {
 }
 
 interface ICreatePostProps {
-  onAdd: () => void;
+  onAdd?: () => void;
 }
 
 function CreatePost({ onAdd }: ICreatePostProps) {
@@ -83,7 +83,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
     await fetchData("/api/posts", "POST", newPost);
     postForm.resetForm();
     handleDisplayAddMenu();
-    onAdd();
+    onAdd && onAdd();
   };
 
   return (

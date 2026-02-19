@@ -143,9 +143,7 @@ function Header() {
           className="overlay"
           data-testid="overlay"
           onClick={handleChangeMenuExpanded}
-        >
-          {" "}
-        </div>
+        ></div>
       )}
     </>
   );

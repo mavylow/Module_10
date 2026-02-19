@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
 import Comment from "@components/Comment";
@@ -16,6 +16,10 @@ import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import Skeleton from "@mui/material/Skeleton";
+
+const queryClient = new QueryClient();
 
 interface PostProps {
   post: IPost;
@@ -28,40 +32,55 @@ function Post({ post, onLike }: PostProps) {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [author, setAuthor] = useState<IUser | null>(null);
-  const [comments, setComments] = useState<IComment[] | null>(null);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
+
+  const { data: author } = useQuery<IUser>({
+    queryKey: ["users", authorId],
+    queryFn: () => fetchData(`api/users/${authorId}`, "GET"),
+    enabled: !!user,
+  });
+
+  const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
+    queryKey: ["posts", id, "comments"],
+    queryFn: () => fetchData(`/api/posts/${id}/comments`, "GET"),
+    enabled: !!user,
+  });
+
+  const likeMutation = useMutation({
+    mutationFn: () => fetchData("api/like", "POST", { postId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      onLike();
+    },
+  });
+  const dislikeMutation = useMutation({
+    mutationFn: () => fetchData("api/dislike", "POST", { postId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      onLike();
+    },
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: (commentId: number) =>
+      fetchData(`/api/comments/${commentId}`, "DELETE"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", id, "comments"] });
+      refetchComments();
+    },
+  });
 
   const handleExpand = () => {
     setIsCommentsExpanded((prev) => !prev);
   };
 
-  useEffect(() => {
-    if (user) {
-      getComments();
-    }
-    getAuthor();
-  }, [user]);
-
-  const getComments = async () => {
-    const commentsData = await fetchData(`/api/posts/${id}/comments`, "GET");
-    setComments(commentsData);
-  };
-
-  const getAuthor = async () => {
-    const postAuthor = await fetchData(`api/users/${authorId}`, "GET");
-    setAuthor(postAuthor);
-  };
-
   const handleDislike = async () => {
-    await fetchData("api/dislike", "POST", { postId: id });
-    onLike();
+    dislikeMutation.mutate();
   };
 
   const handleLike = async () => {
-    await fetchData("api/like", "POST", { postId: id });
-    onLike();
+    likeMutation.mutate();
   };
 
   const handleAddComment = async () => {
@@ -71,15 +90,12 @@ function Post({ post, onLike }: PostProps) {
         text: comment,
       });
     }
-    getComments();
+    refetchComments();
     setComment("");
   };
 
   const handleDeleteComment = async (commentId: number) => {
-    await fetchData(`/api/comments/${commentId}`, "DELETE");
-    setComments((prev) =>
-      prev ? prev.filter((c) => c.id !== commentId) : prev
-    );
+    addCommentMutation.mutate(commentId);
   };
 
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
@@ -153,14 +169,18 @@ function Post({ post, onLike }: PostProps) {
 
         {user && isCommentsExpanded && (
           <ul className="post-comments">
-            {comments?.map((comment, i) => (
-              <Comment
-                key={comment.id}
-                number={i + 1}
-                comment={comment}
-                onDelete={() => handleDeleteComment(comment.id)}
-              />
-            ))}
+            {!comments ? (
+              <Skeleton variant="rectangular" />
+            ) : (
+              comments.map((comment, i) => (
+                <Comment
+                  key={comment.id}
+                  number={i + 1}
+                  comment={comment}
+                  onDelete={() => handleDeleteComment(comment.id)}
+                />
+              ))
+            )}
           </ul>
         )}
         {user && (
