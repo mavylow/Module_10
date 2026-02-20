@@ -16,10 +16,8 @@ import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import Skeleton from "@mui/material/Skeleton";
-
-const queryClient = new QueryClient();
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Box, Skeleton } from "@mui/material";
 
 interface PostProps {
   post: IPost;
@@ -31,14 +29,13 @@ function Post({ post, onLike }: PostProps) {
     post;
 
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const queryClient = useQueryClient();
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
-  const { data: author } = useQuery<IUser>({
+  const { isLoading: isAuthorLoading, data: author } = useQuery<IUser>({
     queryKey: ["users", authorId],
     queryFn: () => fetchData(`api/users/${authorId}`, "GET"),
-    enabled: !!user,
   });
 
   const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
@@ -107,13 +104,19 @@ function Post({ post, onLike }: PostProps) {
       <FrameWrapper>
         <div className="without-comment">
           <div className="post-header">
-            <img
-              src={author?.profileImage}
-              alt={`Profile picture of ${author?.username}`}
-              className="post-avatar"
-              loading="lazy"
-            />
-            <h2>{author?.firstName}</h2>
+            {isAuthorLoading ? (
+              <PostHeaderSkeleton />
+            ) : (
+              <>
+                <img
+                  src={author?.profileImage}
+                  alt={`Profile picture of ${author?.username}`}
+                  className="post-avatar"
+                  loading="lazy"
+                />
+                <h2>{author?.firstName}</h2>
+              </>
+            )}
             <time
               dateTime={creationDate}
               className="post-timestamp"
@@ -152,7 +155,13 @@ function Post({ post, onLike }: PostProps) {
             <div className="comments">
               <CommentIcon />
               {user ? (
-                <span>{comments?.length} comments</span>
+                <>
+                  {comments ? (
+                    <span>{comments.length} comments</span>
+                  ) : (
+                    <Skeleton variant="text" width={10} />
+                  )}
+                </>
               ) : (
                 <span>You have to login to see the comments </span>
               )}
@@ -170,7 +179,7 @@ function Post({ post, onLike }: PostProps) {
         {user && isCommentsExpanded && (
           <ul className="post-comments">
             {!comments ? (
-              <Skeleton variant="rectangular" />
+              <CommentsSkeleton />
             ) : (
               comments.map((comment, i) => (
                 <Comment
@@ -206,5 +215,34 @@ function Post({ post, onLike }: PostProps) {
     </article>
   );
 }
+
+const PostHeaderSkeleton = () => (
+  <>
+    <Skeleton
+      variant="circular"
+      width={48}
+      height={48}
+      animation="wave"
+      className="post-avatar"
+    />
+    <Box marginLeft={2}>
+      <Skeleton variant="text" width="60%" height={24} animation="wave" />
+    </Box>
+  </>
+);
+
+const CommentsSkeleton = () => (
+  <Box sx={{ p: 2 }}>
+    {[1, 2, 3].map((i) => (
+      <Box key={i} sx={{ display: "flex", gap: 2, mb: 2 }}>
+        <Skeleton variant="circular" width={32} height={32} animation="wave" />
+        <Box sx={{ flex: 1 }}>
+          <Skeleton variant="text" width="40%" height={20} animation="wave" />
+          <Skeleton variant="text" width="80%" height={16} animation="wave" />
+        </Box>
+      </Box>
+    ))}
+  </Box>
+);
 
 export default React.memo(Post);

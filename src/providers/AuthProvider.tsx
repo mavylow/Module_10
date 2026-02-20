@@ -38,7 +38,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (!loading && !user && protectedRoutes.includes(location.pathname)) {
       navigate("/");
     }
-  }, [user, location, loading]);
+  }, [user, location.pathname, loading]);
 
   const updateUser = async (updatedUser: IProfileForm) => {
     const newUser = await fetchData("/api/profile", "PUT", updatedUser);

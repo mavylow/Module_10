@@ -68,8 +68,8 @@
 }
 
 .add-post svg {
-  height: clamp(16px, 2vw, 24px);
-  width: clamp(16px, 2vw, 24px);
+  height: clamp(16px, 2vw, 20px);
+  width: clamp(16px, 2vw, 20px);
 }
 
 .add-post h2 {
@@ -121,9 +121,11 @@
 }
 
 .post-form-header button {
-  height: clamp(24px, 3vw, 52px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   width: clamp(24px, 3vw, 52px);
-  align-items: start;
 }
 
 @media (max-width: 700px) {

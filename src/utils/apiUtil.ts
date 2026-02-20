@@ -1,5 +1,5 @@
-
 export type apiMethod = "GET" | "POST" | "PUT" | "DELETE"
+
 
 export async function fetchData(api: string, method: apiMethod, body?: any ) {
 
@@ -22,7 +22,6 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
       
       const response = await fetch(api, options);
 
-
       if(!response.ok) {
         throw new Error("Data fetching error")
       }
@@ -39,4 +38,3 @@ export async function fetchData(api: string, method: apiMethod, body?: any ) {
     const posts = await fetchData("/api/posts", "GET");
     return posts
   };
-

@@ -17,7 +17,8 @@ import { type AppDispatch, type RootState } from "@/store";
 import { logOut } from "@/slices/authSlice";
 import { observer } from "mobx-react-lite";
 import theme from "@/store/themeStore";
-import InputMessage from "../InputMessage";
+import InputMessage from "@components/InputMessage";
+import { Skeleton } from "@mui/material";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),
@@ -27,7 +28,7 @@ const IProfileSchema = Yup.object({
 });
 
 const ProfileInfo = observer(() => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { updateUser } = useContext(AuthContext);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -62,11 +63,17 @@ const ProfileInfo = observer(() => {
       <section className="edit-profile">
         <h2>Edit profile</h2>
         <div className="profile-photo">
-          <img src={user?.profileImage} />
-          <h3>
-            {user?.firstName} {user?.secondName}
-          </h3>
-          <p> Change profile photo</p>
+          {isLoading ? (
+            <ProfilePhotoSkeleton />
+          ) : (
+            <>
+              <img src={user?.profileImage} />
+              <h3>
+                {user?.firstName} {user?.secondName}
+              </h3>
+              <p> Change profile photo</p>
+            </>
+          )}
         </div>
         <div className="username input-container">
           <Input
@@ -174,3 +181,20 @@ const ProfileInfo = observer(() => {
 });
 
 export default ProfileInfo;
+
+const ProfilePhotoSkeleton = () => {
+  return (
+    <>
+      <Skeleton
+        variant="circular"
+        width={64}
+        height={64}
+        sx={{ gridRow: "1 / span 2" }}
+      />
+
+      <Skeleton width={"50%"} height={24} />
+
+      <span> Change profile photo</span>
+    </>
+  );
+};

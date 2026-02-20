@@ -19,6 +19,7 @@ function ProfilePageProvider({ children }: ProfilePageProvider) {
   const [loading, setLoading] = useState(true);
 
   const changePage = (page: TProfilePages) => {
+    localStorage.setItem("profile", page);
     setProfilePage(page);
   };
 

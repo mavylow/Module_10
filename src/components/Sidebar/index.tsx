@@ -1,49 +1,69 @@
 import FrameWrapper from "@components/FrameWrapper";
 import { SidebarElement } from "@components/SidebarElement";
 import "./style.css";
-import { useState, useEffect } from "react";
 import { fetchData } from "@utils/apiUtil";
 import type { IGroup, ISidebarUser } from "@/interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { Box, Skeleton } from "@mui/material";
 
 export default function Sidebar() {
-  const [groups, setGroups] = useState<IGroup[] | null>(null);
-  const [suggestedUser, setSuggestedUser] = useState<ISidebarUser[] | null>(
-    null
-  );
-
-  const getSuggestedUser = async () => {
-    const suggestedUser = await fetchData("/api/getSuggested", "GET");
-    setSuggestedUser(suggestedUser);
-  };
-
-  const getGroup = async () => {
-    const groups = await fetchData("/api/groups", "GET");
-    setGroups(groups);
-  };
-
-  useEffect(() => {
-    getSuggestedUser();
-    getGroup();
-  }, []);
+  const { isLoading: isGroupsLoading, data: groups } = useQuery<
+    IGroup[] | null
+  >({ queryKey: ["groups"], queryFn: () => fetchData("/api/groups", "GET") });
+  const { isLoading: isSuggestedUserLoading, data: suggestedUser } = useQuery<
+    ISidebarUser[] | null
+  >({
+    queryKey: ["groups"],
+    queryFn: () => fetchData("/api/getSuggested", "GET"),
+  });
 
   return (
     <aside>
       <FrameWrapper>
         <section className="suggested-people">
           <h3>Suggested people</h3>
-          {suggestedUser?.slice(0, 5).map((user) => (
-            <SidebarElement key={user.id} element={user} />
-          ))}
+          {isSuggestedUserLoading
+            ? [1, 2, 3].map((index) => <SidebarSkeleton key={index} />)
+            : suggestedUser
+                ?.slice(0, 5)
+                .map((user) => <SidebarElement key={user.id} element={user} />)}
         </section>
       </FrameWrapper>
       <FrameWrapper>
         <section className="suggested-communities">
           <h3>Communities you might like</h3>
-          {groups?.slice(0, 3).map((community) => (
-            <SidebarElement key={community.id} element={community} />
-          ))}
+          {isGroupsLoading
+            ? [1, 2, 3].map((index) => <SidebarSkeleton key={index} />)
+            : groups
+                ?.slice(0, 3)
+                .map((community) => (
+                  <SidebarElement key={community.id} element={community} />
+                ))}
         </section>
       </FrameWrapper>
     </aside>
   );
 }
+
+const SidebarSkeleton = () => {
+  return (
+    <Box
+      sx={{
+        display: "grid",
+        width: "293px",
+        gridTemplateColumns: "48px 1fr",
+        gridTemplateRows: "24px 1fr",
+        padding: "12px 0",
+      }}
+    >
+      <Skeleton
+        variant="circular"
+        width={48}
+        height={48}
+        sx={{ gridRow: "1 / span 2" }}
+      />
+      <Skeleton variant="text" width={"60%"} sx={{ marginLeft: "16px" }} />
+      <Skeleton variant="text" width={"30%"} sx={{ marginLeft: "16px" }} />
+    </Box>
+  );
+};

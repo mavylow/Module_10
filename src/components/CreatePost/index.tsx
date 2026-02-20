@@ -13,6 +13,8 @@ import * as Yup from "yup";
 import { fetchData } from "@utils/apiUtil";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
+import InputMessage from "@components/InputMessage";
+import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
 
 const postFormInitial = {
   title: "",
@@ -103,7 +105,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           onSubmit={postForm.handleSubmit}
         >
           <div className="post-form-header">
-            <h2>Create a new post</h2>{" "}
+            <h2>Create a new post</h2>
             <Button
               type="button"
               Icon={ErrorIcon}
@@ -121,7 +123,13 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             value={postForm.values.title}
             onChange={postForm.handleChange}
           />
-          {postForm.errors.title && <span>{postForm.errors.title}</span>}
+          {postForm.errors.title && (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={postForm.errors.title}
+            />
+          )}
           <Textarea
             id="post-description"
             description="Description"
@@ -131,7 +139,14 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             value={postForm.values.content || ""}
             onChange={postForm.handleChange}
           />
-          {postForm.errors.content && <span>{postForm.errors.content}</span>}
+          {postForm.errors.content && (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={postForm.errors.content}
+            />
+          )}
+
           <label htmlFor="image" className="postImg-label">
             <UploadFileIcon />
             <div>
@@ -147,7 +162,19 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             hidden
             onChange={addFile}
           />
-          {postForm.errors.image && <span>{postForm.errors.image}</span>}
+          {postForm.errors.image ? (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="error"
+              message={postForm.errors.image}
+            />
+          ) : (
+            <InputMessage
+              Icon={ErrorWarningIcon}
+              status="warning"
+              message="Max allowed size is 10MB"
+            />
+          )}
           <Button type="submit" description="Create" />
         </form>
       )}
@@ -166,9 +193,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
         </div>
       </FrameWrapper>
       {isModalOpen && (
-        <div className="overlay" onClick={handleDisplayAddMenu}>
-          {" "}
-        </div>
+        <div className="overlay" onClick={handleDisplayAddMenu}></div>
       )}
     </>
   );

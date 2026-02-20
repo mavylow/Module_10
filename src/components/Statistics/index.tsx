@@ -34,17 +34,33 @@ function Statistics() {
 
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        const [likesRes, commentsRes, postsRes] = await Promise.all([
-          fetchData(`/api/me/likes`, "GET"),
-          fetchData(`/api/me/comments`, "GET"),
-          fetchData(`/api/me/posts`, "GET"),
-        ]);
-        setLikes(likesRes);
-        setComments(commentsRes);
-        setPosts(postsRes);
-      } catch (err) {
-        console.error(err);
+      const results = await Promise.allSettled([
+        fetchData(`/api/me/likes`, "GET"),
+        fetchData(`/api/me/comments`, "GET"),
+        fetchData(`/api/me/posts`, "GET"),
+      ]);
+
+      const [likesResult, commentsResult, postsResult] = results;
+
+      if (likesResult.status === "fulfilled") {
+        setLikes(likesResult.value);
+      } else {
+        console.error("Failed to fetch likes:", likesResult.reason);
+        setLikes([]);
+      }
+
+      if (commentsResult.status === "fulfilled") {
+        setComments(commentsResult.value);
+      } else {
+        console.error("Failed to fetch comments:", commentsResult.reason);
+        setComments([]);
+      }
+
+      if (postsResult.status === "fulfilled") {
+        setPosts(postsResult.value);
+      } else {
+        console.error("Failed to fetch posts:", postsResult.reason);
+        setPosts([]);
       }
     };
 
@@ -98,7 +114,9 @@ function Statistics() {
       <div className="month">
         {currentMonthStats &&
           Object.entries(currentMonthStats).map(([key, stat]) => {
-            if (!stat) return null;
+            if (!stat) {
+              return null;
+            }
 
             return (
               <StatisticCard

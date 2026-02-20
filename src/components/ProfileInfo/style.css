@@ -6,6 +6,7 @@
 
 .profile h3 {
   margin: 0;
+  font-size: 16px;
 }
 
 .profile-info {
@@ -35,10 +36,6 @@
 
 .edit-profile input {
   width: min(327px, 100%);
-}
-
-.edit-profile label {
-  padding-bottom: 12px;
 }
 
 .edit-profile textarea {

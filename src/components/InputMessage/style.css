@@ -6,6 +6,11 @@
   gap: 6px;
 }
 
+.input-message svg {
+  height: clamp(14px, 2vw, 16px);
+  width: clamp(14px, 2vw, 16px);
+}
+
 .warning svg path {
   fill: var(--light-text-color);
 }
