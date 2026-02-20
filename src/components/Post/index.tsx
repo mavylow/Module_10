@@ -10,7 +10,14 @@ import FrameWrapper from "@components/FrameWrapper";
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
-import { fetchData } from "@utils/apiUtil";
+import {
+  addComment,
+  deleteComment,
+  dislikePost,
+  likePost,
+  loadPostComments,
+  loadUser,
+} from "@utils/apiUtil";
 import ChevronIconExpanded from "@assets/ChevronIconExpanded";
 import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
@@ -35,33 +42,40 @@ function Post({ post, onLike }: PostProps) {
 
   const { isLoading: isAuthorLoading, data: author } = useQuery<IUser>({
     queryKey: ["users", authorId],
-    queryFn: () => fetchData(`api/users/${authorId}`, "GET"),
+    queryFn: () => loadUser(authorId),
   });
 
   const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
     queryKey: ["posts", id, "comments"],
-    queryFn: () => fetchData(`/api/posts/${id}/comments`, "GET"),
+    queryFn: () => loadPostComments(id),
     enabled: !!user,
   });
 
   const likeMutation = useMutation({
-    mutationFn: () => fetchData("api/like", "POST", { postId: id }),
+    mutationFn: () => likePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["post"] });
       onLike();
     },
   });
   const dislikeMutation = useMutation({
-    mutationFn: () => fetchData("api/dislike", "POST", { postId: id }),
+    mutationFn: () => dislikePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["post"] });
       onLike();
     },
   });
 
+  const deleteCommentMutation = useMutation({
+    mutationFn: (commentId: number) => deleteComment(commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", id, "comments"] });
+      refetchComments();
+    },
+  });
+
   const addCommentMutation = useMutation({
-    mutationFn: (commentId: number) =>
-      fetchData(`/api/comments/${commentId}`, "DELETE"),
+    mutationFn: (commentData: string) => addComment(commentData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts", id, "comments"] });
       refetchComments();
@@ -82,17 +96,19 @@ function Post({ post, onLike }: PostProps) {
 
   const handleAddComment = async () => {
     if (comment) {
-      await fetchData("api/comments", "POST", {
-        postId: post.id,
-        text: comment,
-      });
+      addCommentMutation.mutate(
+        JSON.stringify({
+          postId: post.id,
+          text: comment,
+        })
+      );
     }
     refetchComments();
     setComment("");
   };
 
   const handleDeleteComment = async (commentId: number) => {
-    addCommentMutation.mutate(commentId);
+    deleteCommentMutation.mutate(commentId);
   };
 
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {

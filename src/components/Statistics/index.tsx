@@ -1,14 +1,20 @@
 import "./style.css";
 import Checkbox from "@components/Checkbox";
-import { useEffect, useMemo, useState } from "react";
-import { fetchData } from "@utils/apiUtil";
+import { useMemo, useState } from "react";
+import {
+  getStatisticComments,
+  getStatisticLikes,
+  getStatisticPosts,
+} from "@utils/apiUtil";
 import type { IComment, ILike, IPost, MonthStat } from "@/interfaces";
 import StatisticCard from "@components/StatisticCard";
+import { Box, Skeleton, Table, TableCell, TableRow } from "@mui/material";
 import {
   calculateFullStats,
   getCurrentMonthStats,
 } from "@/utils/statisticUtils";
 import TableStats from "@/components/TableStats";
+import { useQuery } from "@tanstack/react-query";
 
 const monthStatInitial: MonthStat = {
   month: 0,
@@ -28,62 +34,53 @@ type ITabView = "table" | "chart";
 
 function Statistics() {
   const [tabView, setTabView] = useState<ITabView>("table");
-  const [posts, setPosts] = useState<IPost[]>();
-  const [likes, setLikes] = useState<ILike[]>();
-  const [comments, setComments] = useState<IComment[]>();
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      const results = await Promise.allSettled([
-        fetchData(`/api/me/likes`, "GET"),
-        fetchData(`/api/me/comments`, "GET"),
-        fetchData(`/api/me/posts`, "GET"),
-      ]);
+  const { data: posts, isLoading: isPostsLoading } = useQuery<IPost[]>({
+    queryKey: ["posts"],
+    queryFn: () => getStatisticPosts(),
+  });
+  const { data: likes, isLoading: isLikesLoading } = useQuery<ILike[]>({
+    queryKey: ["likes"],
+    queryFn: () => getStatisticLikes(),
+  });
 
-      const [likesResult, commentsResult, postsResult] = results;
+  const { data: comments, isLoading: isCommentsLoading } = useQuery<IComment[]>(
+    {
+      queryKey: ["comments"],
+      queryFn: () => getStatisticComments(),
+    }
+  );
 
-      if (likesResult.status === "fulfilled") {
-        setLikes(likesResult.value);
-      } else {
-        console.error("Failed to fetch likes:", likesResult.reason);
-        setLikes([]);
-      }
-
-      if (commentsResult.status === "fulfilled") {
-        setComments(commentsResult.value);
-      } else {
-        console.error("Failed to fetch comments:", commentsResult.reason);
-        setComments([]);
-      }
-
-      if (postsResult.status === "fulfilled") {
-        setPosts(postsResult.value);
-      } else {
-        console.error("Failed to fetch posts:", postsResult.reason);
-        setPosts([]);
-      }
-    };
-
-    fetchStats();
-  }, []);
+  const isDataLoading = useMemo(() => {
+    return isCommentsLoading || isLikesLoading || isPostsLoading;
+  }, [isCommentsLoading, isLikesLoading, isPostsLoading]);
 
   const likesStats = useMemo(() => {
-    if (!likes) {
+    if (isLikesLoading) {
       return null;
+    }
+    if (!likes) {
+      return [];
     }
     return calculateFullStats(likes);
   }, [likes]);
 
   const commentsStats = useMemo(() => {
-    if (!comments) {
+    if (isCommentsLoading) {
       return null;
+    }
+    if (!comments) {
+      return [];
     }
     return calculateFullStats(comments);
   }, [comments]);
 
   const postsStats = useMemo(() => {
-    if (!posts) {
+    if (isPostsLoading) {
       return null;
+    }
+    if (!posts) {
+      return [];
     }
     return calculateFullStats(posts);
   }, [posts]);
@@ -109,54 +106,75 @@ function Statistics() {
     setTabView((prev) => (prev === "table" ? "chart" : "table"));
   };
 
+  if (isDataLoading) {
+    return (
+      <div className="statistics">
+        <div className="month">
+          {[1, 2, 3].map((i) => (
+            <StatisticCardSkeleton key={i} />
+          ))}
+        </div>
+        <div className="toggle-view">
+          <Skeleton variant="text" width={200} height={40} />
+        </div>
+        <div className="tables">
+          {[1, 2].map((i) => (
+            <TableStatsSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="statistics">
       <div className="month">
         {currentMonthStats &&
-          Object.entries(currentMonthStats).map(([key, stat]) => {
-            if (!stat) {
-              return null;
-            }
-
-            return (
-              <StatisticCard
-                key={key}
-                title={key}
-                count={stat.count}
-                prev={stat.previousCount}
-              />
-            );
-          })}
+          Object.entries(currentMonthStats).map(([key, stat]) => (
+            <StatisticCard
+              key={key}
+              title={key}
+              count={stat.count}
+              prev={stat.previousCount}
+            />
+          ))}
       </div>
+
       <div className="toggle-view">
         <Checkbox
           onToggle={handleToggle}
           id="chart-view"
           description={
-            tabView === "chart" ? "Enable Chart view" : "Enable Table view"
+            tabView === "chart"
+              ? "Switch to Table view"
+              : "Switch to Chart view"
           }
         />
       </div>
+
       <div className="tables">
-        {likesStats && (
-          <TableStats
-            title="Likes"
-            stats={
-              likesStats[`${new Date().getFullYear()}`]
-                ? likesStats[`${new Date().getFullYear()}`]
-                : yearStatInitial
-            }
-          />
-        )}
-        {commentsStats && (
-          <TableStats
-            title="Comments"
-            stats={
-              commentsStats[`${new Date().getFullYear()}`]
-                ? commentsStats[`${new Date().getFullYear()}`]
-                : yearStatInitial
-            }
-          />
+        {tabView === "table" ? (
+          <>
+            {likesStats && (
+              <TableStats
+                title="Likes"
+                stats={
+                  likesStats[`${new Date().getFullYear()}`] || yearStatInitial
+                }
+              />
+            )}
+            {commentsStats && (
+              <TableStats
+                title="Comments"
+                stats={
+                  commentsStats[`${new Date().getFullYear()}`] ||
+                  yearStatInitial
+                }
+              />
+            )}
+          </>
+        ) : (
+          <div>Chart view coming soon...</div>
         )}
       </div>
     </div>
@@ -164,3 +182,55 @@ function Statistics() {
 }
 
 export default Statistics;
+
+const StatisticCardSkeleton = () => {
+  return (
+    <div className="frame">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "clamp(8px, 1.2vw, 16px)",
+        }}
+      >
+        <Skeleton variant="text"></Skeleton>
+        <Skeleton variant="text" height={30}></Skeleton>
+        <Skeleton variant="text"></Skeleton>
+      </Box>
+    </div>
+  );
+};
+
+const TableStatsSkeleton = () => {
+  return (
+    <div className="table-statistics">
+      <Skeleton
+        variant="text"
+        height={"clamp(28px, 2.5vw, 38px)"}
+        width={"40%"}
+      />
+      <div className="frame">
+        <Table sx={{ "&:last-child tr": { border: 0 } }}>
+          {Array.from({ length: 12 }, (_, i) => i).map((el) => (
+            <TableRow
+              key={el}
+              sx={{
+                borderBottom: `1px solid var(--border-color)`,
+              }}
+            >
+              <TableCell width="60%" padding="none" height={27}>
+                <Skeleton variant="text" width={"80%"} />
+              </TableCell>
+              <TableCell align="right" width="20%" padding="none" height={27}>
+                <Skeleton variant="text" width={"50%"} />
+              </TableCell>
+              <TableCell align="right" width="20%" padding="none" height={27}>
+                <Skeleton variant="text" width={"50%"} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      </div>
+    </div>
+  );
+};

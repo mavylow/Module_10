@@ -1,7 +1,7 @@
 import { createContext, useEffect, type ReactNode } from "react";
 import { type IProfileForm, type IUser } from "@/interfaces";
 import { useLocation, useNavigate } from "react-router";
-import { fetchData } from "@utils/apiUtil";
+import { updateUserAxios } from "@utils/apiUtil";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "@/store";
 import { restoreAuth, setUser } from "@/slices/authSlice";
@@ -41,7 +41,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, [user, location.pathname, loading]);
 
   const updateUser = async (updatedUser: IProfileForm) => {
-    const newUser = await fetchData("/api/profile", "PUT", updatedUser);
+    const newUser = await updateUserAxios(JSON.stringify(updatedUser));
     if (newUser) {
       dispatch(setUser(newUser));
       dispatch(

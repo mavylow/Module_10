@@ -1,7 +1,7 @@
 import FrameWrapper from "@components/FrameWrapper";
 import { SidebarElement } from "@components/SidebarElement";
 import "./style.css";
-import { fetchData } from "@utils/apiUtil";
+import { getGroups, getSuggested } from "@utils/apiUtil";
 import type { IGroup, ISidebarUser } from "@/interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
@@ -9,12 +9,12 @@ import { Box, Skeleton } from "@mui/material";
 export default function Sidebar() {
   const { isLoading: isGroupsLoading, data: groups } = useQuery<
     IGroup[] | null
-  >({ queryKey: ["groups"], queryFn: () => fetchData("/api/groups", "GET") });
+  >({ queryKey: ["groups"], queryFn: () => getGroups() });
   const { isLoading: isSuggestedUserLoading, data: suggestedUser } = useQuery<
     ISidebarUser[] | null
   >({
     queryKey: ["groups"],
-    queryFn: () => fetchData("/api/getSuggested", "GET"),
+    queryFn: () => getSuggested(),
   });
 
   return (

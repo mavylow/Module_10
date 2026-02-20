@@ -10,7 +10,7 @@ import UploadFileIcon from "@assets/UploadFileIcon";
 import ErrorIcon from "@assets/CrossIcon";
 import Textarea from "@components/Textarea";
 import * as Yup from "yup";
-import { fetchData } from "@utils/apiUtil";
+import { addPostsAxios } from "@utils/apiUtil";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import InputMessage from "@components/InputMessage";
@@ -82,7 +82,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
       ...data,
       image: data.image ? URL.createObjectURL(data.image) : null,
     };
-    await fetchData("/api/posts", "POST", newPost);
+    await addPostsAxios(JSON.stringify(newPost));
     postForm.resetForm();
     handleDisplayAddMenu();
     onAdd();

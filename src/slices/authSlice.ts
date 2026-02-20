@@ -1,5 +1,5 @@
 import type { IForm, IUser } from "@/interfaces";
-import { fetchData } from "@/utils/apiUtil";
+import { loginUser, restoreUser, signUpUser } from "@/utils/apiUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { modalSlice } from "./modalSlice";
 
@@ -21,10 +21,12 @@ export const signIn = createAsyncThunk(
   "auth/signin",
   async (form: IForm, { dispatch, rejectWithValue }) => {
     try {
-      const { token, user } = await fetchData("/api/login", "POST", {
-        email: form.email,
-        password: form.password,
-      });
+      const { token, user } = await loginUser(
+        JSON.stringify({
+          email: form.email,
+          password: form.password,
+        })
+      );
 
       if (!user || !token) {
         throw new Error("Invalid credentials");
@@ -36,37 +38,35 @@ export const signIn = createAsyncThunk(
           status: "success",
         })
       );
-      
+
       localStorage.setItem("token", token);
       return user;
-      
     } catch (e) {
       const message = e instanceof Error ? e.message : "Authentication failed";
-      
+
       dispatch(
         modalSlice.actions.setModal({
           message,
           status: "error",
         })
       );
-      
+
       return rejectWithValue(message);
     }
   }
 );
-
 
 export const restoreAuth = createAsyncThunk(
   "auth/restoreAuth",
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      
+
       if (!token) {
         return rejectWithValue("No token found");
       }
 
-      const user = await fetchData("/api/me", "GET");
+      const user = await restoreUser();
 
       if (user) {
         dispatch(
@@ -88,29 +88,30 @@ export const restoreAuth = createAsyncThunk(
       }
     } catch (error) {
       console.error("Auth check failed:", error);
-      
+
       dispatch(
         modalSlice.actions.setModal({
           message: "Authentication failed",
           status: "error",
         })
       );
-      
+
       localStorage.removeItem("token");
       return rejectWithValue("Auth check failed");
     }
   }
 );
 
-
 export const signUp = createAsyncThunk(
   "auth/signup",
   async (form: IForm, { dispatch, rejectWithValue }) => {
     try {
-      const response = await fetchData("/api/signup", "POST", {
-        email: form.email,
-        password: form.password,
-      });
+      const response = await signUpUser(
+        JSON.stringify({
+          email: form.email,
+          password: form.password,
+        })
+      );
 
       if (response.message) {
         dispatch(
@@ -120,36 +121,35 @@ export const signUp = createAsyncThunk(
           })
         );
       }
-      
+
       return response;
     } catch (e) {
       const message = e instanceof Error ? e.message : "Signup failed";
-      
+
       dispatch(
         modalSlice.actions.setModal({
           message,
           status: "error",
         })
       );
-      
+
       return rejectWithValue(message);
     }
   }
 );
 
-
 export const logOut = createAsyncThunk(
   "auth/logout",
   async (_, { dispatch }) => {
     localStorage.removeItem("token");
-    
+
     dispatch(
       modalSlice.actions.setModal({
         message: "Logged out successfully",
         status: "info",
       })
     );
-    
+
     return null;
   }
 );
@@ -159,11 +159,11 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-        state.user = action.payload;
-        state.isAuth = false;
-        state.error = null;
-        state.isLoading = false;
-      },
+      state.user = action.payload;
+      state.isAuth = false;
+      state.error = null;
+      state.isLoading = false;
+    },
     clearAuth: (state) => {
       state.user = null;
       state.isAuth = false;
@@ -189,7 +189,7 @@ export const authSlice = createSlice({
         state.user = null;
         state.error = action.payload as string;
       })
-      
+
       .addCase(signUp.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -201,7 +201,6 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      
 
       .addCase(restoreAuth.pending, (state) => {
         state.isLoading = true;
@@ -215,11 +214,10 @@ export const authSlice = createSlice({
       })
       .addCase(restoreAuth.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuth = false; 
+        state.isAuth = false;
         state.user = null;
         state.error = action.payload as string;
       })
-      
 
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
