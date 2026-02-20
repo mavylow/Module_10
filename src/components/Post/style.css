@@ -115,10 +115,11 @@ figure img {
   content: attr(data-number);
   position: absolute;
   left: 0;
+  bottom: 0;
   font-weight: bold;
   color: var(--text-color);
   margin: 0;
-  top: 0.2vw;
+  font-size: clamp(12px, 1.2vw, 16px);
 }
 
 .add-comment {
