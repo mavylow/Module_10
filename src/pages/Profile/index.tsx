@@ -2,7 +2,6 @@ import "./style.css";
 import { useContext } from "react";
 import ProfileInfo from "@components/ProfileInfo";
 import Statistics from "@components/Statistics";
-
 import { ProfilePageContext } from "@/providers/ProfilePageProvider";
 
 function Profile() {

@@ -2,6 +2,7 @@ import type { IForm, IUser } from "@/interfaces";
 import { loginUser, restoreUser, signUpUser } from "@/utils/apiUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { modalSlice } from "./modalSlice";
+import DOMPurify from "dompurify";
 
 interface IAuthState {
   user: IUser | null;
@@ -23,8 +24,8 @@ export const signIn = createAsyncThunk(
     try {
       const { token, user } = await loginUser(
         JSON.stringify({
-          email: form.email,
-          password: form.password,
+          email: DOMPurify.sanitize(form.email),
+          password: DOMPurify.sanitize(form.password),
         })
       );
 
@@ -108,8 +109,8 @@ export const signUp = createAsyncThunk(
     try {
       const response = await signUpUser(
         JSON.stringify({
-          email: form.email,
-          password: form.password,
+          email: DOMPurify.sanitize(form.email),
+          password: DOMPurify.sanitize(form.password),
         })
       );
 

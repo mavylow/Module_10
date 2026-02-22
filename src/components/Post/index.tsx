@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent } from "react";
+import DOMPurify from "dompurify";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
 import Comment from "@components/Comment";
@@ -99,7 +100,7 @@ function Post({ post, onLike }: PostProps) {
       addCommentMutation.mutate(
         JSON.stringify({
           postId: post.id,
-          text: comment,
+          text: DOMPurify.sanitize(comment),
         })
       );
     }

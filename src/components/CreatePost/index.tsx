@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import InputMessage from "@components/InputMessage";
 import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
+import DOMPurify from "dompurify";
 
 const postFormInitial = {
   title: "",
@@ -77,9 +78,9 @@ function CreatePost({ onAdd }: ICreatePostProps) {
   };
 
   const addPost = async (data: IPostForm) => {
-    console.log(data);
     const newPost = {
-      ...data,
+      title: DOMPurify.sanitize(data.title),
+      content: data.content && DOMPurify.sanitize(data.content),
       image: data.image ? URL.createObjectURL(data.image) : null,
     };
     await addPostsAxios(JSON.stringify(newPost));

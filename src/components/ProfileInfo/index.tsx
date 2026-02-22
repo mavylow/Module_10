@@ -19,6 +19,7 @@ import { observer } from "mobx-react-lite";
 import theme from "@/store/themeStore";
 import InputMessage from "@components/InputMessage";
 import { Skeleton } from "@mui/material";
+import DOMPurify from "dompurify";
 
 const IProfileSchema = Yup.object({
   image: Yup.string().nullable(),
@@ -55,7 +56,13 @@ const ProfileInfo = observer(() => {
   };
 
   const changeProfile = (data: IProfileForm) => {
-    updateUser(data);
+    const sanitizeData = {
+      image: DOMPurify.sanitize(data.image || ""),
+      username: DOMPurify.sanitize(user?.username || ""),
+      email: DOMPurify.sanitize(user?.email || ""),
+      description: DOMPurify.sanitize(user?.description || ""),
+    };
+    updateUser(sanitizeData);
   };
 
   return (
