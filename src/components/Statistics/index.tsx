@@ -8,7 +8,14 @@ import {
 } from "@utils/apiUtil";
 import type { IComment, ILike, IPost, MonthStat } from "@/interfaces";
 import StatisticCard from "@components/StatisticCard";
-import { Box, Skeleton, Table, TableCell, TableRow } from "@mui/material";
+import {
+  Box,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@mui/material";
 import {
   calculateFullStats,
   getCurrentMonthStats,
@@ -89,6 +96,7 @@ function Statistics() {
     if (!likesStats || !commentsStats || !postsStats) {
       return null;
     }
+
     return {
       likes: getCurrentMonthStats(new Date(), likesStats) || {
         ...monthStatInitial,
@@ -211,24 +219,26 @@ const TableStatsSkeleton = () => {
       />
       <div className="frame">
         <Table sx={{ "&:last-child tr": { border: 0 } }}>
-          {Array.from({ length: 12 }, (_, i) => i).map((el) => (
-            <TableRow
-              key={el}
-              sx={{
-                borderBottom: `1px solid var(--border-color)`,
-              }}
-            >
-              <TableCell width="60%" padding="none" height={27}>
-                <Skeleton variant="text" width={"80%"} />
-              </TableCell>
-              <TableCell align="right" width="20%" padding="none" height={27}>
-                <Skeleton variant="text" width={"50%"} />
-              </TableCell>
-              <TableCell align="right" width="20%" padding="none" height={27}>
-                <Skeleton variant="text" width={"50%"} />
-              </TableCell>
-            </TableRow>
-          ))}
+          <TableBody>
+            {Array.from({ length: 12 }, (_, i) => i).map((el) => (
+              <TableRow
+                key={el}
+                sx={{
+                  borderBottom: `1px solid var(--border-color)`,
+                }}
+              >
+                <TableCell width="60%" padding="none" height={27}>
+                  <Skeleton variant="text" width={"80%"} />
+                </TableCell>
+                <TableCell align="right" width="20%" padding="none" height={27}>
+                  <Skeleton variant="text" width={"50%"} />
+                </TableCell>
+                <TableCell align="right" width="20%" padding="none" height={27}>
+                  <Skeleton variant="text" width={"50%"} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
       </div>
     </div>

@@ -83,6 +83,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
       content: data.content && DOMPurify.sanitize(data.content),
       image: data.image ? URL.createObjectURL(data.image) : null,
     };
+
     await addPostsAxios(JSON.stringify(newPost));
     postForm.resetForm();
     handleDisplayAddMenu();
