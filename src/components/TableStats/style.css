@@ -1,0 +1,28 @@
+table {
+  width: 100%;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+td {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-statistics {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.2vw, 24px);
+}
+
+.table-statistics .frame {
+  width: min(575px, 40vw);
+  height: fit-content;
+}
+
+@media (max-width: 900px) {
+  .table-statistics .frame {
+    width: 90vw;
+  }
+}

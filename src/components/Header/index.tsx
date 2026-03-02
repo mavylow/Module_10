@@ -1,25 +1,20 @@
-import SidekickLogoText from "@/assets/SidekickLogoText";
-import SidekickLogo from "@/assets/SidekickLogo";
+import SidekickLogoText from "@assets/SidekickLogoText";
+import SidekickLogo from "@assets/SidekickLogo";
 import "./style.css";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/AuthProvider";
-import { type IUser, USERS } from "@/TestConsts";
-import Hamburger from "@/assets/HamburgerMenuIcon";
-
-const initialUser: IUser = {
-  userId: "",
-  profilePhoto: "",
-  username: "",
-  email: "",
-  description: "",
-};
+import { AuthContext } from "@providers/AuthProvider";
+import Hamburger from "@assets/HamburgerMenuIcon";
+import { NavLink, useLocation, useNavigate } from "react-router";
 
 function Header() {
-  const [user, setUser] = useState<IUser>(initialUser);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { userId } = useContext(AuthContext);
+  const [isPageAuth, setIsPageAuth] = useState(false);
+  const location = useLocation();
+  let navigate = useNavigate();
+
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     handleResize();
@@ -30,15 +25,18 @@ function Header() {
   }, []);
 
   useEffect(() => {
-    if (userId) {
-      setUser(USERS.filter((user) => user.userId === userId)[0]);
+    setIsExpanded(false);
+    if (location.pathname !== "/signin" && location.pathname !== "/signup") {
+      setIsPageAuth(true);
+    } else {
+      setIsPageAuth(false);
     }
-  }, [userId]);
+    console.log(isPageAuth);
+  }, [location]);
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
       setIsMobile(true);
-      console.log("mobile");
     } else {
       setIsMobile(false);
       setIsExpanded(false);
@@ -61,6 +59,10 @@ function Header() {
     setIsExpanded((prev) => !prev);
   };
 
+  const handleNavigate = (url: string) => {
+    navigate(url);
+  };
+
   return (
     <>
       <header
@@ -70,49 +72,57 @@ function Header() {
           (isExpanded ? "expanded" : "")
         }
       >
-        <div className="logo">
+        <div className="logo" onClick={() => handleNavigate("/")}>
           <SidekickLogo />
           <SidekickLogoText />
         </div>
-        {userId ? (
-          <nav
-            className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
-          >
-            {isExpanded ? (
-              <>
-                <a>Profile info</a>
-                <a>Statistics</a>
-              </>
+        {isPageAuth && (
+          <>
+            {user ? (
+              <nav
+                className={
+                  isMobile && isExpanded ? "mobile-nav" : "desktop-nav"
+                }
+              >
+                {isExpanded ? (
+                  <>
+                    <NavLink to={"/profile/info"}> Profile info</NavLink>
+                    <NavLink to={"/profile/statistics"}> Statistics</NavLink>
+                  </>
+                ) : (
+                  <>
+                    <img src={user.profileImage} className="avatar" />
+                    <NavLink to={"/profile/info"}>
+                      {user.firstName} {user.secondName}
+                    </NavLink>
+                  </>
+                )}
+              </nav>
             ) : (
-              <>
-                {" "}
-                <img
-                  src={user.profilePhoto || "../../../public/IMG_1001.jpg"}
-                  className="avatar"
-                />
-                <a>{user.username}</a>
-              </>
+              <nav
+                className={
+                  isMobile && isExpanded ? "mobile-nav" : "desktop-nav"
+                }
+              >
+                <NavLink to={"/signin"}>Sing In</NavLink>
+                <NavLink to={"/signup"}>Sing Up</NavLink>
+              </nav>
             )}
-          </nav>
-        ) : (
-          <nav
-            className={isMobile && isExpanded ? "mobile-nav" : "desktop-nav"}
-          >
-            <a>Sing In</a>
-            <a>Sing Up</a>
-          </nav>
+          </>
         )}
-
-        <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
-          {userId && isExpanded ? (
-            <img
-              src={user.profilePhoto || "../../../public/IMG_1001.jpg"}
-              className="avatar"
-            />
-          ) : (
-            <Hamburger />
-          )}
-        </button>
+        {isPageAuth && (
+          <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
+            {user && isExpanded ? (
+              <img
+                key={user?.profileImage}
+                src={user?.profileImage || "/image/default-avatar.webp"}
+                className="avatar"
+              />
+            ) : (
+              <Hamburger />
+            )}
+          </button>
+        )}
       </header>
       {isMobile && isExpanded && (
         <div className="overlay" onClick={handleChangeMenuExpanded}>

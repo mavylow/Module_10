@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -12,6 +12,8 @@
   -moz-osx-font-smoothing: grayscale;
 
   --primary-orange: rgb(255, 136, 17);
+  --primary-red: rgba(255, 85, 74, 0.8);
+  --primary-yellow: rgba(255, 193, 74, 1);
 
   --background-root-night: 27, 32, 55;
   --svg-color-night: 255, 255, 255;
@@ -28,7 +30,7 @@
   --border-color-day: 163, 169, 182, 1;
 }
 
-[data-theme="night"] {
+[data-theme="dark"] {
   --background-root: rgb(var(--background-root-night));
   --svg-color: rgb(var(--svg-color-night));
   --text-color: rgb(var(--text-color-night));
@@ -37,7 +39,7 @@
   --border-color: rgb(var(--border-color-night));
 }
 
-[data-theme="day"] {
+[data-theme="light"] {
   --background-root: rgb(var(--background-root-day));
   --svg-color: rgb(var(--svg-color-day));
   --text-color: rgb(var(--text-color-day));
@@ -66,24 +68,4 @@ body {
   margin: 0;
   min-width: 320px;
   height: 100%;
-}
-
-h3,
-p,
-label,
-a {
-  font-size: calc(14px + 6 * (100vw - 320px) / 1280);
-}
-
-button {
-  font-size: calc(12px + 8 * (100vw - 320px) / 1280);
-}
-
-h2,
-time,
-span,
-input,
-input::placeholder,
-.desktop a {
-  font-size: calc(12px + 4 * (100vw - 320px) / 1280);
 }

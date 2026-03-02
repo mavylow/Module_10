@@ -1,23 +1,34 @@
-import { type ReactNode } from "react";
-import { createPortal } from "react-dom";
-import "./style.css";
+import { useContext } from "react";
 
-type ModalProps = {
-  children?: ReactNode;
-  isOpen: boolean;
+import "./style.css";
+import CrossIcon from "@assets/CrossIcon";
+import { PopUpContext } from "@/providers/PopupProvider";
+import Portal from "../Portal";
+import Button from "../Button";
+
+export type ModalProps = {
+  message: string;
+  status: modalStatus;
 };
 
-function Modal({ children, isOpen }: ModalProps) {
-  const modalRoot = document.getElementById("modal");
-  if (!modalRoot) {
-    return null;
-  }
+export type modalStatus = "success" | "error" | "warning";
 
-  return createPortal(
-    <div className={`modal ${isOpen ? "modal--open" : "modal--close"}`}>
-      {children}
-    </div>,
-    modalRoot
+function Modal({ message, status }: ModalProps) {
+  const { isOpen, handleCloseModal } = useContext(PopUpContext);
+
+  return (
+    <Portal>
+      <div
+        className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
+      >
+        <span> {message}</span>
+        <Button
+          Icon={CrossIcon}
+          type="button"
+          onButtonClick={handleCloseModal}
+        />
+      </div>
+    </Portal>
   );
 }
 

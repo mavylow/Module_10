@@ -1,5 +1,16 @@
 import { type ChangeEvent, type ComponentType } from "react";
+import { type RegisterOptions, type UseFormRegister } from "react-hook-form";
 import "./style.css";
+import type { IForm } from "@/interfaces";
+
+export interface FromInputProps {
+  id: keyof IForm;
+  description: string;
+  placeholder: string;
+  type: string;
+  Icon: ComponentType;
+  register: UseFormRegister<IForm>;
+}
 
 export interface InputProps {
   id: string;
@@ -9,34 +20,52 @@ export interface InputProps {
   type: string;
   Icon: ComponentType;
   value: string;
-  onInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input({
-  id,
-  description,
-  name,
-  placeholder,
-  type,
-  Icon,
-  value,
-  onInput,
-}: InputProps) {
-  return (
-    <>
-      <label htmlFor={id} className="default-label">
-        <Icon />
-        {description}
-      </label>
-      <input
-        className="default-input"
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        type={type}
-        value={value}
-        onChange={(e) => onInput(e)}
-      />
-    </>
-  );
+export default function Input(props: InputProps | FromInputProps) {
+  if ("register" in props) {
+    const { id, description, placeholder, type, Icon, register } = props;
+    const registerOptions: RegisterOptions<IForm, "email" | "password"> = {
+      required: true,
+    };
+
+    return (
+      <>
+        <label htmlFor={id} className="default-label">
+          <Icon />
+          {description}
+        </label>
+
+        <input
+          className="default-input"
+          id={id}
+          placeholder={placeholder}
+          type={type}
+          {...register(id, registerOptions)}
+        />
+      </>
+    );
+  } else {
+    const { id, description, name, placeholder, type, Icon, value, onChange } =
+      props;
+    return (
+      <>
+        <label htmlFor={id} className="default-label">
+          <Icon />
+          {description}
+        </label>
+
+        <input
+          className="default-input"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          onChange={onChange}
+          value={value}
+        />
+      </>
+    );
+  }
 }

@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 main {
@@ -12,4 +12,9 @@ main {
   width: min(700px, 100%);
   margin: 1em 0;
   position: relative;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
 }

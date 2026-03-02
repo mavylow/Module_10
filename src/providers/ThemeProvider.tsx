@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 
-export type ThemeType = "day" | "night";
+export type ThemeType = "light" | "dark";
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -13,13 +13,13 @@ interface IThemeContext {
 }
 
 export const ThemeContext = createContext<IThemeContext>({
-  theme: "night",
+  theme: "dark",
   changeTheme: () => {},
   resetTheme: () => {},
 });
 
 function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeType>("night");
+  const [theme, setTheme] = useState<ThemeType>("dark");
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -29,10 +29,10 @@ function ThemeProvider({ children }: ThemeProviderProps) {
 
     const storageTheme = localStorage.getItem("theme");
 
-    if (storageTheme === "day" || storageTheme === "night") {
+    if (storageTheme === "light" || storageTheme === "dark") {
       setTheme(storageTheme);
     } else {
-      localStorage.setItem("theme", "night");
+      localStorage.setItem("theme", "dark");
     }
 
     setIsInitialized(true);
@@ -46,11 +46,11 @@ function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme, isInitialized]);
 
   const changeTheme = () => {
-    setTheme((prev) => (prev === "day" ? "night" : "day"));
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   const resetTheme = () => {
-    setTheme("night");
+    setTheme("dark");
   };
 
   return (

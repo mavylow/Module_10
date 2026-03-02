@@ -1,5 +1,5 @@
 .default-input {
-  background-color: var(--background-root);
+  background-color: var(--background-main);
   border: 1px solid var(--border-color);
   padding: 0.5em;
   color: var(--text-color);

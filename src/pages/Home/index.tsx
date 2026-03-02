@@ -1,42 +1,30 @@
-import { useContext, useState } from "react";
-import Footer from "@components/Footer";
-import Header from "@components/Header";
+import { useContext } from "react";
+import { useLoaderData, useRevalidator } from "react-router";
 import Post from "@components/Post";
 import Sidebar from "@components/Sidebar";
-import { POSTS } from "@/TestConsts";
-import type { IComment, IPost } from "@/TestConsts";
-import { AuthContext } from "@/AuthProvider";
+import type { IPost } from "@/interfaces";
+import { AuthContext } from "@providers/AuthProvider";
+import CreatePost from "@components/CreatePost";
 
 function Home() {
-  const [posts, setPosts] = useState(POSTS);
-
-  const { userId } = useContext(AuthContext);
-
-  const handleAddComment = (postId: string, comment: IComment) => {
-    const newPosts = posts.map((post) => {
-      if (post.postId === postId) {
-        const newPost: IPost = {
-          ...post,
-          comments: [...post.comments, comment],
-        };
-        return newPost;
-      }
-      return post;
-    });
-    setPosts(newPosts);
-  };
+  const posts = useLoaderData<IPost[]>();
+  const { revalidate } = useRevalidator();
+  const { user } = useContext(AuthContext);
 
   return (
-    <>
-      <Header />
-      <main>
-        {userId && <Sidebar />}
-        {posts.map((post) => (
-          <Post key={post.postId} post={post} onAddComment={handleAddComment} />
+    <main className="home">
+      {user && <Sidebar />}
+      {user && <CreatePost onAdd={revalidate} />}
+      {posts
+        ?.sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime()
+        )
+        .map((post) => (
+          <Post key={post.id} post={post} onLike={revalidate} />
         ))}
-      </main>
-      <Footer />
-    </>
+    </main>
   );
 }
 
