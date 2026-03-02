@@ -62,6 +62,7 @@ function SignUp() {
       navigate("/");
     }
   }, [isAuth]);
+
   return (
     <main>
       <form className="sing-up" onSubmit={onSubmit}>
@@ -84,8 +85,6 @@ function SignUp() {
             (errors.email ? (
               <>
                 <div className="input-message">
-                  <ErrorWarningIcon />
-                  <p className="error">{errors.email.message}</p>
                   <InputMessage
                     message={errors.email.message!}
                     Icon={ErrorWarningIcon}

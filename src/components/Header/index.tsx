@@ -8,6 +8,8 @@ import { ProfilePageContext } from "@providers/ProfilePageProvider";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store";
 
+//TODO fix styles
+
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -100,11 +102,13 @@ function Header() {
                   </>
                 ) : (
                   <>
-                    <img
-                      src={user.profileImage}
-                      className="avatar"
-                      alt="profile-image"
-                    />
+                    <NavLink to={"/profile"}>
+                      <img
+                        src={user.profileImage}
+                        className="avatar"
+                        alt="profile-image"
+                      />
+                    </NavLink>
                     <NavLink to={"/profile"}>
                       {user.firstName} {user.secondName}
                     </NavLink>

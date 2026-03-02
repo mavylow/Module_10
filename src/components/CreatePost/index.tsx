@@ -34,9 +34,7 @@ const FormSchema = Yup.object({
     .required("Title is required")
     .max(20, "Max 20 characters"),
 
-  content: Yup.string()
-    .required("Description is required")
-    .max(200, "Max 200 characters"),
+  content: Yup.string().max(200, "Max 200 characters"),
 
   image: Yup.mixed<File>()
     .nullable()

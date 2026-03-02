@@ -21,37 +21,6 @@ vi.mock("@components/Post", () => ({
   ),
 }));
 
-vi.mock("react-router", async () => {
-  const actual = await vi.importActual("react-router");
-  return {
-    ...actual,
-    useLoaderData: vi.fn(),
-    useRevalidator: () => ({
-      revalidate: vi.fn(),
-    }),
-  };
-});
-const mockUseSelector = vi.fn();
-vi.mock("react-redux", async () => {
-  const actual = await vi.importActual("react-redux");
-  return {
-    ...actual,
-    useSelector: () => mockUseSelector(),
-  };
-});
-let mockUser = {
-  id: 1,
-  username: "helenahills",
-  firstName: "Helena",
-  secondName: "Hills",
-  email: "helena.hills@social.com",
-  description: "Travel and design enthusiast.",
-  profileImage: "/assets/user-helena.png",
-  lastLogin: "2025-10-02T12:00:00Z",
-  creationDate: "2023-11-01T09:00:00Z",
-  modifiedDate: "2025-10-02T12:00:00Z",
-};
-
 const mockPosts = [
   {
     id: 102,
@@ -132,6 +101,46 @@ const mockPosts = [
     ],
   },
 ];
+
+vi.mock("@tanstack/react-query", async () => {
+  const actual = await vi.importActual("@tanstack/react-query");
+  return {
+    ...actual,
+    useQuery: () => ({ isLoading: false, data: mockPosts, refetch: vi.fn() }),
+  };
+});
+
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+    ...actual,
+    useLoaderData: vi.fn(),
+    useRevalidator: () => ({
+      revalidate: vi.fn(),
+    }),
+  };
+});
+
+const mockUseSelector = vi.fn();
+vi.mock("react-redux", async () => {
+  const actual = await vi.importActual("react-redux");
+  return {
+    ...actual,
+    useSelector: () => mockUseSelector(),
+  };
+});
+let mockUser = {
+  id: 1,
+  username: "helenahills",
+  firstName: "Helena",
+  secondName: "Hills",
+  email: "helena.hills@social.com",
+  description: "Travel and design enthusiast.",
+  profileImage: "/assets/user-helena.png",
+  lastLogin: "2025-10-02T12:00:00Z",
+  creationDate: "2023-11-01T09:00:00Z",
+  modifiedDate: "2025-10-02T12:00:00Z",
+};
 
 const createTestStore = (initialState = {}) => {
   return configureStore({

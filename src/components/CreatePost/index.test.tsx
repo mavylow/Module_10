@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/vitest";
 import CreatePost from "@components/CreatePost";
 import authReducer from "@/slices/authSlice";
 import userEvent from "@testing-library/user-event";
-import { fetchData } from "@utils/apiUtil";
+import { addPostsAxios } from "@utils/apiUtil";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -21,11 +21,15 @@ vi.mock("@assets/CrossIcon", () => ({
   default: () => <svg data-testid={"cross-icon"} />,
 }));
 
-vi.mock("@utils/apiUtil", () => ({
-  fetchData: vi.fn(),
-}));
+vi.mock("@utils/apiUtil", async () => {
+  const actual = vi.importActual("@utils/apiUtil");
+  return {
+    ...actual,
+    addPostsAxios: vi.fn(),
+  };
+});
 
-const mockedFetchData = vi.mocked(fetchData);
+const mockedFetchData = vi.mocked(addPostsAxios);
 
 const createTestStore = (initialState = {}) => {
   return configureStore({
@@ -52,6 +56,11 @@ const renderComponent = (store = createTestStore()) => {
     </Provider>
   );
 };
+
+const mockCreateObjectURL = vi.fn();
+vi.stubGlobal("URL", {
+  createObjectURL: mockCreateObjectURL,
+});
 
 vi.mock("react-redux", async () => {
   const actual = await vi.importActual("react-redux");
@@ -102,7 +111,8 @@ describe("CreatePost", () => {
 
   it("add new post", async () => {
     renderComponent();
-
+    const mockBlob = "blob:nodedata:6897ba45-86a6-4b9e-97ed-e7636d638d29";
+    (URL.createObjectURL as any).mockReturnValue(mockBlob);
     const tellEveryoneButton = screen.getByTestId("button");
     await userEvent.click(tellEveryoneButton);
 
@@ -117,12 +127,14 @@ describe("CreatePost", () => {
     const fileInput = screen.getByLabelText(/Select a file/i);
     await userEvent.upload(fileInput, validFile);
 
-    await userEvent.click(createButton);
-    expect(mockedFetchData).toHaveBeenCalledWith("/api/posts", "POST", {
+    const newPost = {
       title: "Post title",
-      description: "Post description",
-      image: expect.stringMatching(/^blob:/),
-    });
+      content: "Post description",
+      image: mockBlob,
+    };
+
+    await userEvent.click(createButton);
+    expect(mockedFetchData).toHaveBeenCalledWith(JSON.stringify(newPost));
 
     expect(screen.queryByTestId("add-post-form")).not.toBeInTheDocument();
   });

@@ -112,7 +112,7 @@ describe("SignIn", () => {
   it("renders sign in page data correctly", () => {
     renderComponent();
 
-    expect(screen.getByText("Sing In")).toBeInTheDocument();
+    expect(screen.getByText("Sign In")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Enter password")).toBeInTheDocument();
     expect(screen.getByTestId("mail-icon")).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe("SignIn", () => {
       await screen.findByText("Your password is strong")
     ).toBeInTheDocument();
     expect(await screen.findByTestId("thumb-up-icon")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /sing in/i }));
+    await user.click(screen.getByTestId("submit-button"));
 
     expect(mockDispatch).toHaveBeenCalledTimes(1);
     expect(mockDispatch).toHaveBeenCalledWith(mockSignInAction);

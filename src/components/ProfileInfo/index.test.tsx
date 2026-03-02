@@ -40,7 +40,7 @@ vi.mock("react-redux", async () => {
   const actual = await vi.importActual("react-redux");
   return {
     ...actual,
-    useSelector: () => mockUseSelector(),
+    useSelector: () => ({ isLoading: false, user: mockUser }),
     useDispatch: () => logOut(),
   };
 });

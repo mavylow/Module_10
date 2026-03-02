@@ -3,6 +3,10 @@ import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import Statistics from "@components/Statistics";
 
+const mockPosts = [{ id: 1, createdAt: "2024-01-01" }];
+const mockLikes = [{ id: 1, createdAt: "2024-01-01" }];
+const mockComments = [{ id: 1, createdAt: "2024-01-01" }];
+
 vi.mock("@components/Checkbox", () => ({
   default: ({ description }: { description: string }) => (
     <div data-testid="checkbox">{description}</div>
@@ -48,18 +52,21 @@ vi.mock("@/utils/statisticUtils", () => ({
   })),
 }));
 
-/* ───────── api ───────── */
+const getStatisticComments = vi.fn();
+const getStatisticLikes = vi.fn();
+const getStatisticPosts = vi.fn();
 
 vi.mock("@utils/apiUtil", () => ({
-  fetchData: vi.fn((url: string) => {
-    if (url.includes("likes")) return Promise.resolve([{}]);
-    if (url.includes("comments")) return Promise.resolve([{}]);
-    if (url.includes("posts")) return Promise.resolve([{}]);
-    return Promise.resolve([]);
-  }),
+  getStatisticComments: () => getStatisticComments(),
+  getStatisticLikes: () => getStatisticLikes(),
+  getStatisticPosts: () => getStatisticPosts(),
 }));
 
-/* ───────── tests ───────── */
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: vi.fn(),
+}));
+
+import { useQuery } from "@tanstack/react-query";
 
 describe("Statistics", () => {
   afterEach(() => {
@@ -67,7 +74,25 @@ describe("Statistics", () => {
     vi.clearAllMocks();
   });
 
+  function mockAllQueriesLoaded() {
+    (useQuery as any)
+      .mockReturnValueOnce({
+        data: mockPosts,
+        isLoading: false,
+      })
+      .mockReturnValueOnce({
+        data: mockLikes,
+        isLoading: false,
+      })
+      .mockReturnValueOnce({
+        data: mockComments,
+        isLoading: false,
+      });
+  }
+
   it("renders statistic cards for current month", async () => {
+    mockAllQueriesLoaded();
+
     render(<Statistics />);
 
     const cards = await screen.findAllByTestId("stat-card");
@@ -79,6 +104,8 @@ describe("Statistics", () => {
   });
 
   it("renders table stats for likes and comments", async () => {
+    mockAllQueriesLoaded();
+
     render(<Statistics />);
 
     const tables = await screen.findAllByTestId("table-stats");
@@ -88,20 +115,35 @@ describe("Statistics", () => {
     expect(screen.getByText("Comments")).toBeInTheDocument();
   });
 
-  it("renders checkbox with table view text by default", async () => {
+  it("renders checkbox with chart view text by default", async () => {
+    mockAllQueriesLoaded();
+
     render(<Statistics />);
 
     const checkbox = await screen.findByTestId("checkbox");
-    expect(checkbox).toHaveTextContent("Enable Table view");
+
+    expect(checkbox).toHaveTextContent("Switch to Chart view");
   });
 
-  it("fetches likes, comments and posts on mount", async () => {
-    const { fetchData } = await import("@utils/apiUtil");
+  it("calls API functions via react-query", async () => {
+    getStatisticPosts.mockResolvedValue(mockPosts);
+    getStatisticLikes.mockResolvedValue(mockLikes);
+    getStatisticComments.mockResolvedValue(mockComments);
+
+    (useQuery as any).mockImplementation(
+      ({ queryFn }: { queryFn: () => any }) => {
+        queryFn();
+        return {
+          data: [],
+          isLoading: false,
+        };
+      }
+    );
 
     render(<Statistics />);
 
-    expect(fetchData).toHaveBeenCalledWith("/api/me/likes", "GET");
-    expect(fetchData).toHaveBeenCalledWith("/api/me/comments", "GET");
-    expect(fetchData).toHaveBeenCalledWith("/api/me/posts", "GET");
+    expect(getStatisticPosts).toHaveBeenCalledOnce();
+    expect(getStatisticLikes).toHaveBeenCalledOnce();
+    expect(getStatisticComments).toHaveBeenCalledOnce();
   });
 });

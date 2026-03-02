@@ -58,9 +58,9 @@ const ProfileInfo = observer(() => {
   const changeProfile = (data: IProfileForm) => {
     const sanitizeData = {
       image: DOMPurify.sanitize(data.image || ""),
-      username: DOMPurify.sanitize(user?.username || ""),
-      email: DOMPurify.sanitize(user?.email || ""),
-      description: DOMPurify.sanitize(user?.description || ""),
+      username: DOMPurify.sanitize(data?.username || ""),
+      email: DOMPurify.sanitize(data?.email || ""),
+      description: DOMPurify.sanitize(data?.description || ""),
     };
     updateUser(sanitizeData);
   };

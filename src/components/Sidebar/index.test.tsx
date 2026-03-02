@@ -1,19 +1,8 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
+import { describe, it, expect, vi, type Mock, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import Sidebar from ".";
-import { fetchData } from "@utils/apiUtil";
-
-vi.mock("@utils/apiUtil", () => ({
-  fetchData: vi.fn().mockImplementation((url: string) => {
-    if (url === "/api/getSuggested") {
-      return Promise.resolve(mockUsers);
-    }
-    if (url === "/api/groups") {
-      return Promise.resolve(mockGroups);
-    }
-  }),
-}));
+import { useQuery } from "@tanstack/react-query";
 
 vi.mock("@components/SidebarElement", () => ({
   SidebarElement: ({ element }: any) => (
@@ -23,6 +12,10 @@ vi.mock("@components/SidebarElement", () => ({
 
 vi.mock("@components/FrameWrapper", () => ({
   default: ({ children }: any) => <div>{children}</div>,
+}));
+
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: vi.fn(),
 }));
 
 const mockUsers = Array.from({ length: 10 }).map((_, i) => ({
@@ -36,12 +29,25 @@ const mockGroups = Array.from({ length: 6 }).map((_, i) => ({
 }));
 
 describe("Sidebar", () => {
-  beforeEach(() => {
+  function mockQueries() {
+    (useQuery as any)
+      .mockReturnValueOnce({
+        data: mockGroups,
+        isLoading: false,
+      })
+      .mockReturnValueOnce({
+        data: mockUsers,
+        isLoading: false,
+      });
+  }
+
+  afterEach(() => {
     vi.clearAllMocks();
     cleanup();
   });
 
   it("renders section titles", () => {
+    mockQueries();
     render(<Sidebar />);
 
     expect(screen.getByText("Suggested people")).toBeInTheDocument();
@@ -50,13 +56,14 @@ describe("Sidebar", () => {
   });
 
   it("calls fetchData for suggested users and groups", async () => {
+    mockQueries();
     render(<Sidebar />);
 
-    expect(fetchData as Mock).toHaveBeenCalledWith("/api/getSuggested", "GET");
-    expect(fetchData as Mock).toHaveBeenCalledWith("/api/groups", "GET");
+    expect(useQuery as Mock).toBeCalledTimes(2);
   });
 
   it("renders only first 5 suggested users", async () => {
+    mockQueries();
     render(<Sidebar />);
 
     const users = await screen.findAllByTestId("sidebar-element");
@@ -69,6 +76,7 @@ describe("Sidebar", () => {
   });
 
   it("renders only first 3 groups", async () => {
+    mockQueries();
     render(<Sidebar />);
 
     expect(await screen.findByText("Group 1")).toBeInTheDocument();
@@ -77,7 +85,15 @@ describe("Sidebar", () => {
   });
 
   it("does not crash when API returns null", async () => {
-    (fetchData as Mock).mockResolvedValueOnce(null);
+    (useQuery as any)
+      .mockReturnValueOnce({
+        data: null,
+        isLoading: false,
+      })
+      .mockReturnValueOnce({
+        data: null,
+        isLoading: false,
+      });
 
     render(<Sidebar />);
 

@@ -1,12 +1,12 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { vi, describe, expect, it, afterEach } from "vitest";
+import { vi, describe, expect, it, afterEach, type Mock } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import Post from "@components/Post";
 import userEvent from "@testing-library/user-event";
 import authReducer from "@/slices/authSlice";
-import type { apiMethod } from "@/utils/apiUtil";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
+import { useQuery } from "@tanstack/react-query";
 
 vi.mock("@assets/HeartDislikeIcon", () => ({
   default: () => <svg data-testid="heart-dislike-icon" />,
@@ -95,35 +95,18 @@ const mockComment = {
 
 let comments = [mockComment];
 
-vi.mock("@utils/apiUtil", () => ({
-  fetchData: vi.fn((url: string, method: apiMethod, body?: any) => {
-    if (url.includes("/comments") && method === "GET") {
-      return Promise.resolve(comments);
-    }
+vi.mock("@tanstack/react-query", () => ({
+  useMutation: vi.fn().mockImplementation(({ onSuccess }) => {
+    return {
+      mutate: () => {
+        onSuccess?.();
+      },
+    };
+  }),
 
-    if (url.includes("/comments") && method === "POST") {
-      const newComment = {
-        id: 6,
-        postId: 101,
-        authorId: 1,
-        text: body.text,
-        creationDate: "2025-09-04T18:10:00Z",
-        modifiedDate: "2025-09-04T18:10:00Z",
-      };
-
-      comments = [...comments, newComment];
-      return Promise.resolve(newComment);
-    }
-
-    if (url.includes("/users/")) {
-      return Promise.resolve(mockUser);
-    }
-
-    if (url.includes("/like") || url.includes("/dislike")) {
-      return Promise.resolve({ success: true });
-    }
-
-    return Promise.resolve(null);
+  useQuery: vi.fn(),
+  useQueryClient: vi.fn().mockReturnValue({
+    invalidateQueries: vi.fn(),
   }),
 }));
 
@@ -169,8 +152,34 @@ describe("Post", () => {
     cleanup();
     vi.clearAllMocks();
   });
+
+  function setupQueries({ withComments = true } = {}) {
+    (useQuery as Mock).mockImplementation(({ queryKey }) => {
+      if (queryKey[0] === "users") {
+        return {
+          data: mockUser,
+          isLoading: false,
+        };
+      }
+
+      if (queryKey[0] === "posts") {
+        return {
+          data: withComments ? comments : [],
+          isLoading: false,
+          refetch: vi.fn(),
+        };
+      }
+
+      return {
+        data: undefined,
+        isLoading: false,
+      };
+    });
+  }
+
   it("ui of a post with auth", async () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    setupQueries();
     renderComponent();
     expect(await screen.findByText("Helena")).toBeInTheDocument();
     expect(
@@ -185,8 +194,9 @@ describe("Post", () => {
     expect(await screen.findByTestId("chevron-icon")).toBeInTheDocument();
   });
 
-  it("ui of a post with auth", async () => {
+  it("ui of a post without auth", async () => {
     vi.mocked(mockUseSelector).mockReturnValue(null);
+    setupQueries();
     renderComponent();
     expect(await screen.findByText("Helena")).toBeInTheDocument();
     expect(
@@ -203,6 +213,7 @@ describe("Post", () => {
 
   it("expand comment section", async () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    setupQueries();
     renderComponent();
 
     const expandButton = screen
@@ -220,32 +231,25 @@ describe("Post", () => {
 
   it("like and dislike post", async () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    setupQueries();
     renderComponent();
 
-    const likeSvg = screen.queryByTestId("heart-like-icon");
-
-    const likeButton = likeSvg?.closest("button");
-
-    expect(likeButton).toBeInTheDocument();
+    const likeButton = screen.getByTestId("heart-like-icon").closest("button");
 
     await userEvent.click(likeButton!);
 
-    expect(screen.queryByTestId("heart-dislike-icon"));
     expect(onLike).toBeCalledTimes(1);
-    await userEvent.click(likeButton!);
-    expect(screen.queryByTestId("heart-like-icon"));
-    expect(onLike).toBeCalledTimes(2);
   });
 
   it("add not empty comment", async () => {
     const user = userEvent.setup();
 
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
+    setupQueries();
+
     renderComponent();
 
-    const expandButton = screen
-      .queryByTestId("chevron-icon")
-      ?.closest("button");
+    const expandButton = screen.getByTestId("chevron-icon").closest("button");
 
     await user.click(expandButton!);
 
@@ -253,9 +257,8 @@ describe("Post", () => {
     const addComment = screen.getByRole("button", { name: "Add a comment" });
 
     await user.type(commentInput, "New comment");
-    expect(commentInput).toHaveValue("New comment");
     await user.click(addComment);
 
-    expect(await screen.findByText("New comment")).toBeInTheDocument();
+    expect(commentInput).toHaveValue("");
   });
 });

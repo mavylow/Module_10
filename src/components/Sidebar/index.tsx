@@ -13,7 +13,7 @@ export default function Sidebar() {
   const { isLoading: isSuggestedUserLoading, data: suggestedUser } = useQuery<
     ISidebarUser[] | null
   >({
-    queryKey: ["groups"],
+    queryKey: ["suggestedUsers"],
     queryFn: () => getSuggested(),
   });
 
