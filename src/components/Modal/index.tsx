@@ -6,9 +6,11 @@ import { PopUpContext } from "@/providers/PopupProvider";
 import Portal from "@components/Portal";
 import Button from "@components/Button";
 import type { IModal } from "@/interfaces";
+import { useTranslation } from "react-i18next";
 
 function Modal({ message, status }: IModal) {
   const { isOpen, handleCloseModal } = useContext(PopUpContext);
+  const { t } = useTranslation();
 
   return (
     <Portal>
@@ -16,7 +18,7 @@ function Modal({ message, status }: IModal) {
         data-testid="modal-message"
         className={`modal ${isOpen ? "modal--open" : "modal--close"} ${status}`}
       >
-        <span> {message}</span>
+        <span> {t(message)}</span>
         <Button
           Icon={CrossIcon}
           type="button"

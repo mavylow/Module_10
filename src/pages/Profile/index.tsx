@@ -3,8 +3,10 @@ import { useContext } from "react";
 import ProfileInfo from "@components/ProfileInfo";
 import Statistics from "@components/Statistics";
 import { ProfilePageContext } from "@/providers/ProfilePageProvider";
+import { useTranslation } from "react-i18next";
 
 function Profile() {
+  const { t } = useTranslation();
   const { profilePage, changePage } = useContext(ProfilePageContext);
 
   return (
@@ -14,13 +16,13 @@ function Profile() {
           onClick={() => changePage("info")}
           className={profilePage === "info" ? "active" : ""}
         >
-          Profile Info
+          {t("profileInfo")}
         </a>
         <a
           onClick={() => changePage("statistics")}
           className={profilePage === "statistics" ? "active" : ""}
         >
-          Statistic
+          {t("statistics")}
         </a>
       </nav>
       {profilePage === "info" && <ProfileInfo />}

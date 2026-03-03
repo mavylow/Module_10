@@ -5,7 +5,7 @@ import SignIn from "@pages/auth/SignIn";
 import Home from "@pages/Home";
 import Profile from "@/pages/Profile";
 import Layout from "@/Layout";
-import { loadPosts } from "@utils/apiUtil";
+
 import NotFoundPage from "@pages/NotFoundPage";
 import Fallback from "@pages/Fallback";
 
@@ -15,7 +15,7 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { index: true, element: <Home />, loader: loadPosts },
+        { index: true, element: <Home /> },
         { path: "signin", element: <SignIn /> },
         { path: "signup", element: <SignUp /> },
         {

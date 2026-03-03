@@ -6,6 +6,7 @@ import App from "./App";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./i18n";
 
 async function enableMocking() {
   await startMockingSocial();

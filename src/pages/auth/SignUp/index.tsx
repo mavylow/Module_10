@@ -18,19 +18,22 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { signUp } from "@/slices/authSlice";
 import InputMessage from "@/components/InputMessage";
-
-const FormSchema = z.object({
-  email: z.email("Email is not valid"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(14, "Password cannot exceed 14 characters")
-    .regex(/[0-9]/, "Password must contain at least one number"),
-});
-
-type FormData = z.infer<typeof FormSchema>;
+import { useTranslation } from "react-i18next";
 
 function SignUp() {
+  const { t } = useTranslation();
+
+  const FormSchema = z.object({
+    email: z.email(t("emailNotValid")),
+    password: z
+      .string()
+      .min(8, t("shortPassword"))
+      .max(14, t("longPassword"))
+      .regex(/[0-9]/, t("passwordContainNumber")),
+  });
+
+  type FormData = z.infer<typeof FormSchema>;
+
   const {
     register,
     handleSubmit,
@@ -67,15 +70,17 @@ function SignUp() {
     <main>
       <form className="sing-up" onSubmit={onSubmit}>
         <div className="form-header">
-          <h1>Create an account</h1>
-          <p>Enter your email and password to sign up for this app</p>
+          <h1>{t("createAccount")}</h1>
+          <p>
+            {t("enterFields", { sign: t("toSignUp"), appPreposition: "ом" })}
+          </p>
         </div>
 
         <div className="input-container">
           <Input
             id="email"
-            description="Email"
-            placeholder="Enter email"
+            description={t("email")}
+            placeholder={t("emailPlaceholder")}
             type="email"
             Icon={MailIcon}
             register={register}
@@ -113,8 +118,8 @@ function SignUp() {
 
           <Input
             id="password"
-            description="Password"
-            placeholder="Enter password"
+            description={t("password")}
+            placeholder={t("passwordPlaceholder")}
             type={isPasswordOpen ? "text" : "password"}
             Icon={EyeOpenIcon}
             register={register}
@@ -136,24 +141,24 @@ function SignUp() {
             ))}
         </div>
 
-        <Button description="Sign Up" type="submit" />
+        <Button description={t("signUp")} type="submit" />
 
         <p className="legal-disclaimer">
-          By clicking continue, you agree to our{" "}
+          {t("termsAgreement")}{" "}
           <a href="/terms" className="legal-link" rel="nofollow">
-            Terms of Service
+            {t("termsOfService")}
           </a>{" "}
-          and{" "}
+          {t("and")}{" "}
           <a href="/privacy" className="legal-link" rel="nofollow">
-            Privacy Policy
+            {t("privacyPolicy")}
           </a>
         </p>
       </form>
 
       <span>
-        Already have an account?{" "}
+        {t("alreadyHaveAccount")}{" "}
         <NavLink to={"/signin"} className="nav-link">
-          Sign in
+          {t("signIn")}
         </NavLink>
       </span>
     </main>

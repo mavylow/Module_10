@@ -1,6 +1,12 @@
 import type { IComment, ILike, IPost } from "@/interfaces";
 
-export function formattedDate(date: string): string{
+interface formattedDateT {
+  key: string,
+  count?: number
+  date?: string
+}
+
+export function formattedDate(date: string): formattedDateT{
 
   const ms = new Date(date).getTime()
   const diffMs = Date.now() - ms
@@ -11,14 +17,14 @@ export function formattedDate(date: string): string{
   const diffWeek = Math.floor(diffDay / 7);
   const diffMonth = Math.floor(diffWeek / 4);
 
-  if (diffSec < 60) return "now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHour < 24) return `${diffHour}h ago`;
-  if (diffDay < 7) return `${diffDay}d ago`;
-  if (diffWeek < 4) return `${diffWeek}w ago`;
-  if (diffMonth < 12) return `${diffMonth}mth ago`;
+  if (diffSec < 60) return {key: "time.now"};
+  if (diffMin < 60) return {key: "time.minute", count:diffMin };
+  if (diffHour < 24) return {key: "time.hour", count:diffHour };
+  if (diffDay < 7) return {key: "time.day", count:diffDay };
+  if (diffWeek < 4) return {key: "time.week", count:diffWeek };
+  if (diffMonth < 12) return {key: "time.month", count:diffMonth };
 
-  return new Date(date).toLocaleDateString()
+  return {key: "time.fullDate", date: new Date(date).toLocaleDateString()}
 }
 
 export function filterByMonth(el: ILike | IPost | IComment, month: number): boolean {

@@ -22,6 +22,7 @@ import {
 } from "@/utils/statisticUtils";
 import TableStats from "@/components/TableStats";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const monthStatInitial: MonthStat = {
   month: 0,
@@ -40,6 +41,7 @@ const yearStatInitial: MonthStat[] = Array.from({ length: 12 }, (_, i) => {
 type ITabView = "table" | "chart";
 
 function Statistics() {
+  const { t } = useTranslation();
   const [tabView, setTabView] = useState<ITabView>("table");
 
   const { data: posts, isLoading: isPostsLoading } = useQuery<IPost[]>({
@@ -153,9 +155,7 @@ function Statistics() {
           onToggle={handleToggle}
           id="chart-view"
           description={
-            tabView === "chart"
-              ? "Switch to Table view"
-              : "Switch to Chart view"
+            tabView === "chart" ? t("switchStatTables") : t("switchStatCharts")
           }
         />
       </div>

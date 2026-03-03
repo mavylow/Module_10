@@ -20,15 +20,24 @@ import theme from "@/store/themeStore";
 import InputMessage from "@components/InputMessage";
 import { Skeleton } from "@mui/material";
 import DOMPurify from "dompurify";
-
-const IProfileSchema = Yup.object({
-  image: Yup.string().nullable(),
-  username: Yup.string().max(20, "Username is too long"),
-  email: Yup.string().email("Enter write email"),
-  description: Yup.string().max(200, "Max 200 chars").nullable(),
-});
+import { useTranslation } from "react-i18next";
 
 const ProfileInfo = observer(() => {
+  const { t, i18n } = useTranslation();
+
+  const lngs = {
+    en: { nativeName: t("english") },
+    ru: { nativeName: t("russian") },
+    it: { nativeName: t("italian") },
+  } as const;
+
+  const IProfileSchema = Yup.object({
+    image: Yup.string().nullable(),
+    username: Yup.string().max(20, t("usernameToLong")),
+    email: Yup.string().email(t("emailNotValid")),
+    description: Yup.string().max(200, t("max200chars")).nullable(),
+  });
+
   const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { updateUser } = useContext(AuthContext);
 
@@ -68,7 +77,7 @@ const ProfileInfo = observer(() => {
   return (
     <form onSubmit={formik.handleSubmit} className="profile-info">
       <section className="edit-profile">
-        <h2>Edit profile</h2>
+        <h2>{t("editProfile")}</h2>
         <div className="profile-photo">
           {isLoading ? (
             <ProfilePhotoSkeleton />
@@ -78,17 +87,17 @@ const ProfileInfo = observer(() => {
               <h3>
                 {user?.firstName} {user?.secondName}
               </h3>
-              <p> Change profile photo</p>
+              <p> {t("changeProfilePhoto")}</p>
             </>
           )}
         </div>
         <div className="username input-container">
           <Input
             id="username"
-            description="Username"
+            description={t("username")}
             name="username"
             type="text"
-            placeholder="Write your username"
+            placeholder={t("usernamePlaceholder")}
             Icon={PersonIcon}
             value={formik.values.username}
             onChange={formik.handleChange}
@@ -104,17 +113,17 @@ const ProfileInfo = observer(() => {
             <InputMessage
               Icon={ErrorWarningIcon}
               status="warning"
-              message="Max 20 chars"
+              message={t("max20chars")}
             />
           )}
         </div>
         <div className="email input-container">
           <Input
             id="email"
-            description="Email"
+            description={t("email")}
             name="email"
             type="email"
-            placeholder="Change email"
+            placeholder={t("changeEmail")}
             Icon={MailIcon}
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -137,8 +146,8 @@ const ProfileInfo = observer(() => {
           <Textarea
             id="description"
             name="description"
-            description="Description"
-            placeholder="Write description"
+            description={t("description")}
+            placeholder={t("descriptionPlaceholder")}
             Icon={EditPenIcon}
             value={formik.values.description || ""}
             onChange={formik.handleChange}
@@ -153,31 +162,41 @@ const ProfileInfo = observer(() => {
             <InputMessage
               Icon={ErrorWarningIcon}
               status="warning"
-              message="Max 200 chars"
+              message={t("max200chars")}
             />
           )}
         </div>
-        <Button description="Save changes" type="submit" />
+        <Button description={t("saveChanges")} type="submit" />
       </section>
       <div>
         <section className="preferences">
-          <h2>Preferences</h2>
+          <h2>{t("preferences")}</h2>
           <div className="theme">
             <Checkbox
               onToggle={() => theme.changeTheme()}
               id="theme"
-              description={
-                theme.value.slice(0, 1).toUpperCase() +
-                theme.value.slice(1) +
-                " theme"
-              }
+              description={t(`theme.${theme.value}`)}
             />
+          </div>
+          <div className="language">
+            <div className="language">
+              <select
+                value={i18n.language}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+              >
+                {Object.keys(lngs).map((lng) => (
+                  <option key={lng} value={lng}>
+                    {lngs[lng as keyof typeof lngs].nativeName}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </section>
         <section className="actions">
-          <h2>Actions</h2>
+          <h2>{t("actions")}</h2>
           <Button
-            description="Logout"
+            description={t("logout")}
             type="button"
             onButtonClick={handleLogout}
           />
@@ -196,10 +215,14 @@ const ProfilePhotoSkeleton = () => {
         variant="circular"
         width={64}
         height={64}
-        sx={{ gridRow: "1 / span 2" }}
+        sx={{ gridRow: "1 / span 2", bgcolor: "var(--border-color)" }}
       />
 
-      <Skeleton width={"50%"} height={24} />
+      <Skeleton
+        width={"50%"}
+        height={24}
+        sx={{ bgcolor: "var(--border-color)" }}
+      />
 
       <span> Change profile photo</span>
     </>

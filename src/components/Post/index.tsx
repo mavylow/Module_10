@@ -24,8 +24,13 @@ import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface PostProps {
   post: IPost;
@@ -33,34 +38,38 @@ interface PostProps {
 }
 
 function Post({ post, onLike }: PostProps) {
+  const { t } = useTranslation();
+
   const { id, authorId, title, content, image, likedByUsers, creationDate } =
     post;
-
+  const date = formattedDate(creationDate);
   const user = useSelector((state: RootState) => state.auth.user);
   const queryClient = useQueryClient();
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
-  const { isLoading: isAuthorLoading, data: author } = useQuery<IUser>({
+  const { data: author } = useSuspenseQuery<IUser>({
     queryKey: ["users", authorId],
     queryFn: () => loadUser(authorId),
   });
 
-  const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
+  const { data: comments, refetch: refetchComments } = useSuspenseQuery<
+    IComment[]
+  >({
     queryKey: ["posts", id, "comments"],
     queryFn: () => loadPostComments(id),
-    enabled: !!user,
   });
 
-  const likeMutation = useMutation({
-    mutationFn: () => likePost(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
-      onLike();
+  const dislikeAndLikeMutation = useMutation({
+    mutationFn: async (action: "like" | "dislike") => {
+      if (action === "like") {
+        return likePost(id);
+      }
+
+      if (action === "dislike") {
+        return dislikePost(id);
+      }
     },
-  });
-  const dislikeMutation = useMutation({
-    mutationFn: () => dislikePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["post"] });
       onLike();
@@ -87,12 +96,8 @@ function Post({ post, onLike }: PostProps) {
     setIsCommentsExpanded((prev) => !prev);
   };
 
-  const handleDislike = async () => {
-    dislikeMutation.mutate();
-  };
-
-  const handleLike = async () => {
-    likeMutation.mutate();
+  const handleLikeAndDislike = async (action: "like" | "dislike") => {
+    dislikeAndLikeMutation.mutate(action);
   };
 
   const handleAddComment = async () => {
@@ -121,25 +126,19 @@ function Post({ post, onLike }: PostProps) {
       <FrameWrapper>
         <div className="without-comment">
           <div className="post-header">
-            {isAuthorLoading ? (
-              <PostHeaderSkeleton />
-            ) : (
-              <>
-                <img
-                  src={author?.profileImage}
-                  alt={`Profile picture of ${author?.username}`}
-                  className="post-avatar"
-                  loading="lazy"
-                />
-                <h2>{author?.firstName}</h2>
-              </>
-            )}
+            <img
+              src={author?.profileImage}
+              alt={`Profile picture of ${author?.username}`}
+              className="post-avatar"
+              loading="lazy"
+            />
+            <h2>{author?.firstName}</h2>
             <time
               dateTime={creationDate}
               className="post-timestamp"
               title={creationDate}
             >
-              {formattedDate(creationDate)}
+              {t(date.key, { count: date.count, date: date.date })}
             </time>
           </div>
           {image && (
@@ -157,30 +156,30 @@ function Post({ post, onLike }: PostProps) {
                 <Button
                   type="button"
                   Icon={HeartLikeIcon}
-                  onButtonClick={handleDislike}
+                  onButtonClick={() => handleLikeAndDislike("dislike")}
                 />
               ) : (
                 <Button
                   type="button"
                   Icon={HeartDislikeIcon}
-                  onButtonClick={handleLike}
+                  onButtonClick={() => handleLikeAndDislike("like")}
                 />
               )}
 
-              <span>{likedByUsers.length} likes</span>
+              <span>{t("like", { count: likedByUsers.length })}</span>
             </div>
             <div className="comments">
               <CommentIcon />
               {user ? (
                 <>
                   {comments ? (
-                    <span>{comments.length} comments</span>
+                    <span>{t("comment", { count: comments.length })}</span>
                   ) : (
                     <Skeleton variant="text" width={10} />
                   )}
                 </>
               ) : (
-                <span>You have to login to see the comments </span>
+                <span>{t("hiddenComments")} </span>
               )}
               {user && (
                 <Button
@@ -213,16 +212,16 @@ function Post({ post, onLike }: PostProps) {
           <div className="add-comment">
             <Input
               id="comment"
-              description="Add a comment"
+              description={t("addAComment")}
               name="comment"
-              placeholder="Write description here..."
+              placeholder={t("addCommentPlaceholder")}
               type="text"
               Icon={EditPenIcon}
               value={comment}
               onChange={handleSetComment}
             />
             <Button
-              description="Add a comment"
+              description={t("addAComment")}
               type="button"
               onButtonClick={handleAddComment}
             />
@@ -233,29 +232,32 @@ function Post({ post, onLike }: PostProps) {
   );
 }
 
-const PostHeaderSkeleton = () => (
-  <>
-    <Skeleton
-      variant="circular"
-      width={48}
-      height={48}
-      animation="wave"
-      className="post-avatar"
-    />
-    <Box marginLeft={2}>
-      <Skeleton variant="text" width="60%" height={24} animation="wave" />
-    </Box>
-  </>
-);
-
 const CommentsSkeleton = () => (
   <Box sx={{ p: 2 }}>
     {[1, 2, 3].map((i) => (
       <Box key={i} sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <Skeleton variant="circular" width={32} height={32} animation="wave" />
+        <Skeleton
+          variant="circular"
+          width={32}
+          height={32}
+          animation="wave"
+          sx={{ bgcolor: "var(--border-color)" }}
+        />
         <Box sx={{ flex: 1 }}>
-          <Skeleton variant="text" width="40%" height={20} animation="wave" />
-          <Skeleton variant="text" width="80%" height={16} animation="wave" />
+          <Skeleton
+            variant="text"
+            width="40%"
+            height={20}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
+          <Skeleton
+            variant="text"
+            width="80%"
+            height={16}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
         </Box>
       </Box>
     ))}

@@ -35,7 +35,7 @@ export const signIn = createAsyncThunk(
 
       dispatch(
         modalSlice.actions.setModal({
-          message: "Signed in successfully",
+          message: "signInStatus.success",
           status: "success",
         })
       );
@@ -47,7 +47,7 @@ export const signIn = createAsyncThunk(
 
       dispatch(
         modalSlice.actions.setModal({
-          message,
+          message: "signInStatus.success",
           status: "error",
         })
       );
@@ -72,7 +72,7 @@ export const restoreAuth = createAsyncThunk(
       if (user) {
         dispatch(
           modalSlice.actions.setModal({
-            message: "Welcome back!",
+            message: "restoreAuthStatus.success",
             status: "success",
           })
         );
@@ -81,7 +81,7 @@ export const restoreAuth = createAsyncThunk(
         localStorage.removeItem("token");
         dispatch(
           modalSlice.actions.setModal({
-            message: "Session expired",
+            message: "restoreAuthStatus.warning",
             status: "warning",
           })
         );
@@ -92,7 +92,7 @@ export const restoreAuth = createAsyncThunk(
 
       dispatch(
         modalSlice.actions.setModal({
-          message: "Authentication failed",
+          message: "restoreAuthStatus.error",
           status: "error",
         })
       );
@@ -129,7 +129,7 @@ export const signUp = createAsyncThunk(
 
       dispatch(
         modalSlice.actions.setModal({
-          message,
+         message: "signUpStatus.error",
           status: "error",
         })
       );
@@ -146,7 +146,7 @@ export const logOut = createAsyncThunk(
 
     dispatch(
       modalSlice.actions.setModal({
-        message: "Logged out successfully",
+        message: "logOutStatus.success",
         status: "info",
       })
     );
