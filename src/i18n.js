@@ -29,7 +29,7 @@ i18next
           passwordPlaceholder: "Enter password",
 
           enterFields:
-            "Enter your email and password to {{sign, lowercase}} into this app",
+            "Enter your email and password to {{sign}} into this app",
 
           emailNotValid: "Email is not valid",
           shortPassword: "Password must be at least 8 characters",
@@ -69,6 +69,33 @@ i18next
             month: "{{count}}mth ago",
             fullDate: "{{date}}",
           },
+
+          createPost: "Create a new post",
+          postTitle: "Post title",
+          postTitlePlaceholder: "Enter post title",
+          description: "description",
+          descriptionPlaceholder: "Write description here...",
+          selectFile: "Select a file or drag and drop here",
+          imagePlaceholder: "JPG, PNG or PDF, file size no more than 10MB",
+          imageMaxSize: "Max allowed size is 10MB",
+          create: "Create",
+
+          titleRequired: "Title is required",
+          titleToLong: "Max 20 characters",
+          contentToLong: "Max 200 characters",
+          wrongFileFormat: "Unsupported file format",
+
+          preferences: "Preferences",
+
+          theme: {
+            dark: "Dark theme",
+            light: "Light theme",
+          },
+          actions: "Actions",
+          logOut: "Logout",
+          editProfile: "Edit profile",
+          changeProfilePhoto: "Change profile photo",
+          username: "Username",
         },
       },
       ru: {
@@ -86,7 +113,7 @@ i18next
           passwordPlaceholder: "Введите пароль",
 
           enterFields:
-            "Введите вашу почту и пароль, чтобы {{sign, lowercase}} в эт{{appPreposition}} приложение",
+            "Введите вашу почту и пароль, чтобы {{sign}} в эт{{appPreposition}} приложение",
 
           emailNotValid: "Email некорректный",
           shortPassword: "Пароль должен содержать минимум 8 символов",
@@ -128,6 +155,23 @@ i18next
             month: "{{count}} мес назад",
             fullDate: "{{date}}",
           },
+          createPost: "Создать новый пост",
+          postTitle: "Заголовок поста",
+          postTitlePlaceholder: "Введите заголовок поста",
+          description: "Описание",
+          descriptionPlaceholder: "Напишите описание здесь...",
+          selectFile: "Выберите файл или перетащите его сюда",
+          imagePlaceholder: "JPG, PNG или PDF, размер файла не более 10 МБ",
+          imageMaxSize: "Максимальный размер файла — 10 МБ",
+          create: "Создать",
+
+          titleRequired: "Заголовок обязателен",
+          titleTooLong: "Заголовок не должен превышать 20 символов",
+          contentTooLong: "Описание не должно превышать 200 символов",
+          wrongFileFormat:
+            "Неподдерживаемый формат файла. Загрузите JPG, PNG или PDF",
+
+          preferences: "",
         },
       },
       it: {
@@ -143,7 +187,7 @@ i18next
           passwordPlaceholder: "Inserisci password",
 
           enterFields:
-            "Inserisci la tua email e password per {{sign, lowercase}} in questa app",
+            "Inserisci la tua email e password per {{sign}} in questa app",
 
           emailNotValid: "L'email non è valida",
           shortPassword: "La password deve contenere almeno 8 caratteri",
@@ -183,6 +227,21 @@ i18next
             month: "{{count}} mesi fa",
             fullDate: "{{date}}",
           },
+
+          createPost: "Crea un nuovo post",
+          postTitle: "Titolo del post",
+          postTitlePlaceholder: "Inserisci il titolo del post",
+          description: "Descrizione",
+          descriptionPlaceholder: "Scrivi qui la descrizione...",
+          selectFile: "Seleziona un file o trascinalo qui",
+          imagePlaceholder: "JPG, PNG o PDF, dimensione massima 10 MB",
+          imageMaxSize: "Dimensione massima consentita 10 MB",
+          create: "Crea",
+
+          titleRequired: "Il titolo è obbligatorio",
+          titleTooLong: "Il titolo non può superare i 20 caratteri",
+          contentTooLong: "La descrizione non può superare i 200 caratteri",
+          wrongFileFormat: "Formato file non supportato. Carica JPG, PNG o PDF",
         },
       },
     },

@@ -30,27 +30,6 @@ const SUPPORTED_FORMATS = [
   "image/webp",
 ];
 
-const FormSchema = Yup.object({
-  title: Yup.string()
-    .required("Title is required")
-    .max(20, "Max 20 characters"),
-
-  content: Yup.string().max(200, "Max 200 characters"),
-
-  image: Yup.mixed<File>()
-    .nullable()
-    .test(
-      "fileSize",
-      "Max allowed size is 10MB",
-      (value) => !value || value.size <= MAX_FILE_SIZE
-    )
-    .test(
-      "fileFormat",
-      "Unsupported file format",
-      (value) => !value || SUPPORTED_FORMATS.includes(value.type)
-    ),
-});
-
 interface IPostForm {
   title: string;
   content?: string;
@@ -63,6 +42,24 @@ interface ICreatePostProps {
 
 function CreatePost({ onAdd }: ICreatePostProps) {
   const { t } = useTranslation();
+  const FormSchema = Yup.object({
+    title: Yup.string().required(t("titleRequired")).max(20, t("titleToLong")),
+
+    content: Yup.string().max(200, t("contentToLong")),
+
+    image: Yup.mixed<File>()
+      .nullable()
+      .test(
+        "fileSize",
+        t("imageMaxSize"),
+        (value) => !value || value.size <= MAX_FILE_SIZE
+      )
+      .test(
+        "fileFormat",
+        t("wrongFileFormat"),
+        (value) => !value || SUPPORTED_FORMATS.includes(value.type)
+      ),
+  });
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,7 +94,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
     }
     postForm.setFieldValue("image", file);
   };
-
+  //TODO размеры create post исправить
   return (
     <>
       {isModalOpen && (
@@ -107,7 +104,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           onSubmit={postForm.handleSubmit}
         >
           <div className="post-form-header">
-            <h2>Create a new post</h2>
+            <h2>{t("createPost")}</h2>
             <Button
               type="button"
               Icon={ErrorIcon}
@@ -117,9 +114,9 @@ function CreatePost({ onAdd }: ICreatePostProps) {
 
           <Input
             id="post-title"
-            description="Post title"
+            description={t("postTitle")}
             name="title"
-            placeholder="Enter post title"
+            placeholder={t("postTitlePlaceholder")}
             type="text"
             Icon={MailIcon}
             value={postForm.values.title}
@@ -134,9 +131,9 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           )}
           <Textarea
             id="post-description"
-            description="Description"
+            description={t("description")}
             name="content"
-            placeholder="Write description here..."
+            placeholder={t("descriptionPlaceholder")}
             Icon={EditPenIcon}
             value={postForm.values.content || ""}
             onChange={postForm.handleChange}
@@ -152,8 +149,8 @@ function CreatePost({ onAdd }: ICreatePostProps) {
           <label htmlFor="image" className="postImg-label">
             <UploadFileIcon />
             <div>
-              <p>Select a file or drag and drop here</p>
-              <span>JPG, PNG or PDF, file size no more than 10MB</span>
+              <p>{t("selectFile")}</p>
+              <span>{t("imagePlaceholder")}</span>
             </div>
           </label>
           <input
@@ -174,10 +171,10 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             <InputMessage
               Icon={ErrorWarningIcon}
               status="warning"
-              message="Max allowed size is 10MB"
+              message={t("imageMaxSize")}
             />
           )}
-          <Button type="submit" description="Create" />
+          <Button type="submit" description={t("create")} />
         </form>
       )}
       <FrameWrapper>
