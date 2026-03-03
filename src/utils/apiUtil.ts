@@ -2,11 +2,17 @@ import axios, { type AxiosRequestConfig } from "axios";
 
 export type apiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
+// Функция для создания задержки
+const delay = (ms: number = 2000) => new Promise(resolve => setTimeout(resolve, ms));
+
 export async function fetchRESTData(
   api: string,
   method: apiMethod,
   body?: string
 ) {
+  // Добавляем задержку для тестирования Suspense
+  await delay();
+  
   const token = localStorage.getItem("token");
 
   const config: AxiosRequestConfig = {
@@ -42,6 +48,9 @@ export async function fetchRESTData(
 }
 
 export async function fetchGraphQLData(body?: string) {
+  // Добавляем задержку для тестирования Suspense
+  await delay(1500); // Можно указать свою задержку
+  
   try {
     const token = localStorage.getItem("token");
 
@@ -67,6 +76,9 @@ export async function fetchGraphQLData(body?: string) {
 }
 
 export const loadPosts = async () => {
+  // Добавляем задержку для тестирования Suspense
+  await delay(2500); // Более длинная задержка для постов
+  
   const query = `
     query allPosts {
       allPosts {
@@ -96,16 +108,25 @@ export const addPostsAxios = async (newPost: string) => {
 };
 
 export const loadUser = async (userId: number) => {
+  // Добавляем задержку для тестирования Suspense
+  await delay(1000);
+  
   const user = await fetchRESTData(`api/users/${userId}`, "GET");
   return user;
 };
 
 export const loginUser = async (loginForm: string) => {
+  // Короткая задержка для логина
+  await delay(800);
+  
   const user = await fetchRESTData("/api/login", "POST", loginForm);
   return user;
 };
 
 export const restoreUser = async () => {
+  // Добавляем задержку для тестирования Suspense при восстановлении пользователя
+  await delay(1800);
+  
   const query = `
     query me {
       me {
@@ -129,29 +150,47 @@ export const restoreUser = async () => {
 };
 
 export const signUpUser = async (singUpForm: string) => {
+  // Задержка для регистрации
+  await delay(1200);
+  
   const user = await fetchRESTData("/api/signup", "POST", singUpForm);
   return user;
 };
 
 export const updateUserAxios = async (updatedUser: string) => {
+  // Задержка для обновления профиля
+  await delay(1500);
+  
   const user = await fetchRESTData("/api/profile", "PUT", updatedUser);
   return user;
 };
 
 export const loadPostComments = async (postId: number) => {
+  // Задержка для загрузки комментариев
+  await delay(1000);
+  
   const comments = await fetchRESTData(`/api/posts/${postId}/comments`, "GET");
   return comments;
 };
 
 export const deleteComment = async (commentId: number) => {
+  // Короткая задержка для удаления
+  await delay(500);
+  
   await fetchRESTData(`/api/comments/${commentId}`, "DELETE");
 };
 
 export const addComment = async (commentData: string) => {
+  // Задержка для добавления комментария
+  await delay(800);
+  
   await fetchRESTData("api/comments", "POST", commentData);
 };
 
 export const likePost = async (postId: number) => {
+  // Короткая задержка для лайка
+  await delay(600);
+  
   const token = localStorage.getItem("token");
 
   const query = `
@@ -169,13 +208,12 @@ export const likePost = async (postId: number) => {
     const response = await axios.post(
       "/api/graphql",
       {
-        // Fixed URL
         query,
         variables: { postId },
       },
       {
         headers: {
-          "Content-Type": "application/json", // Fixed content type
+          "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
       }
@@ -189,22 +227,32 @@ export const likePost = async (postId: number) => {
 };
 
 export const dislikePost = async (postId: number) => {
+  // Короткая задержка для дизлайка
+  await delay(600);
+  
   await fetchRESTData("api/dislike", "POST", JSON.stringify({ postId }));
 };
 
-
-
 export const getSuggested = async () => {
+  // Задержка для предложений
+  await delay(1200);
+  
   const suggested = await fetchRESTData("/api/getSuggested", "GET");
   return suggested;
 };
 
 export const getGroups = async () => {
+  // Задержка для групп
+  await delay(1000);
+  
   const groups = await fetchRESTData("/api/groups", "GET");
   return groups;
 };
 
 export const getStatisticLikes = async () => {
+  // Задержка для статистики лайков
+  await delay(2000);
+  
   const query = `
     query meLikes {
       meLikes {
@@ -231,11 +279,18 @@ export const getStatisticLikes = async () => {
 };
 
 export const getStatisticPosts = async () => {
+  // Задержка для статистики постов
+  await delay(1800);
+  
   const posts = await fetchRESTData(`/api/me/posts`, "GET");
   return posts;
 };
 
 export const getStatisticComments = async () => {
+  // Задержка для статистики комментариев
+  await delay(1600);
+  
   const comments = fetchRESTData(`/api/me/comments`, "GET");
   return comments;
 };
+

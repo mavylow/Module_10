@@ -94,7 +94,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
     }
     postForm.setFieldValue("image", file);
   };
-  //TODO размеры create post исправить
+
   return (
     <>
       {isModalOpen && (

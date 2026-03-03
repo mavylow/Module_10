@@ -24,7 +24,11 @@ import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -44,15 +48,16 @@ function Post({ post, onLike }: PostProps) {
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
-  const { isLoading: isAuthorLoading, data: author } = useQuery<IUser>({
+  const { data: author } = useSuspenseQuery<IUser>({
     queryKey: ["users", authorId],
     queryFn: () => loadUser(authorId),
   });
 
-  const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
+  const { data: comments, refetch: refetchComments } = useSuspenseQuery<
+    IComment[]
+  >({
     queryKey: ["posts", id, "comments"],
     queryFn: () => loadPostComments(id),
-    enabled: !!user,
   });
 
   const dislikeAndLikeMutation = useMutation({
@@ -121,19 +126,13 @@ function Post({ post, onLike }: PostProps) {
       <FrameWrapper>
         <div className="without-comment">
           <div className="post-header">
-            {isAuthorLoading ? (
-              <PostHeaderSkeleton />
-            ) : (
-              <>
-                <img
-                  src={author?.profileImage}
-                  alt={`Profile picture of ${author?.username}`}
-                  className="post-avatar"
-                  loading="lazy"
-                />
-                <h2>{author?.firstName}</h2>
-              </>
-            )}
+            <img
+              src={author?.profileImage}
+              alt={`Profile picture of ${author?.username}`}
+              className="post-avatar"
+              loading="lazy"
+            />
+            <h2>{author?.firstName}</h2>
             <time
               dateTime={creationDate}
               className="post-timestamp"
@@ -233,29 +232,32 @@ function Post({ post, onLike }: PostProps) {
   );
 }
 
-const PostHeaderSkeleton = () => (
-  <>
-    <Skeleton
-      variant="circular"
-      width={48}
-      height={48}
-      animation="wave"
-      className="post-avatar"
-    />
-    <Box marginLeft={2}>
-      <Skeleton variant="text" width="60%" height={24} animation="wave" />
-    </Box>
-  </>
-);
-
 const CommentsSkeleton = () => (
   <Box sx={{ p: 2 }}>
     {[1, 2, 3].map((i) => (
       <Box key={i} sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <Skeleton variant="circular" width={32} height={32} animation="wave" />
+        <Skeleton
+          variant="circular"
+          width={32}
+          height={32}
+          animation="wave"
+          sx={{ bgcolor: "var(--border-color)" }}
+        />
         <Box sx={{ flex: 1 }}>
-          <Skeleton variant="text" width="40%" height={20} animation="wave" />
-          <Skeleton variant="text" width="80%" height={16} animation="wave" />
+          <Skeleton
+            variant="text"
+            width="40%"
+            height={20}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
+          <Skeleton
+            variant="text"
+            width="80%"
+            height={16}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
         </Box>
       </Box>
     ))}

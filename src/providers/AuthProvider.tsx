@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "@/store";
 import { restoreAuth, setUser } from "@/slices/authSlice";
 import { setModal } from "@/slices/modalSlice";
+import { CircularProgress } from "@mui/material";
 
 export interface IAuthContext {
   user: IUser | null;
@@ -28,7 +29,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   const { user, isLoading: loading } = useSelector(
     (state: RootState) => state.auth
   );
+
   const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     dispatch(restoreAuth());
   }, []);
@@ -53,6 +56,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  if (loading) {
+    return <CircularProgress sx={{ color: "var(--primary-orange)" }} />;
+  }
   return (
     <AuthContext.Provider value={{ user, updateUser }}>
       {children}
