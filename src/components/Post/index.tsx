@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface PostProps {
   post: IPost;
@@ -33,9 +34,11 @@ interface PostProps {
 }
 
 function Post({ post, onLike }: PostProps) {
+  const { t } = useTranslation();
+
   const { id, authorId, title, content, image, likedByUsers, creationDate } =
     post;
-
+  const date = formattedDate(creationDate);
   const user = useSelector((state: RootState) => state.auth.user);
   const queryClient = useQueryClient();
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
@@ -139,7 +142,7 @@ function Post({ post, onLike }: PostProps) {
               className="post-timestamp"
               title={creationDate}
             >
-              {formattedDate(creationDate)}
+              {t(date.key, { count: date.count, date: date.date })}
             </time>
           </div>
           {image && (
@@ -167,20 +170,20 @@ function Post({ post, onLike }: PostProps) {
                 />
               )}
 
-              <span>{likedByUsers.length} likes</span>
+              <span>{t("like", { count: likedByUsers.length })}</span>
             </div>
             <div className="comments">
               <CommentIcon />
               {user ? (
                 <>
                   {comments ? (
-                    <span>{comments.length} comments</span>
+                    <span>{t("comment", { count: comments.length })}</span>
                   ) : (
                     <Skeleton variant="text" width={10} />
                   )}
                 </>
               ) : (
-                <span>You have to login to see the comments </span>
+                <span>{t("hiddenComments")} </span>
               )}
               {user && (
                 <Button
@@ -213,16 +216,16 @@ function Post({ post, onLike }: PostProps) {
           <div className="add-comment">
             <Input
               id="comment"
-              description="Add a comment"
+              description={t("addAComment")}
               name="comment"
-              placeholder="Write description here..."
+              placeholder={t("addCommentPlaceholder")}
               type="text"
               Icon={EditPenIcon}
               value={comment}
               onChange={handleSetComment}
             />
             <Button
-              description="Add a comment"
+              description={t("addAComment")}
               type="button"
               onButtonClick={handleAddComment}
             />

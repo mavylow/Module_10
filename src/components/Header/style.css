@@ -20,6 +20,10 @@
   z-index: 1001;
 }
 
+header a {
+  text-decoration: none;
+}
+
 .desktop nav {
   display: flex;
   align-items: center;

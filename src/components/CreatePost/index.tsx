@@ -16,6 +16,7 @@ import type { RootState } from "@/store";
 import InputMessage from "@components/InputMessage";
 import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
 import DOMPurify from "dompurify";
+import { useTranslation } from "react-i18next";
 
 const postFormInitial = {
   title: "",
@@ -61,6 +62,7 @@ interface ICreatePostProps {
 }
 
 function CreatePost({ onAdd }: ICreatePostProps) {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -182,12 +184,12 @@ function CreatePost({ onAdd }: ICreatePostProps) {
         <div className="create-post">
           <div>
             <img src={user?.profileImage} />
-            <span>What’s happening?</span>
+            <span>{t("whatHappening")}</span>
           </div>
 
           <Button
             type="button"
-            description="Tell everyone"
+            description={t("tellEveryone")}
             onButtonClick={handleDisplayAddMenu}
           />
         </div>

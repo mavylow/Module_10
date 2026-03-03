@@ -17,16 +17,19 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import { signIn } from "@/slices/authSlice";
 import InputMessage from "@/components/InputMessage";
-
-const FormSchema = Yup.object({
-  email: Yup.string().required().email("Write correct email"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .max(14, "Password cannot exceed 14 characters")
-    .matches(/[0-9]/, "Password must contain at least one number"),
-});
+import { useTranslation } from "react-i18next";
 
 export default function SignIn() {
+  const { t } = useTranslation();
+
+  const FormSchema = Yup.object({
+    email: Yup.string().required().email("Write correct email"),
+    password: Yup.string()
+      .min(8, t("shortPassword"))
+      .max(14, t("longPassword"))
+      .matches(/[0-9]/, t("passwordContainNumber")),
+  });
+
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const isAuth = useSelector<RootState>((state) => state.auth.isAuth);
@@ -52,15 +55,17 @@ export default function SignIn() {
     <main>
       <form className="sing-up" onSubmit={form.handleSubmit}>
         <div className="form-header">
-          <h1>Sign in into an account</h1>
-          <p>Enter your email and password to sign in into this app</p>
+          <h1>{t("signIntoAccount")}</h1>
+          <p>
+            {t("enterFields", { sign: t("toSignIn"), appPreposition: "о" })}
+          </p>
         </div>
         <div className="input-container">
           <Input
             id="email"
-            description="Email"
+            description={t("email")}
             name="email"
-            placeholder="Enter email"
+            placeholder={t("emailPlaceholder")}
             type="email"
             Icon={MailIcon}
             value={form.values.email}
@@ -71,7 +76,7 @@ export default function SignIn() {
               {form.errors.email ? (
                 <>
                   <InputMessage
-                    message="Email is not valid"
+                    message={t("emailNotValid")}
                     Icon={ErrorWarningIcon}
                     status="error"
                   />
@@ -98,9 +103,9 @@ export default function SignIn() {
           </div>
           <Input
             id="password"
-            description="Password"
+            description={t("password")}
             name="password"
-            placeholder="Enter password"
+            placeholder={t("passwordPlaceholder")}
             type={isPasswordOpen ? "text" : "password"}
             Icon={EyeOpenIcon}
             value={form.values.password}
@@ -116,7 +121,7 @@ export default function SignIn() {
                 />
               ) : (
                 <InputMessage
-                  message="Your password is strong"
+                  message={t("strongPassword")}
                   Icon={ThumbUpIcon}
                   status="success"
                 />
@@ -125,12 +130,12 @@ export default function SignIn() {
           )}
         </div>
 
-        <Button description="Sign In" type="submit" />
+        <Button description={t("signIn")} type="submit" />
       </form>
       <span>
-        Forgot to create an account?{" "}
+        {t("forgotToCreate")}{" "}
         <NavLink className={"nav-link"} to={"/signup"}>
-          Sign up
+          {t("signUp")}
         </NavLink>
       </span>
     </main>

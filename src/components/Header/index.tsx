@@ -103,6 +103,7 @@ function Header() {
                 ) : (
                   <>
                     <NavLink to={"/profile"}>
+                      {/* TODO fix img center */}
                       <img
                         src={user.profileImage}
                         className="avatar"
