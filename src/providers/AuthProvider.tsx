@@ -46,7 +46,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       dispatch(setUser(newUser));
       dispatch(
         setModal({
-          message: "Profile info updated successfully",
+          message: "updateProfileStatus.success",
           status: "success",
         })
       );

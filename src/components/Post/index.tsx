@@ -55,15 +55,16 @@ function Post({ post, onLike }: PostProps) {
     enabled: !!user,
   });
 
-  const likeMutation = useMutation({
-    mutationFn: () => likePost(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
-      onLike();
+  const dislikeAndLikeMutation = useMutation({
+    mutationFn: async (action: "like" | "dislike") => {
+      if (action === "like") {
+        return likePost(id);
+      }
+
+      if (action === "dislike") {
+        return dislikePost(id);
+      }
     },
-  });
-  const dislikeMutation = useMutation({
-    mutationFn: () => dislikePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["post"] });
       onLike();
@@ -90,12 +91,8 @@ function Post({ post, onLike }: PostProps) {
     setIsCommentsExpanded((prev) => !prev);
   };
 
-  const handleDislike = async () => {
-    dislikeMutation.mutate();
-  };
-
-  const handleLike = async () => {
-    likeMutation.mutate();
+  const handleLikeAndDislike = async (action: "like" | "dislike") => {
+    dislikeAndLikeMutation.mutate(action);
   };
 
   const handleAddComment = async () => {
@@ -160,13 +157,13 @@ function Post({ post, onLike }: PostProps) {
                 <Button
                   type="button"
                   Icon={HeartLikeIcon}
-                  onButtonClick={handleDislike}
+                  onButtonClick={() => handleLikeAndDislike("dislike")}
                 />
               ) : (
                 <Button
                   type="button"
                   Icon={HeartDislikeIcon}
-                  onButtonClick={handleLike}
+                  onButtonClick={() => handleLikeAndDislike("like")}
                 />
               )}
 

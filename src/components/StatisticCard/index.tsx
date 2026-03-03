@@ -1,6 +1,7 @@
 import React from "react";
 import FrameWrapper from "@components/FrameWrapper";
 import "./style.css";
+import { useTranslation } from "react-i18next";
 
 interface IStatisticCard {
   title: string;
@@ -9,15 +10,18 @@ interface IStatisticCard {
 }
 
 function StatisticCard({ title, count, prev }: IStatisticCard) {
+  const { t } = useTranslation();
   const diff = count - prev;
   const percent = prev === 0 ? 100 : Math.round((diff / prev) * 100);
 
   return (
     <FrameWrapper>
       <div className="card">
-        <h3>{title}</h3>
+        <h3>{t(title).toLocaleLowerCase()}</h3>
         <p>{count}</p>
-        <small> +{percent}% month over month</small>
+        <small>
+          +{percent}% {t("monthStat")}
+        </small>
       </div>
     </FrameWrapper>
   );

@@ -192,6 +192,8 @@ export const dislikePost = async (postId: number) => {
   await fetchRESTData("api/dislike", "POST", JSON.stringify({ postId }));
 };
 
+
+
 export const getSuggested = async () => {
   const suggested = await fetchRESTData("/api/getSuggested", "GET");
   return suggested;

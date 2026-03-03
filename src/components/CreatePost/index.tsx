@@ -43,9 +43,9 @@ interface ICreatePostProps {
 function CreatePost({ onAdd }: ICreatePostProps) {
   const { t } = useTranslation();
   const FormSchema = Yup.object({
-    title: Yup.string().required(t("titleRequired")).max(20, t("titleToLong")),
+    title: Yup.string().required(t("titleRequired")).max(20, t("max20chars")),
 
-    content: Yup.string().max(200, t("contentToLong")),
+    content: Yup.string().max(200, t("max200chars")),
 
     image: Yup.mixed<File>()
       .nullable()
