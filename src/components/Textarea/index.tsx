@@ -21,7 +21,7 @@ function Textarea({
   onChange,
 }: TextareaProps) {
   return (
-    <>
+    <div className="input-wrapper">
       <label htmlFor={id} className="default-label">
         <Icon />
         {description}
@@ -36,7 +36,7 @@ function Textarea({
         onChange={onChange}
         value={value}
       />
-    </>
+    </div>
   );
 }
 

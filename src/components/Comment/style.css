@@ -7,7 +7,6 @@
 }
 
 .comment span {
-  margin: 0;
   display: inline-flex;
   align-items: end;
 }

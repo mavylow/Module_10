@@ -5,20 +5,18 @@ export const PostArticle = styled.article`
   font-size: 16px;
 
   .frame {
-  display: flex;
-  flex-direction: column;
-  gap: 16px
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   h2 {
     font-size: 16px;
-    margin: 0;
   }
 
   h3,
   p {
     font-size: clamp(14px, 3vw, 20px);
-    margin: 0;
   }
 
   span {
@@ -37,10 +35,6 @@ export const PostArticle = styled.article`
   @media (max-width: 375px) {
     svg {
       height: 18px;
-    }
-
-    span {
-      font-size: 10px;
     }
   }
 `;
@@ -66,12 +60,10 @@ export const PostHeader = styled.div`
   display: grid;
   grid-template-rows: 24px 1fr;
   grid-template-columns: 48px 1fr;
-  padding: 0;
 
   h2,
   time {
     padding-left: min(1em, 3%);
-    margin: 0;
     align-self: center;
   }
 
@@ -91,7 +83,6 @@ export const PostAvatar = styled.img`
 `;
 
 export const Figure = styled.figure`
-  margin: 0;
 
   img {
     width: 100%;
@@ -104,6 +95,7 @@ export const PostInfo = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 1em;
+  height: 24px;
 `;
 
 export const Likes = styled.div`
@@ -125,7 +117,6 @@ export const PostComments = styled.ul`
   flex-direction: column;
   list-style: none;
   padding-left: 0;
-  margin: 0;
   gap: 16px;
 `;
 
@@ -143,10 +134,6 @@ export const AddComment = styled.div`
     width: clamp(163px, 40%, 211px);
     height: 44px;
     font-size: 14px;
-  }
-
-  label {
-    padding: 0.5em 0;
   }
 
   @media (max-width: 350px) {

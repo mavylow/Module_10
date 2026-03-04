@@ -25,13 +25,11 @@
 
 .form-header h1 {
   font-size: 18px;
-  margin: 0;
 }
 
 .form-header p {
   width: 80%;
   text-align: center;
-  margin: 0;
 }
 
 form input {
@@ -42,7 +40,6 @@ form input {
 form button {
   height: 44px;
   width: min(327px, 90vw);
-  margin: 0;
 }
 
 .legal-link,
