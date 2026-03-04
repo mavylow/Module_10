@@ -3,20 +3,6 @@ import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 
-// function manualChunks(id: string) {
-//   if (id.includes("node_modules")) {
-//     if (id.includes("/@sidekick-monorepo/")) {
-//       return "vendor-backend-mock";
-//     }
-
-//   if (id.includes("react") && !id.includes("mui")) {
-//       return "vendor-backend-mock";
-//     }
-//     return "vendor-other";
-//   }
-//   return undefined;
-// }
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), visualizer()],

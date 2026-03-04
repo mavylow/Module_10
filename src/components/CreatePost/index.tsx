@@ -111,69 +111,70 @@ function CreatePost({ onAdd }: ICreatePostProps) {
               onButtonClick={handleDisplayAddMenu}
             />
           </div>
+          <div className="inputs">
+            <Input
+              id="post-title"
+              description={t("postTitle")}
+              name="title"
+              placeholder={t("postTitlePlaceholder")}
+              type="text"
+              Icon={MailIcon}
+              value={postForm.values.title}
+              onChange={postForm.handleChange}
+            />
+            {postForm.errors.title && (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.title}
+              />
+            )}
+            <Textarea
+              id="post-description"
+              description={t("description")}
+              name="content"
+              placeholder={t("descriptionPlaceholder")}
+              Icon={EditPenIcon}
+              value={postForm.values.content || ""}
+              onChange={postForm.handleChange}
+            />
+            {postForm.errors.content && (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.content}
+              />
+            )}
 
-          <Input
-            id="post-title"
-            description={t("postTitle")}
-            name="title"
-            placeholder={t("postTitlePlaceholder")}
-            type="text"
-            Icon={MailIcon}
-            value={postForm.values.title}
-            onChange={postForm.handleChange}
-          />
-          {postForm.errors.title && (
-            <InputMessage
-              Icon={ErrorWarningIcon}
-              status="error"
-              message={postForm.errors.title}
+            <label htmlFor="image" className="postImg-label">
+              <UploadFileIcon />
+              <div>
+                <p>{t("selectFile")}</p>
+                <span>{t("imagePlaceholder")}</span>
+              </div>
+            </label>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={addFile}
             />
-          )}
-          <Textarea
-            id="post-description"
-            description={t("description")}
-            name="content"
-            placeholder={t("descriptionPlaceholder")}
-            Icon={EditPenIcon}
-            value={postForm.values.content || ""}
-            onChange={postForm.handleChange}
-          />
-          {postForm.errors.content && (
-            <InputMessage
-              Icon={ErrorWarningIcon}
-              status="error"
-              message={postForm.errors.content}
-            />
-          )}
-
-          <label htmlFor="image" className="postImg-label">
-            <UploadFileIcon />
-            <div>
-              <p>{t("selectFile")}</p>
-              <span>{t("imagePlaceholder")}</span>
-            </div>
-          </label>
-          <input
-            id="image"
-            name="image"
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={addFile}
-          />
-          {postForm.errors.image ? (
-            <InputMessage
-              Icon={ErrorWarningIcon}
-              status="error"
-              message={postForm.errors.image}
-            />
-          ) : (
-            <InputMessage
-              Icon={ErrorWarningIcon}
-              status="warning"
-              message={t("imageMaxSize")}
-            />
-          )}
+            {postForm.errors.image ? (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.image}
+              />
+            ) : (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="warning"
+                message={t("imageMaxSize")}
+              />
+            )}
+          </div>
           <Button type="submit" description={t("create")} />
         </form>
       )}

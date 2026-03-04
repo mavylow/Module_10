@@ -1,11 +1,6 @@
 import "./style.css";
 import Checkbox from "@components/Checkbox";
 import { useMemo, useState } from "react";
-import {
-  getStatisticComments,
-  getStatisticLikes,
-  getStatisticPosts,
-} from "@utils/apiUtil";
 import type { IComment, ILike, IPost, MonthStat } from "@/interfaces";
 import StatisticCard from "@components/StatisticCard";
 import {
@@ -21,8 +16,9 @@ import {
   getCurrentMonthStats,
 } from "@/utils/statisticUtils";
 import TableStats from "@/components/TableStats";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@apollo/client/react";
 import { useTranslation } from "react-i18next";
+import { gql } from "@apollo/client";
 
 const monthStatInitial: MonthStat = {
   month: 0,
@@ -39,26 +35,44 @@ const yearStatInitial: MonthStat[] = Array.from({ length: 12 }, (_, i) => {
 });
 
 type ITabView = "table" | "chart";
-
+const ME_LIKES = gql`
+  query meLikes {
+    meLikes {
+      id
+      creationDate
+    }
+  }
+`;
+const ME_POSTS = gql`
+  query mePosts {
+    mePosts {
+      id
+      creationDate
+    }
+  }
+`;
+const ME_COMMENTS = gql`
+  query meComments {
+    meComments {
+      id
+      creationDate
+    }
+  }
+`;
 function Statistics() {
   const { t } = useTranslation();
   const [tabView, setTabView] = useState<ITabView>("table");
 
-  const { data: posts, isLoading: isPostsLoading } = useQuery<IPost[]>({
-    queryKey: ["posts"],
-    queryFn: () => getStatisticPosts(),
-  });
-  const { data: likes, isLoading: isLikesLoading } = useQuery<ILike[]>({
-    queryKey: ["likes"],
-    queryFn: () => getStatisticLikes(),
-  });
+  const { data: posts, loading: isPostsLoading } = useQuery<{
+    mePosts: IPost[];
+  }>(ME_POSTS);
+  const { data: likes, loading: isLikesLoading } = useQuery<{
+    meLikes: ILike[];
+  }>(ME_LIKES);
 
-  const { data: comments, isLoading: isCommentsLoading } = useQuery<IComment[]>(
-    {
-      queryKey: ["comments"],
-      queryFn: () => getStatisticComments(),
-    }
-  );
+  const { data: comments, loading: isCommentsLoading } = useQuery<{
+    meComments: IComment[];
+  }>(ME_COMMENTS);
 
   const isDataLoading = useMemo(() => {
     return isCommentsLoading || isLikesLoading || isPostsLoading;
@@ -71,7 +85,7 @@ function Statistics() {
     if (!likes) {
       return [];
     }
-    return calculateFullStats(likes);
+    return calculateFullStats(likes.meLikes);
   }, [likes]);
 
   const commentsStats = useMemo(() => {
@@ -81,7 +95,7 @@ function Statistics() {
     if (!comments) {
       return [];
     }
-    return calculateFullStats(comments);
+    return calculateFullStats(comments.meComments);
   }, [comments]);
 
   const postsStats = useMemo(() => {
@@ -91,7 +105,7 @@ function Statistics() {
     if (!posts) {
       return [];
     }
-    return calculateFullStats(posts);
+    return calculateFullStats(posts.mePosts);
   }, [posts]);
 
   const currentMonthStats = useMemo(() => {

@@ -18,7 +18,7 @@
 
 .home > .frame {
   padding: 0;
-  margin-bottom: 12px;
+  margin-bottom: 26px;
 }
 
 .create-post img {
@@ -43,7 +43,7 @@
   width: min(800px, 95vw);
   max-height: 90vh;
   height: auto;
-  gap: 16px;
+  gap: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,11 @@
   flex-direction: column;
   gap: 12px;
 }
-
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .add-post button {
   align-self: flex-end;
   width: 144px;

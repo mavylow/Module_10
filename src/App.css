@@ -10,8 +10,8 @@ main {
   justify-content: center;
   flex-direction: column;
   width: min(700px, 100%);
-  margin: 1em 0;
   position: relative;
+  margin-top: 26px;
 }
 
 a {
