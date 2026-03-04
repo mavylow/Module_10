@@ -31,7 +31,7 @@ export default function Input(props: InputProps | FormInputProps) {
     };
 
     return (
-      <>
+      <div className="input-wrapper">
         <label htmlFor={id} className="default-label">
           <Icon />
           {description}
@@ -43,15 +43,17 @@ export default function Input(props: InputProps | FormInputProps) {
           id={id}
           placeholder={placeholder}
           type={type}
+          aria-describedby="username-success username-error username-warning"
+          aria-required="true"
           {...register(id, registerOptions)}
         />
-      </>
+      </div>
     );
   } else {
     const { id, description, name, placeholder, type, Icon, value, onChange } =
       props;
     return (
-      <>
+      <div className="input-wrapper">
         <label htmlFor={id} className="default-label">
           <Icon />
           {description}
@@ -67,7 +69,7 @@ export default function Input(props: InputProps | FormInputProps) {
           onChange={onChange}
           value={value}
         />
-      </>
+      </div>
     );
   }
 }

@@ -3,11 +3,10 @@ import DOMPurify from "dompurify";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
 import Comment from "@components/Comment";
-import "./style.css";
 import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import FrameWrapper from "@components/FrameWrapper";
+
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
@@ -26,11 +25,26 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
+
+import FrameWrapper from "@components/FrameWrapper";
+import {
+  AddComment,
+  Comments,
+  Figure,
+  Likes,
+  PostArticle,
+  PostAvatar,
+  PostComments,
+  PostHeader,
+  PostInfo,
+  WithoutComment,
+} from "./index.styled";
 
 interface PostProps {
   post: IPost;
@@ -45,6 +59,7 @@ function Post({ post, onLike }: PostProps) {
   const date = formattedDate(creationDate);
   const user = useSelector((state: RootState) => state.auth.user);
   const queryClient = useQueryClient();
+
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
@@ -53,11 +68,10 @@ function Post({ post, onLike }: PostProps) {
     queryFn: () => loadUser(authorId),
   });
 
-  const { data: comments, refetch: refetchComments } = useSuspenseQuery<
-    IComment[]
-  >({
+  const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
     queryKey: ["posts", id, "comments"],
     queryFn: () => loadPostComments(id),
+    enabled: !!user,
   });
 
   const dislikeAndLikeMutation = useMutation({
@@ -122,11 +136,11 @@ function Post({ post, onLike }: PostProps) {
   };
 
   return (
-    <article className="post">
+    <PostArticle>
       <FrameWrapper>
-        <div className="without-comment">
-          <div className="post-header">
-            <img
+        <WithoutComment>
+          <PostHeader>
+            <PostAvatar
               src={author?.profileImage}
               alt={`Profile picture of ${author?.username}`}
               className="post-avatar"
@@ -140,18 +154,18 @@ function Post({ post, onLike }: PostProps) {
             >
               {t(date.key, { count: date.count, date: date.date })}
             </time>
-          </div>
+          </PostHeader>
           {image && (
-            <figure>
+            <Figure>
               <img src={image} />
-            </figure>
+            </Figure>
           )}
           <div className="post-text">
             <h3>{title}</h3>
             <p> {content}</p>
           </div>
-          <div className="post-info">
-            <div className="likes">
+          <PostInfo>
+            <Likes>
               {user && likedByUsers?.some((u) => u.email === user.email) ? (
                 <Button
                   type="button"
@@ -167,8 +181,8 @@ function Post({ post, onLike }: PostProps) {
               )}
 
               <span>{t("like", { count: likedByUsers.length })}</span>
-            </div>
-            <div className="comments">
+            </Likes>
+            <Comments>
               <CommentIcon />
               {user ? (
                 <>
@@ -188,12 +202,12 @@ function Post({ post, onLike }: PostProps) {
                   onButtonClick={handleExpand}
                 />
               )}
-            </div>
-          </div>
-        </div>
+            </Comments>
+          </PostInfo>
+        </WithoutComment>
 
         {user && isCommentsExpanded && (
-          <ul className="post-comments">
+          <PostComments>
             {!comments ? (
               <CommentsSkeleton />
             ) : (
@@ -206,10 +220,10 @@ function Post({ post, onLike }: PostProps) {
                 />
               ))
             )}
-          </ul>
+          </PostComments>
         )}
         {user && (
-          <div className="add-comment">
+          <AddComment>
             <Input
               id="comment"
               description={t("addAComment")}
@@ -225,10 +239,10 @@ function Post({ post, onLike }: PostProps) {
               type="button"
               onButtonClick={handleAddComment}
             />
-          </div>
+          </AddComment>
         )}
       </FrameWrapper>
-    </article>
+    </PostArticle>
   );
 }
 

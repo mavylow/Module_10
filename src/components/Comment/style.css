@@ -4,11 +4,9 @@
   justify-content: space-between;
   position: relative;
   padding-left: 2em;
-  margin-bottom: 0.5em;
 }
 
 .comment span {
-  margin: 0;
   display: inline-flex;
   align-items: end;
 }

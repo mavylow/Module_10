@@ -1,11 +1,10 @@
 .profile h2 {
   font-size: clamp(18px, 2.5vw, 28px);
   font-weight: 600;
-  margin: 0;
+  height: 30px;
 }
 
 .profile h3 {
-  margin: 0;
   font-size: 16px;
 }
 
@@ -34,10 +33,21 @@
   width: min(40vw, 575px);
 }
 
+.profile .description label {
+  height: 24px;
+}
+
 .language select {
   border: 1px solid var(--border-color);
   outline: 1px solid var(--border-color);
   width: 90px;
+}
+
+.language select option {
+  all: unset;
+  background-color: var(--background-main);
+  color: var(--text-color);
+  padding: 8px;
 }
 
 .edit-profile input {
@@ -66,11 +76,6 @@
   grid-template-rows: 32px 1fr;
   column-gap: 24px;
   align-items: center;
-}
-
-.profile-photo h2,
-.profile-photo p {
-  margin: 0;
 }
 
 .profile-photo img {

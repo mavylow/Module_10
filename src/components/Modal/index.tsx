@@ -23,6 +23,7 @@ function Modal({ message, status }: IModal) {
           Icon={CrossIcon}
           type="button"
           onButtonClick={handleCloseModal}
+          description="close modal button"
         />
       </div>
     </Portal>

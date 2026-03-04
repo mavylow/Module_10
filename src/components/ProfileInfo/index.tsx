@@ -83,7 +83,7 @@ const ProfileInfo = observer(() => {
             <ProfilePhotoSkeleton />
           ) : (
             <>
-              <img src={user?.profileImage} />
+              <img src={user?.profileImage} alt="profile-image" />
               <h3>
                 {user?.firstName} {user?.secondName}
               </h3>
@@ -181,6 +181,7 @@ const ProfileInfo = observer(() => {
           <div className="language">
             <div className="language">
               <select
+                id="language-select"
                 value={i18n.language}
                 onChange={(e) => i18n.changeLanguage(e.target.value)}
               >

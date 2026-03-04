@@ -12,4 +12,5 @@
 .icon-button {
   background-color: transparent;
   border: none;
+  display: flex;
 }

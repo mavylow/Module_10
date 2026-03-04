@@ -48,10 +48,6 @@
   --border-color: rgb(var(--border-color-day));
 }
 
-* {
-  box-sizing: border-box;
-}
-
 #root {
   display: flex;
   flex-direction: column;
@@ -65,7 +61,6 @@
 }
 
 body {
-  margin: 0;
   min-width: 320px;
   height: 100%;
 }

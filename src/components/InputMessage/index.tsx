@@ -9,7 +9,7 @@ interface InputMessageProps {
 
 function InputMessage({ message, status, Icon }: InputMessageProps) {
   return (
-    <div className={`input-message ${status}`}>
+    <div className={`input-message ${status}`} id={`username-${status}`}>
       <Icon />
       <p className={`${status}-text`}>{message}</p>
     </div>

@@ -2,6 +2,7 @@ import TrashIcon from "@assets/TrashIcon";
 import type { IComment } from "@/interfaces";
 import "./style.css";
 import Button from "@components/Button";
+import { CommentStyled } from "./index.styled";
 
 interface ICommentProps {
   comment: IComment;
@@ -12,10 +13,10 @@ interface ICommentProps {
 export default function Comment({ comment, number, onDelete }: ICommentProps) {
   return (
     <>
-      <li data-number={`#${number}.`} className="comment">
+      <CommentStyled $number={number}>
         <span>{comment.text}</span>
         <Button Icon={TrashIcon} onButtonClick={onDelete} type="button" />
-      </li>
+      </CommentStyled>
     </>
   );
 }
