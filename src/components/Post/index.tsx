@@ -3,11 +3,10 @@ import DOMPurify from "dompurify";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
 import Comment from "@components/Comment";
-import "./style.css";
 import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import FrameWrapper from "@components/FrameWrapper";
+
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
@@ -24,9 +23,28 @@ import HeartLikeIcon from "@assets/HeartLikeIcon";
 import HeartDislikeIcon from "@assets/HeartDislikeIcon";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Box, Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
+
+import FrameWrapper from "@components/FrameWrapper";
+import {
+  AddComment,
+  Comments,
+  Figure,
+  Likes,
+  PostArticle,
+  PostAvatar,
+  PostComments,
+  PostHeader,
+  PostInfo,
+  WithoutComment,
+} from "./index.styled";
 
 interface PostProps {
   post: IPost;
@@ -44,7 +62,7 @@ function Post({ post, onLike }: PostProps) {
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 
-  const { isLoading: isAuthorLoading, data: author } = useQuery<IUser>({
+  const { data: author } = useSuspenseQuery<IUser>({
     queryKey: ["users", authorId],
     queryFn: () => loadUser(authorId),
   });
@@ -117,23 +135,17 @@ function Post({ post, onLike }: PostProps) {
   };
 
   return (
-    <article className="post">
+    <PostArticle>
       <FrameWrapper>
-        <div className="without-comment">
-          <div className="post-header">
-            {isAuthorLoading ? (
-              <PostHeaderSkeleton />
-            ) : (
-              <>
-                <img
-                  src={author?.profileImage}
-                  alt={`Profile picture of ${author?.username}`}
-                  className="post-avatar"
-                  loading="lazy"
-                />
-                <h2>{author?.firstName}</h2>
-              </>
-            )}
+        <WithoutComment>
+          <PostHeader>
+            <PostAvatar
+              src={author?.profileImage}
+              alt={`Profile picture of ${author?.username}`}
+              className="post-avatar"
+              loading="lazy"
+            />
+            <h2>{author?.firstName}</h2>
             <time
               dateTime={creationDate}
               className="post-timestamp"
@@ -141,18 +153,18 @@ function Post({ post, onLike }: PostProps) {
             >
               {t(date.key, { count: date.count, date: date.date })}
             </time>
-          </div>
+          </PostHeader>
           {image && (
-            <figure>
+            <Figure>
               <img src={image} />
-            </figure>
+            </Figure>
           )}
           <div className="post-text">
             <h3>{title}</h3>
             <p> {content}</p>
           </div>
-          <div className="post-info">
-            <div className="likes">
+          <PostInfo>
+            <Likes>
               {user && likedByUsers?.some((u) => u.email === user.email) ? (
                 <Button
                   type="button"
@@ -168,8 +180,8 @@ function Post({ post, onLike }: PostProps) {
               )}
 
               <span>{t("like", { count: likedByUsers.length })}</span>
-            </div>
-            <div className="comments">
+            </Likes>
+            <Comments>
               <CommentIcon />
               {user ? (
                 <>
@@ -189,12 +201,12 @@ function Post({ post, onLike }: PostProps) {
                   onButtonClick={handleExpand}
                 />
               )}
-            </div>
-          </div>
-        </div>
+            </Comments>
+          </PostInfo>
+        </WithoutComment>
 
         {user && isCommentsExpanded && (
-          <ul className="post-comments">
+          <PostComments>
             {!comments ? (
               <CommentsSkeleton />
             ) : (
@@ -207,10 +219,10 @@ function Post({ post, onLike }: PostProps) {
                 />
               ))
             )}
-          </ul>
+          </PostComments>
         )}
         {user && (
-          <div className="add-comment">
+          <AddComment>
             <Input
               id="comment"
               description={t("addAComment")}
@@ -226,36 +238,39 @@ function Post({ post, onLike }: PostProps) {
               type="button"
               onButtonClick={handleAddComment}
             />
-          </div>
+          </AddComment>
         )}
       </FrameWrapper>
-    </article>
+    </PostArticle>
   );
 }
-
-const PostHeaderSkeleton = () => (
-  <>
-    <Skeleton
-      variant="circular"
-      width={48}
-      height={48}
-      animation="wave"
-      className="post-avatar"
-    />
-    <Box marginLeft={2}>
-      <Skeleton variant="text" width="60%" height={24} animation="wave" />
-    </Box>
-  </>
-);
 
 const CommentsSkeleton = () => (
   <Box sx={{ p: 2 }}>
     {[1, 2, 3].map((i) => (
       <Box key={i} sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <Skeleton variant="circular" width={32} height={32} animation="wave" />
+        <Skeleton
+          variant="circular"
+          width={32}
+          height={32}
+          animation="wave"
+          sx={{ bgcolor: "var(--border-color)" }}
+        />
         <Box sx={{ flex: 1 }}>
-          <Skeleton variant="text" width="40%" height={20} animation="wave" />
-          <Skeleton variant="text" width="80%" height={16} animation="wave" />
+          <Skeleton
+            variant="text"
+            width="40%"
+            height={20}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
+          <Skeleton
+            variant="text"
+            width="80%"
+            height={16}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
         </Box>
       </Box>
     ))}

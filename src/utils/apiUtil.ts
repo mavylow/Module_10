@@ -2,6 +2,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 
 export type apiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
+
 export async function fetchRESTData(
   api: string,
   method: apiMethod,
@@ -42,6 +43,8 @@ export async function fetchRESTData(
 }
 
 export async function fetchGraphQLData(body?: string) {
+
+
   try {
     const token = localStorage.getItem("token");
 
@@ -169,13 +172,12 @@ export const likePost = async (postId: number) => {
     const response = await axios.post(
       "/api/graphql",
       {
-        // Fixed URL
         query,
         variables: { postId },
       },
       {
         headers: {
-          "Content-Type": "application/json", // Fixed content type
+          "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
       }
@@ -191,8 +193,6 @@ export const likePost = async (postId: number) => {
 export const dislikePost = async (postId: number) => {
   await fetchRESTData("api/dislike", "POST", JSON.stringify({ postId }));
 };
-
-
 
 export const getSuggested = async () => {
   const suggested = await fetchRESTData("/api/getSuggested", "GET");

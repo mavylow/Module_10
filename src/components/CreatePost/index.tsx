@@ -94,7 +94,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
     }
     postForm.setFieldValue("image", file);
   };
-  //TODO размеры create post исправить
+
   return (
     <>
       {isModalOpen && (
@@ -180,7 +180,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
       <FrameWrapper>
         <div className="create-post">
           <div>
-            <img src={user?.profileImage} />
+            <img src={user?.profileImage} alt="profile-image" />
             <span>{t("whatHappening")}</span>
           </div>
 

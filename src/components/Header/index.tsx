@@ -103,7 +103,6 @@ function Header() {
                 ) : (
                   <>
                     <NavLink to={"/profile"}>
-                      {/* TODO fix img center */}
                       <img
                         src={user.profileImage}
                         className="avatar"
@@ -129,7 +128,11 @@ function Header() {
           </>
         )}
         {isPageAuth && (
-          <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
+          <button
+            className="hamburger-menu"
+            onClick={handleChangeMenuExpanded}
+            aria-label="hamburger menu button"
+          >
             {user && isExpanded ? (
               <img
                 key={user?.profileImage}

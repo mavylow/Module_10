@@ -3,52 +3,19 @@ import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 
-function manualChunks(id: string) {
-  if (id.includes("node_modules")) {
-    if (
-      id.includes("/react/") ||
-      id.includes("/react-dom/") ||
-      id.includes("/react-router-dom/") ||
-      id.includes("/react-redux/") ||
-      id.includes("/@reduxjs/toolkit/")
-    ) {
-      return "vendor-react";
-    }
+// function manualChunks(id: string) {
+//   if (id.includes("node_modules")) {
+//     if (id.includes("/@sidekick-monorepo/")) {
+//       return "vendor-backend-mock";
+//     }
 
-    if (
-      id.includes("/@mui/") ||
-      id.includes("/@emotion/")
-    ) {
-      return "vendor-mui";
-    }
-
-    if (
-      id.includes("/@tanstack/") ||
-      id.includes("/axios/") ||
-      id.includes("/mobx/")
-    ) {
-      return "vendor-utils";
-    }
-
-    if (
-      id.includes("/formik/") ||
-      id.includes("/yup/") ||
-      id.includes("/zod/") ||
-      id.includes("/react-hook-form/") ||
-      id.includes("/@hookform/")
-    ) {
-      return "vendor-forms";
-    }
-
-    if (id.includes("/@sidekick-monorepo/")) {
-      return "vendor-backend-mock";
-    }
-
-    return "vendor-other";
-  }
-  return undefined;
-}
-
+//   if (id.includes("react") && !id.includes("mui")) {
+//       return "vendor-backend-mock";
+//     }
+//     return "vendor-other";
+//   }
+//   return undefined;
+// }
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -56,11 +23,31 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 600,
     rollupOptions: {
-      output: { manualChunks: manualChunks },
+      output: {
+        manualChunks: {
+          "vendor-react": [
+            "react",
+            "react-dom",
+            "react-router-dom",
+            "react-redux",
+            "@reduxjs/toolkit",
+          ],
+          "vendor-mui": [
+            "@mui/material",
+            "@mui/system",
+          ],
+          "vendor-utils": ["@tanstack/react-query", "axios"],
+          "vendor-forms": [
+            "formik",
+            "yup",
+            "react-hook-form"
+          ],
+          "vendor-backend-mock": ["@sidekick-monorepo/internship-backend"],
+        },
+      },
       treeshake: {
-        preset: 'recommended',
-
-      }
+        preset: "recommended",
+      },
     },
   },
   resolve: {

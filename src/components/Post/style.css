@@ -1,4 +1,5 @@
-.without-comment {
+.without-comment,
+.add-comment {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -32,7 +33,7 @@
   display: flex;
   border-bottom: none;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .post:last-child .frame {
@@ -103,12 +104,10 @@ figure img {
 .post-comments {
   display: flex;
   flex-direction: column;
-}
-
-.post-comments {
   list-style: none;
   padding-left: 0;
   margin: 0;
+  gap: 16px;
 }
 
 .post-comments li::before {
@@ -120,12 +119,6 @@ figure img {
   color: var(--text-color);
   margin: 0;
   font-size: clamp(12px, 1.2vw, 16px);
-}
-
-.add-comment {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .add-comment > input {

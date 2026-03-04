@@ -23,7 +23,13 @@ import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 
 const ProfileInfo = observer(() => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const lngs = {
+    en: { nativeName: t("english") },
+    ru: { nativeName: t("russian") },
+    it: { nativeName: t("italian") },
+  } as const;
 
   const IProfileSchema = Yup.object({
     image: Yup.string().nullable(),
@@ -77,7 +83,7 @@ const ProfileInfo = observer(() => {
             <ProfilePhotoSkeleton />
           ) : (
             <>
-              <img src={user?.profileImage} />
+              <img src={user?.profileImage} alt="profile-image" />
               <h3>
                 {user?.firstName} {user?.secondName}
               </h3>
@@ -172,6 +178,21 @@ const ProfileInfo = observer(() => {
               description={t(`theme.${theme.value}`)}
             />
           </div>
+          <div className="language">
+            <div className="language">
+              <select
+                id="language-select"
+                value={i18n.language}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+              >
+                {Object.keys(lngs).map((lng) => (
+                  <option key={lng} value={lng}>
+                    {lngs[lng as keyof typeof lngs].nativeName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </section>
         <section className="actions">
           <h2>{t("actions")}</h2>
@@ -195,10 +216,14 @@ const ProfilePhotoSkeleton = () => {
         variant="circular"
         width={64}
         height={64}
-        sx={{ gridRow: "1 / span 2" }}
+        sx={{ gridRow: "1 / span 2", bgcolor: "var(--border-color)" }}
       />
 
-      <Skeleton width={"50%"} height={24} />
+      <Skeleton
+        width={"50%"}
+        height={24}
+        sx={{ bgcolor: "var(--border-color)" }}
+      />
 
       <span> Change profile photo</span>
     </>

@@ -43,6 +43,8 @@ export default function Input(props: InputProps | FormInputProps) {
           id={id}
           placeholder={placeholder}
           type={type}
+          aria-describedby="username-success username-error username-warning"
+          aria-required="true"
           {...register(id, registerOptions)}
         />
       </>

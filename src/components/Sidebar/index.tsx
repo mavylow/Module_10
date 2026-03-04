@@ -60,10 +60,18 @@ const SidebarSkeleton = () => {
         variant="circular"
         width={48}
         height={48}
-        sx={{ gridRow: "1 / span 2" }}
+        sx={{ gridRow: "1 / span 2", bgcolor: "var(--border-color)" }}
       />
-      <Skeleton variant="text" width={"60%"} sx={{ marginLeft: "16px" }} />
-      <Skeleton variant="text" width={"30%"} sx={{ marginLeft: "16px" }} />
+      <Skeleton
+        variant="text"
+        width={"60%"}
+        sx={{ marginLeft: "16px", bgcolor: "var(--border-color)" }}
+      />
+      <Skeleton
+        variant="text"
+        width={"30%"}
+        sx={{ marginLeft: "16px", bgcolor: "var(--border-color)" }}
+      />
     </Box>
   );
 };
