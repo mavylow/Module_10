@@ -59,6 +59,7 @@ function Post({ post, onLike }: PostProps) {
   const date = formattedDate(creationDate);
   const user = useSelector((state: RootState) => state.auth.user);
   const queryClient = useQueryClient();
+
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
 

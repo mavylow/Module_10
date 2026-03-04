@@ -2,7 +2,6 @@ import axios, { type AxiosRequestConfig } from "axios";
 
 export type apiMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-
 export async function fetchRESTData(
   api: string,
   method: apiMethod,
@@ -43,8 +42,6 @@ export async function fetchRESTData(
 }
 
 export async function fetchGraphQLData(body?: string) {
-
-
   try {
     const token = localStorage.getItem("token");
 
