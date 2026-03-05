@@ -4,7 +4,7 @@ import "./style.css";
 import { useContext, useEffect, useState } from "react";
 import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
-import { ProfilePageContext } from "@providers/ProfilePageProvider";
+import { ProfilePageContext } from "@/store/profileStore";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store";
 

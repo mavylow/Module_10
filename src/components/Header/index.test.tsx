@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/vitest";
 import Header from "@components/Header";
 import authReducer from "@/slices/authSlice";
 
-import { ProfilePageContext } from "@/providers/ProfilePageProvider";
+import { ProfilePageContext } from "@/store/profileStore";
 import type { ReactNode } from "react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";

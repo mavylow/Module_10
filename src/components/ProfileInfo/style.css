@@ -76,6 +76,11 @@
   grid-template-rows: 32px 1fr;
   column-gap: 24px;
   align-items: center;
+  position: relative;
+}
+
+#change-profile-photo {
+  display: none;
 }
 
 .profile-photo img {

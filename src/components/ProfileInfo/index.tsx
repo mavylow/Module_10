@@ -1,7 +1,7 @@
 import { AuthContext } from "@providers/AuthProvider";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, type ChangeEvent } from "react";
 import { useFormik } from "formik";
 import PersonIcon from "@assets/PersonIcon";
 import MailIcon from "@assets/MailIcon";
@@ -33,7 +33,7 @@ const ProfileInfo = observer(() => {
 
   const IProfileSchema = Yup.object({
     image: Yup.string().nullable(),
-    username: Yup.string().max(20, t("usernameToLong")),
+    username: Yup.string().max(20, t("max20chars")),
     email: Yup.string().email(t("emailNotValid")),
     description: Yup.string().max(200, t("max200chars")).nullable(),
   });
@@ -53,6 +53,16 @@ const ProfileInfo = observer(() => {
     [user]
   );
 
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+
+    formik.setFieldValue("image", imageUrl);
+  };
+
   const formik = useFormik<IProfileForm>({
     initialValues: initialValues,
     validationSchema: IProfileSchema,
@@ -65,6 +75,7 @@ const ProfileInfo = observer(() => {
   };
 
   const changeProfile = (data: IProfileForm) => {
+    console.log(data);
     const sanitizeData = {
       image: DOMPurify.sanitize(data.image || ""),
       username: DOMPurify.sanitize(data?.username || ""),
@@ -78,16 +89,23 @@ const ProfileInfo = observer(() => {
     <form onSubmit={formik.handleSubmit} className="profile-info">
       <section className="edit-profile">
         <h2>{t("editProfile")}</h2>
-        <div className="profile-photo">
+        <div>
           {isLoading ? (
             <ProfilePhotoSkeleton />
           ) : (
             <>
-              <img src={user?.profileImage} alt="profile-image" />
-              <h3>
-                {user?.firstName} {user?.secondName}
-              </h3>
-              <p> {t("changeProfilePhoto")}</p>
+              <label className="profile-photo" htmlFor="change-profile-photo">
+                <img src={formik.values.image} alt="profile-image" />
+                <h3>
+                  {user?.firstName} {user?.secondName}
+                </h3>
+                <p> {t("changeProfilePhoto")}</p>
+              </label>
+              <input
+                type="file"
+                id="change-profile-photo"
+                onChange={(e) => handleUploadFile(e)}
+              ></input>
             </>
           )}
         </div>
@@ -211,7 +229,7 @@ export default ProfileInfo;
 
 const ProfilePhotoSkeleton = () => {
   return (
-    <>
+    <div className="profile-photo">
       <Skeleton
         variant="circular"
         width={64}
@@ -226,6 +244,6 @@ const ProfilePhotoSkeleton = () => {
       />
 
       <span> Change profile photo</span>
-    </>
+    </div>
   );
 };

@@ -1,13 +1,12 @@
 import "./style.css";
-import { useContext } from "react";
 import ProfileInfo from "@components/ProfileInfo";
 import Statistics from "@components/Statistics";
-import { ProfilePageContext } from "@/providers/ProfilePageProvider";
+import { useProfilePage } from "@/store/profileStore";
 import { useTranslation } from "react-i18next";
 
 function Profile() {
   const { t } = useTranslation();
-  const { profilePage, changePage } = useContext(ProfilePageContext);
+  const { profilePage, changePage } = useProfilePage((state) => state);
 
   return (
     <main className="profile">

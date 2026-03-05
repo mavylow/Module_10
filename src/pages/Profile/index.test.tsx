@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import Profile from "@pages/Profile";
 import { userEvent } from "@testing-library/user-event";
-import { ProfilePageContext } from "@providers/ProfilePageProvider";
+import { ProfilePageContext } from "@/store/profileStore";
 import "@testing-library/jest-dom/vitest";
 import type { TProfilePages } from "@/interfaces";
 
