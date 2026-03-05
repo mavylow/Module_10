@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.2.2",
     "@mui/material": "^7.3.8",
+    "@mui/x-charts": "^8.27.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@sidekick-monorepo/internship-backend": "file:sidekick-monorepo-internship-backend-0.0.1.tgz",
     "@tanstack/react-query": "^5.90.21",

@@ -75,74 +75,74 @@ function SignUp() {
             {t("enterFields", { sign: t("toSignUp"), appPreposition: "ом" })}
           </p>
         </div>
+        <div className="inputs">
+          <div className="input-container">
+            <Input
+              id="email"
+              description={t("email")}
+              placeholder={t("emailPlaceholder")}
+              type="email"
+              Icon={MailIcon}
+              register={register}
+            />
 
-        <div className="input-container">
-          <Input
-            id="email"
-            description={t("email")}
-            placeholder={t("emailPlaceholder")}
-            type="email"
-            Icon={MailIcon}
-            register={register}
-          />
-
-          {showEmailValidation &&
-            (errors.email ? (
-              <>
-                <div className="input-message">
-                  <InputMessage
-                    message={errors.email.message!}
-                    Icon={ErrorWarningIcon}
-                    status="error"
-                  />
+            {showEmailValidation &&
+              (errors.email ? (
+                <>
+                  <div className="input-message">
+                    <InputMessage
+                      message={errors.email.message!}
+                      Icon={ErrorWarningIcon}
+                      status="error"
+                    />
+                  </div>
+                  <div className="error email-warning">
+                    <CrossIcon />
+                  </div>
+                </>
+              ) : (
+                <div className="correct email-warning">
+                  <CheckIcon />
                 </div>
-                <div className="error email-warning">
-                  <CrossIcon />
-                </div>
-              </>
-            ) : (
-              <div className="correct email-warning">
-                <CheckIcon />
-              </div>
-            ))}
-        </div>
-
-        <div className="input-container">
-          <div
-            data-testid="password-icon"
-            className="password-icon"
-            onClick={() => setIsPasswordOpen((p) => !p)}
-          >
-            {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+              ))}
           </div>
 
-          <Input
-            id="password"
-            description={t("password")}
-            placeholder={t("passwordPlaceholder")}
-            type={isPasswordOpen ? "text" : "password"}
-            Icon={EyeOpenIcon}
-            register={register}
-          />
+          <div className="input-container">
+            <div
+              data-testid="password-icon"
+              className="password-icon"
+              onClick={() => setIsPasswordOpen((p) => !p)}
+            >
+              {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+            </div>
 
-          {showPasswordValidation &&
-            (errors.password ? (
-              <InputMessage
-                message={errors.password.message!}
-                Icon={ErrorWarningIcon}
-                status="error"
-              />
-            ) : (
-              <InputMessage
-                message="Your password is strong"
-                Icon={ThumbUpIcon}
-                status="success"
-              />
-            ))}
+            <Input
+              id="password"
+              description={t("password")}
+              placeholder={t("passwordPlaceholder")}
+              type={isPasswordOpen ? "text" : "password"}
+              Icon={EyeOpenIcon}
+              register={register}
+            />
+
+            {showPasswordValidation &&
+              (errors.password ? (
+                <InputMessage
+                  message={errors.password.message!}
+                  Icon={ErrorWarningIcon}
+                  status="error"
+                />
+              ) : (
+                <InputMessage
+                  message="Your password is strong"
+                  Icon={ThumbUpIcon}
+                  status="success"
+                />
+              ))}
+          </div>
+
+          <Button description={t("signUp")} type="submit" />
         </div>
-
-        <Button description={t("signUp")} type="submit" />
-
         <p className="legal-disclaimer">
           {t("termsAgreement")}{" "}
           <a href="/terms" className="legal-link" rel="nofollow">

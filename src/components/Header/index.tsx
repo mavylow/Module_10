@@ -8,8 +8,6 @@ import { ProfilePageContext } from "@/store/profileStore";
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store";
 
-//TODO fix styles
-
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -72,7 +70,9 @@ function Header() {
         className={
           (isMobile ? "mobile" : "desktop") +
           " " +
-          (isExpanded ? "expanded" : "")
+          (isExpanded ? "expanded" : "") +
+          " " +
+          (!isPageAuth ? "auth-page" : "")
         }
         data-testid="header"
       >

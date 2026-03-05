@@ -16,9 +16,15 @@ import {
   getCurrentMonthStats,
 } from "@/utils/statisticUtils";
 import TableStats from "@/components/TableStats";
-import { useQuery } from "@apollo/client/react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { gql } from "@apollo/client";
+// import { gql } from "@apollo/client";
+import {
+  getStatisticComments,
+  getStatisticLikes,
+  getStatisticPosts,
+} from "@utils/apiUtil";
+import { ChartStats } from "../ChartStats";
 
 const monthStatInitial: MonthStat = {
   month: 0,
@@ -35,44 +41,49 @@ const yearStatInitial: MonthStat[] = Array.from({ length: 12 }, (_, i) => {
 });
 
 type ITabView = "table" | "chart";
-const ME_LIKES = gql`
-  query meLikes {
-    meLikes {
-      id
-      creationDate
-    }
-  }
-`;
-const ME_POSTS = gql`
-  query mePosts {
-    mePosts {
-      id
-      creationDate
-    }
-  }
-`;
-const ME_COMMENTS = gql`
-  query meComments {
-    meComments {
-      id
-      creationDate
-    }
-  }
-`;
+// const ME_LIKES = gql`
+//   query meLikes {
+//     meLikes {
+//       id
+//       creationDate
+//     }
+//   }
+// `;
+// const ME_POSTS = gql`
+//   query mePosts {
+//     mePosts {
+//       id
+//       creationDate
+//     }
+//   }
+// `;
+// const ME_COMMENTS = gql`
+//   query meComments {
+//     meComments {
+//       id
+//       creationDate
+//     }
+//   }
+// `;
+
 function Statistics() {
   const { t } = useTranslation();
   const [tabView, setTabView] = useState<ITabView>("table");
+  const { data: posts, isLoading: isPostsLoading } = useQuery<IPost[]>({
+    queryKey: ["posts"],
+    queryFn: () => getStatisticPosts(),
+  });
+  const { data: likes, isLoading: isLikesLoading } = useQuery<ILike[]>({
+    queryKey: ["likes"],
+    queryFn: () => getStatisticLikes(),
+  });
 
-  const { data: posts, loading: isPostsLoading } = useQuery<{
-    mePosts: IPost[];
-  }>(ME_POSTS);
-  const { data: likes, loading: isLikesLoading } = useQuery<{
-    meLikes: ILike[];
-  }>(ME_LIKES);
-
-  const { data: comments, loading: isCommentsLoading } = useQuery<{
-    meComments: IComment[];
-  }>(ME_COMMENTS);
+  const { data: comments, isLoading: isCommentsLoading } = useQuery<IComment[]>(
+    {
+      queryKey: ["comments"],
+      queryFn: () => getStatisticComments(),
+    }
+  );
 
   const isDataLoading = useMemo(() => {
     return isCommentsLoading || isLikesLoading || isPostsLoading;
@@ -85,7 +96,7 @@ function Statistics() {
     if (!likes) {
       return [];
     }
-    return calculateFullStats(likes.meLikes);
+    return calculateFullStats(likes);
   }, [likes]);
 
   const commentsStats = useMemo(() => {
@@ -95,7 +106,7 @@ function Statistics() {
     if (!comments) {
       return [];
     }
-    return calculateFullStats(comments.meComments);
+    return calculateFullStats(comments);
   }, [comments]);
 
   const postsStats = useMemo(() => {
@@ -105,7 +116,7 @@ function Statistics() {
     if (!posts) {
       return [];
     }
-    return calculateFullStats(posts.mePosts);
+    return calculateFullStats(posts);
   }, [posts]);
 
   const currentMonthStats = useMemo(() => {
@@ -125,6 +136,8 @@ function Statistics() {
       },
     };
   }, [likesStats, commentsStats, postsStats]);
+
+  console.log(commentsStats);
 
   const handleToggle = () => {
     setTabView((prev) => (prev === "table" ? "chart" : "table"));
@@ -174,7 +187,7 @@ function Statistics() {
         />
       </div>
 
-      <div className="tables">
+      <div className={`tables ${tabView}`}>
         {tabView === "table" ? (
           <>
             {likesStats && (
@@ -196,7 +209,25 @@ function Statistics() {
             )}
           </>
         ) : (
-          <div>Chart view coming soon...</div>
+          <>
+            {likesStats && (
+              <ChartStats
+                title="Likes"
+                stats={
+                  likesStats[`${new Date().getFullYear()}`] || yearStatInitial
+                }
+              />
+            )}
+            {commentsStats && (
+              <ChartStats
+                title="Comments"
+                stats={
+                  commentsStats[`${new Date().getFullYear()}`] ||
+                  yearStatInitial
+                }
+              />
+            )}
+          </>
         )}
       </div>
     </div>

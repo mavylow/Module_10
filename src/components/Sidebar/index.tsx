@@ -33,9 +33,9 @@ export default function Sidebar() {
         <section className="suggested-communities">
           <h3>Communities you might like</h3>
           {isGroupsLoading
-            ? [1, 2, 3].map((index) => <SidebarSkeleton key={index} />)
+            ? [1, 2, 3, 4].map((index) => <SidebarSkeleton key={index} />)
             : groups
-                ?.slice(0, 3)
+                ?.slice(0, 4)
                 .map((community) => (
                   <SidebarElement key={community.id} element={community} />
                 ))}

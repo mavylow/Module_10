@@ -60,77 +60,79 @@ export default function SignIn() {
             {t("enterFields", { sign: t("toSignIn"), appPreposition: "о" })}
           </p>
         </div>
-        <div className="input-container">
-          <Input
-            id="email"
-            description={t("email")}
-            name="email"
-            placeholder={t("emailPlaceholder")}
-            type="email"
-            Icon={MailIcon}
-            value={form.values.email}
-            onChange={form.handleChange}
-          />
-          {form.values.email && (
-            <>
-              {form.errors.email ? (
-                <>
+        <div className="inputs">
+          <div className="input-container">
+            <Input
+              id="email"
+              description={t("email")}
+              name="email"
+              placeholder={t("emailPlaceholder")}
+              type="email"
+              Icon={MailIcon}
+              value={form.values.email}
+              onChange={form.handleChange}
+            />
+            {form.values.email && (
+              <>
+                {form.errors.email ? (
+                  <>
+                    <InputMessage
+                      message={t("emailNotValid")}
+                      Icon={ErrorWarningIcon}
+                      status="error"
+                    />
+
+                    <div className="error email-warning">
+                      <CrossIcon />
+                    </div>
+                  </>
+                ) : (
+                  <div className="correct email-warning">
+                    <CheckIcon />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          <div className="input-container">
+            <div
+              data-testid="password-icon"
+              className="password-icon"
+              onClick={handleShowPassword}
+            >
+              {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+            </div>
+            <Input
+              id="password"
+              description={t("password")}
+              name="password"
+              placeholder={t("passwordPlaceholder")}
+              type={isPasswordOpen ? "text" : "password"}
+              Icon={EyeOpenIcon}
+              value={form.values.password}
+              onChange={form.handleChange}
+            />
+            {form.values.password && (
+              <>
+                {form.errors.password ? (
                   <InputMessage
-                    message={t("emailNotValid")}
+                    message={form.errors.password}
                     Icon={ErrorWarningIcon}
                     status="error"
                   />
-
-                  <div className="error email-warning">
-                    <CrossIcon />
-                  </div>
-                </>
-              ) : (
-                <div className="correct email-warning">
-                  <CheckIcon />
-                </div>
-              )}
-            </>
-          )}
-        </div>
-        <div className="input-container">
-          <div
-            data-testid="password-icon"
-            className="password-icon"
-            onClick={handleShowPassword}
-          >
-            {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+                ) : (
+                  <InputMessage
+                    message={t("strongPassword")}
+                    Icon={ThumbUpIcon}
+                    status="success"
+                  />
+                )}
+              </>
+            )}
           </div>
-          <Input
-            id="password"
-            description={t("password")}
-            name="password"
-            placeholder={t("passwordPlaceholder")}
-            type={isPasswordOpen ? "text" : "password"}
-            Icon={EyeOpenIcon}
-            value={form.values.password}
-            onChange={form.handleChange}
-          />
-          {form.values.password && (
-            <>
-              {form.errors.password ? (
-                <InputMessage
-                  message={form.errors.password}
-                  Icon={ErrorWarningIcon}
-                  status="error"
-                />
-              ) : (
-                <InputMessage
-                  message={t("strongPassword")}
-                  Icon={ThumbUpIcon}
-                  status="success"
-                />
-              )}
-            </>
-          )}
-        </div>
 
-        <Button description={t("signIn")} type="submit" />
+          <Button description={t("signIn")} type="submit" />
+        </div>
       </form>
       <span>
         {t("forgotToCreate")}{" "}

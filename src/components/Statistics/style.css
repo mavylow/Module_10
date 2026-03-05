@@ -30,6 +30,9 @@
   align-items: center;
 }
 
+.tables.chart .frame {
+  padding-left: 0;
+}
 @media (max-width: 900px) {
   .month {
     flex-direction: column;
