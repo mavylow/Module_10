@@ -41,30 +41,6 @@ const yearStatInitial: MonthStat[] = Array.from({ length: 12 }, (_, i) => {
 });
 
 type ITabView = "table" | "chart";
-// const ME_LIKES = gql`
-//   query meLikes {
-//     meLikes {
-//       id
-//       creationDate
-//     }
-//   }
-// `;
-// const ME_POSTS = gql`
-//   query mePosts {
-//     mePosts {
-//       id
-//       creationDate
-//     }
-//   }
-// `;
-// const ME_COMMENTS = gql`
-//   query meComments {
-//     meComments {
-//       id
-//       creationDate
-//     }
-//   }
-// `;
 
 function Statistics() {
   const { t } = useTranslation();

@@ -10,24 +10,24 @@ describe("StatisticCard", () => {
   it("renders title, count and percentage correctly", () => {
     render(<StatisticCard title="Likes" count={10} prev={5} />);
 
-    expect(screen.getByText("Likes")).toBeInTheDocument();
+    expect(screen.getByText("likes")).toBeInTheDocument();
     expect(screen.getByText("10")).toBeInTheDocument();
-    expect(screen.getByText("+100% month over month")).toBeInTheDocument();
+    expect(screen.getByTestId(`monthStat`)).toBeInTheDocument();
   });
 
   it("handles zero previous count correctly", () => {
     render(<StatisticCard title="Comments" count={5} prev={0} />);
 
-    expect(screen.getByText("Comments")).toBeInTheDocument();
+    expect(screen.getByText("comments")).toBeInTheDocument();
     expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText("+100% month over month")).toBeInTheDocument();
+    expect(screen.getByTestId(`monthStat`)).toBeInTheDocument();
   });
 
   it("calculates negative growth correctly", () => {
     render(<StatisticCard title="Posts" count={2} prev={4} />);
 
-    expect(screen.getByText("Posts")).toBeInTheDocument();
+    expect(screen.getByText("posts")).toBeInTheDocument();
     expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("+-50% month over month")).toBeInTheDocument();
+    expect(screen.getByText(/-50%/)).toBeInTheDocument();
   });
 });

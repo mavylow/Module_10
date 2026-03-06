@@ -30,7 +30,9 @@ export function ChartStats({ title, stats }: ITableStats) {
       <h2> {t(title.toLocaleLowerCase())} </h2>
       <FrameWrapper>
         <BarChart
-          xAxis={[{ data: MONTH_NAMES, max: 5 }]}
+          xAxis={[
+            { data: MONTH_NAMES.map((month) => t(`months.${month}`)), max: 5 },
+          ]}
           yAxis={[
             {
               tickMinStep: 1,

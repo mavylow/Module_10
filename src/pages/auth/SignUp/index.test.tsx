@@ -2,81 +2,20 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import SignUp from "@pages/auth/SignUp";
 import { userEvent } from "@testing-library/user-event";
-import authReducer from "@/slices/authSlice";
+import authReducer, { signUp } from "@/slices/authSlice";
 import "@testing-library/jest-dom/vitest";
-import type { ReactNode } from "react";
+
 import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
-
-vi.mock("@assets/MailIcon", () => ({
-  default: () => <svg data-testid="mail-icon" />,
-}));
-
-vi.mock("@assets/EyeCrossedIcon", () => ({
-  default: () => <svg data-testid="eye-close-icon" />,
-}));
-
-vi.mock("@assets/EyeOpenIcon", () => ({
-  default: () => <svg data-testid="eye-open-icon" />,
-}));
-vi.mock("@assets/ErrorWarningIcon", () => ({
-  default: () => <svg data-testid="error-warning-icon" />,
-}));
-
-vi.mock("@assets/ThumbUpIcon", () => ({
-  default: () => <svg data-testid="thumb-up-icon" />,
-}));
-
-vi.mock("@assets/CheckIcon", () => ({
-  default: () => <svg data-testid="check-icon" />,
-}));
-
-vi.mock("@assets/CrossIcon", () => ({
-  default: () => <svg data-testid="cross-icon" />,
-}));
-
-const mockNavigate = vi.fn();
-
-vi.mock("react-router", () => {
-  const actual = vi.importActual("react-router");
-  return {
-    ...actual,
-    NavLink: ({ to, children }: { to: string; children: ReactNode }) => (
-      <a
-        onClick={(e) => {
-          e.preventDefault();
-          mockNavigate(to);
-        }}
-      >
-        {children}
-      </a>
-    ),
-    useNavigate: () => {
-      navigate: vi.fn();
-    },
-  };
-});
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router";
 
 const mockDispatch = vi.fn();
 
-vi.mock("react-redux", async () => {
-  const actual = await vi.importActual("react-redux");
-  return {
-    ...actual,
-    useDispatch: () => mockDispatch,
-    useSelector: () => false,
-  };
-});
-
-const mockSignUpAction = vi.fn();
-
-vi.mock("@/slices/authSlice", async () => {
-  const actual = await vi.importActual("@/slices/authSlice");
-  return {
-    ...actual,
-    signUp: vi.fn(() => mockSignUpAction),
-  };
-});
+vi.mocked(NavLink).mockImplementation(({ children, to, onClick }: any) => (
+  <a href={to} onClick={onClick} data-testid={`nav-${to}`}>
+    {children}
+  </a>
+));
 
 const createTestStore = (initialState = {}) => {
   return configureStore({
@@ -105,6 +44,7 @@ const renderComponent = (store = createTestStore()) => {
 
 describe("SignUp", () => {
   beforeEach(() => {
+    vi.mocked(useSelector).mockReturnValue(false);
     cleanup();
     vi.clearAllMocks();
   });
@@ -112,26 +52,30 @@ describe("SignUp", () => {
   it("renders sign in page data correctly", () => {
     renderComponent();
 
-    expect(screen.getByText("Create an account")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Enter password")).toBeInTheDocument();
+    expect(screen.getByText("createAccount")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("passwordPlaceholder")
+    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("emailPlaceholder")).toBeInTheDocument();
+
     expect(screen.getByTestId("mail-icon")).toBeInTheDocument();
     expect(screen.getAllByTestId("eye-open-icon")).toHaveLength(2);
   });
 
   it("allows user to sign in data and submit form", async () => {
+    vi.mocked(useDispatch).mockReturnValue(() => mockDispatch());
     const user = userEvent.setup();
     renderComponent();
 
-    const emailInput = screen.getByPlaceholderText("Enter email");
+    const emailInput = screen.getByPlaceholderText("emailPlaceholder");
 
     await user.clear(emailInput);
     await user.type(emailInput, "newusername@gmail.com");
 
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /signUp/i }));
     expect(await screen.findByTestId("check-icon")).toBeInTheDocument();
 
-    const passwordInput = screen.getByPlaceholderText("Enter password");
+    const passwordInput = screen.getByPlaceholderText("passwordPlaceholder");
 
     await user.clear(passwordInput);
     await user.type(passwordInput, "password128");
@@ -140,23 +84,23 @@ describe("SignUp", () => {
       await screen.findByText("Your password is strong")
     ).toBeInTheDocument();
     expect(await screen.findByTestId("thumb-up-icon")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /signUp/i }));
 
     expect(mockDispatch).toHaveBeenCalledTimes(1);
-    expect(mockDispatch).toHaveBeenCalledWith(mockSignUpAction);
+    expect(signUp).toHaveBeenCalled();
   });
 
   it("shows validation error when email is too wrong", async () => {
     const user = userEvent.setup();
     renderComponent();
 
-    const emailInput = screen.getByPlaceholderText("Enter email");
+    const emailInput = screen.getByPlaceholderText("emailPlaceholder");
 
     await user.clear(emailInput);
     await user.type(emailInput, "newuser.com");
 
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
-    expect(await screen.findByText("Email is not valid")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /signUp/i }));
+    expect(await screen.findByText("emailNotValid")).toBeInTheDocument();
 
     expect(mockDispatch).not.toHaveBeenCalled();
   });
@@ -165,15 +109,15 @@ describe("SignUp", () => {
     const user = userEvent.setup();
     renderComponent();
 
-    const passwordInput = screen.getByPlaceholderText("Enter password");
+    const passwordInput = screen.getByPlaceholderText("passwordPlaceholder");
 
     await user.clear(passwordInput);
     await user.type(passwordInput, "password");
 
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /signUp/i }));
 
     expect(
-      await screen.findByText("Password must contain at least one number")
+      await screen.findByText("passwordContainNumber")
     ).toBeInTheDocument();
 
     expect(mockDispatch).not.toHaveBeenCalled();
@@ -184,7 +128,7 @@ describe("SignUp", () => {
     renderComponent();
 
     const passwordInput = screen.getByPlaceholderText(
-      "Enter password"
+      "passwordPlaceholder"
     ) as HTMLInputElement;
     const passwordIcon = screen.getByTestId("password-icon");
 
@@ -206,11 +150,18 @@ describe("SignUp", () => {
   it("navigate to sign up page", async () => {
     const user = userEvent.setup();
     renderComponent();
-    const navLink = screen.getByText("Sign in");
+    const navLink = screen.getByText("signIn");
 
     await user.click(navLink);
 
-    expect(mockNavigate).toHaveBeenCalledTimes(1);
-    expect(mockNavigate).toBeCalledWith("/signin");
+    expect(NavLink).toHaveBeenCalledTimes(2);
+    expect(NavLink).toBeCalledWith(
+      {
+        children: "signIn",
+        className: "nav-link",
+        to: "/signin",
+      },
+      undefined
+    );
   });
 });

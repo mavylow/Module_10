@@ -19,7 +19,7 @@ function StatisticCard({ title, count, prev }: IStatisticCard) {
       <div className="card">
         <h3>{t(title).toLocaleLowerCase()}</h3>
         <p>{count}</p>
-        <small>
+        <small data-testid="monthStat">
           +{percent}% {t("monthStat")}
         </small>
       </div>

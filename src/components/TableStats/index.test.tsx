@@ -3,12 +3,6 @@ import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import TableStats from "@components/TableStats";
 
-vi.mock("@components/FrameWrapper", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="frame-wrapper">{children}</div>
-  ),
-}));
-
 const mockStats = [
   { month: 0, count: 10, previousCount: 8 },
   { month: 1, count: 15, previousCount: 12 },
@@ -24,7 +18,7 @@ describe("TableStats", () => {
   it("renders title", () => {
     render(<TableStats title="Statistics" stats={mockStats} />);
 
-    expect(screen.getByText("Statistics")).toBeInTheDocument();
+    expect(screen.getByText("statistics")).toBeInTheDocument();
   });
 
   it("renders table rows based on stats", () => {
@@ -37,9 +31,9 @@ describe("TableStats", () => {
   it("renders correct month names", () => {
     render(<TableStats title="Statistics" stats={mockStats} />);
 
-    expect(screen.getByText("Jan")).toBeInTheDocument();
-    expect(screen.getByText("Feb")).toBeInTheDocument();
-    expect(screen.getByText("Jun")).toBeInTheDocument();
+    expect(screen.getByText("months.jun")).toBeInTheDocument();
+    expect(screen.getByText("months.feb")).toBeInTheDocument();
+    expect(screen.getByText("months.jun")).toBeInTheDocument();
   });
 
   it("renders correct counts and previous counts", () => {

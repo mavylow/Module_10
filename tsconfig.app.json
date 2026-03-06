@@ -33,5 +33,5 @@
       "@providers/*": ["./src/providers/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/tests"]
 }

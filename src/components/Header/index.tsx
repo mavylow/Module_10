@@ -1,12 +1,13 @@
 import SidekickLogoText from "@assets/SidekickLogoText";
 import SidekickLogo from "@assets/SidekickLogo";
 import "./style.css";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
-import { ProfilePageContext } from "@/store/profileStore";
+
 import { useSelector } from "react-redux";
 import { type RootState } from "@/store";
+import { useProfilePage } from "@/store/profileStore";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
@@ -16,7 +17,7 @@ function Header() {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.auth.user);
-  const { changePage } = useContext(ProfilePageContext);
+  const { changePage } = useProfilePage((state) => state);
 
   useEffect(() => {
     handleResize();
@@ -90,10 +91,15 @@ function Header() {
               >
                 {isExpanded ? (
                   <>
-                    <NavLink to={"/profile"} onClick={() => changePage("info")}>
+                    <NavLink
+                      data-testid="profile-info"
+                      to={"/profile"}
+                      onClick={() => changePage("info")}
+                    >
                       Profile info
                     </NavLink>
                     <NavLink
+                      data-testid="statistics"
                       to={"/profile"}
                       onClick={() => changePage("statistics")}
                     >

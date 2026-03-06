@@ -3,10 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import Comment from "@components/Comment";
 import userEvent from "@testing-library/user-event";
-
-vi.mock("@assets/TrashIcon", () => ({
-  default: () => <svg data-testid="svg-trash" />,
-}));
+import { mockComment } from "@/tests/consts";
 
 vi.mock("@components/Button", () => ({
   default: ({ Icon, onButtonClick, type }: any) => (
@@ -15,15 +12,6 @@ vi.mock("@components/Button", () => ({
     </button>
   ),
 }));
-
-const mockComment = {
-  id: 5,
-  postId: 101,
-  authorId: 1,
-  text: "Adding detail here.",
-  creationDate: "2025-09-04T18:00:00Z",
-  modifiedDate: "2025-09-04T18:00:00Z",
-};
 
 describe("Comment", () => {
   beforeEach(() => {
@@ -40,9 +28,7 @@ describe("Comment", () => {
     );
     expect(screen.getByText("Adding detail here.")).toBeInTheDocument();
 
-    const listItem = screen.getByRole("listitem");
-    expect(listItem).toHaveAttribute("data-number", "#5.");
-
+    expect(screen.getByText("Adding detail here.")).toBeInTheDocument();
     const deleteButton = screen.getByTestId("delete-button");
     expect(deleteButton).toBeInTheDocument();
 

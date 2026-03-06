@@ -6,8 +6,9 @@ import { AuthContext } from "@providers/AuthProvider";
 
 import "@testing-library/jest-dom/vitest";
 import authReducer, { logOut } from "@/slices/authSlice";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
+import { mockUser } from "@/tests/consts";
 
 const mockUpdateUser = vi.fn();
 const mockChangeTheme = vi.fn();
@@ -21,39 +22,11 @@ vi.mock("@/store/themeStore", () => ({
   },
 }));
 
-const mockUser = {
-  id: 1,
-  username: "helenahills",
-  firstName: "Helena",
-  secondName: "Hills",
-  email: "helena.hills@social.com",
-  description: "Travel and design enthusiast.",
-  profileImage: "/assets/user-helena.png",
-  lastLogin: "2025-10-02T12:00:00Z",
-  creationDate: "2023-11-01T09:00:00Z",
-  modifiedDate: "2025-10-02T12:00:00Z",
-};
-
 const mockUseSelector = vi.fn();
 
-vi.mock("react-redux", async () => {
-  const actual = await vi.importActual("react-redux");
-  return {
-    ...actual,
-    useSelector: () => ({ isLoading: false, user: mockUser }),
-    useDispatch: () => logOut(),
-  };
-});
-
-const mockLogOutAction = vi.fn();
-
-vi.mock("@/slices/authSlice", async () => {
-  const actual = await vi.importActual("@/slices/authSlice");
-  return {
-    ...actual,
-    logOut: vi.fn(() => mockLogOutAction),
-  };
-});
+vi.mocked(useSelector).mockReturnValue({ isLoading: false, user: mockUser });
+const mockDispatch = vi.fn();
+vi.mocked(useDispatch).mockReturnValue(mockDispatch);
 
 const createTestStore = (initialState = {}) => {
   return configureStore({
@@ -97,7 +70,7 @@ describe("ProfileInfo", () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
-    expect(screen.getByText("Edit profile")).toBeInTheDocument();
+    expect(screen.getByText("editProfile")).toBeInTheDocument();
     expect(screen.getByText("Helena Hills")).toBeInTheDocument();
 
     expect(screen.getByDisplayValue("helenahills")).toBeInTheDocument();
@@ -113,12 +86,12 @@ describe("ProfileInfo", () => {
     const user = userEvent.setup();
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
-    const usernameInput = screen.getByPlaceholderText("Write your username");
+    const usernameInput = screen.getByPlaceholderText("usernamePlaceholder");
 
     await user.clear(usernameInput);
     await user.type(usernameInput, "newusername");
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /saveChanges/i }));
 
     expect(mockUpdateUser).toHaveBeenCalledTimes(1);
     expect(mockUpdateUser).toHaveBeenCalledWith(
@@ -136,13 +109,13 @@ describe("ProfileInfo", () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
-    const usernameInput = screen.getByPlaceholderText("Write your username");
+    const usernameInput = screen.getByPlaceholderText("usernamePlaceholder");
 
     await user.clear(usernameInput);
     await user.type(usernameInput, "a".repeat(25));
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /saveChanges/i }));
 
-    expect(await screen.findByText("Username is too long")).toBeInTheDocument();
+    expect(await screen.findByText("max20chars")).toBeInTheDocument();
 
     expect(mockUpdateUser).not.toHaveBeenCalled();
   });
@@ -152,7 +125,7 @@ describe("ProfileInfo", () => {
     vi.mocked(mockUseSelector).mockReturnValue(mockUser);
     renderComponent();
 
-    await user.click(screen.getByText("Dark theme"));
+    await user.click(screen.getByText("theme.dark"));
 
     expect(mockChangeTheme).toHaveBeenCalledTimes(1);
   });
@@ -164,6 +137,6 @@ describe("ProfileInfo", () => {
 
     await user.click(screen.getByRole("button", { name: /logout/i }));
 
-    expect(mockLogOutAction).toHaveBeenCalledTimes(1);
+    expect(logOut).toHaveBeenCalledTimes(1);
   });
 });

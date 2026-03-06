@@ -6,6 +6,7 @@ exports[`SidebarElement > sidebar group 1`] = `
     class="aside-element"
   >
     <img
+      alt="suggested group avatar image"
       src="/group-1.jpg"
     />
     <h3>
@@ -24,6 +25,7 @@ exports[`SidebarElement > sidebar user 1`] = `
     class="aside-element"
   >
     <img
+      alt="suggested user avatar image"
       src="/user.png"
     />
     <h3>

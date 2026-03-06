@@ -37,7 +37,12 @@ function Home() {
 
         {user && <CreatePost onAdd={handleRefetch} />}
         {sortedPosts?.map((post) => (
-          <Post key={post.id} post={post} onLike={handleRefetch} />
+          <Post
+            data-testid="post"
+            key={post.id}
+            post={post}
+            onLike={handleRefetch}
+          />
         ))}
       </main>
     </Suspense>

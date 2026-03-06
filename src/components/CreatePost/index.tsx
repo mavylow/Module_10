@@ -189,6 +189,7 @@ function CreatePost({ onAdd }: ICreatePostProps) {
             type="button"
             description={t("tellEveryone")}
             onButtonClick={handleDisplayAddMenu}
+            data-testid="button"
           />
         </div>
       </FrameWrapper>

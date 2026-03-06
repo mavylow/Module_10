@@ -136,7 +136,7 @@ function Post({ post, onLike }: PostProps) {
   };
 
   return (
-    <PostArticle>
+    <PostArticle data-testid="post">
       <FrameWrapper>
         <WithoutComment>
           <PostHeader>

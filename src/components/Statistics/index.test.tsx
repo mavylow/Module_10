@@ -1,11 +1,9 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, type Mock } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import Statistics from "@components/Statistics";
-
-const mockPosts = [{ id: 1, createdAt: "2024-01-01" }];
-const mockLikes = [{ id: 1, createdAt: "2024-01-01" }];
-const mockComments = [{ id: 1, createdAt: "2024-01-01" }];
+import { useQuery } from "@tanstack/react-query";
+import { mockStatComments, mockStatLikes, mockStatPosts } from "@/tests/consts";
 
 vi.mock("@components/Checkbox", () => ({
   default: ({ description }: { description: string }) => (
@@ -62,37 +60,13 @@ vi.mock("@utils/apiUtil", () => ({
   getStatisticPosts: () => getStatisticPosts(),
 }));
 
-vi.mock("@tanstack/react-query", () => ({
-  useQuery: vi.fn(),
-}));
-
-import { useQuery } from "@tanstack/react-query";
-
 describe("Statistics", () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
   });
 
-  function mockAllQueriesLoaded() {
-    (useQuery as any)
-      .mockReturnValueOnce({
-        data: mockPosts,
-        isLoading: false,
-      })
-      .mockReturnValueOnce({
-        data: mockLikes,
-        isLoading: false,
-      })
-      .mockReturnValueOnce({
-        data: mockComments,
-        isLoading: false,
-      });
-  }
-
   it("renders statistic cards for current month", async () => {
-    mockAllQueriesLoaded();
-
     render(<Statistics />);
 
     const cards = await screen.findAllByTestId("stat-card");
@@ -104,8 +78,6 @@ describe("Statistics", () => {
   });
 
   it("renders table stats for likes and comments", async () => {
-    mockAllQueriesLoaded();
-
     render(<Statistics />);
 
     const tables = await screen.findAllByTestId("table-stats");
@@ -116,21 +88,19 @@ describe("Statistics", () => {
   });
 
   it("renders checkbox with chart view text by default", async () => {
-    mockAllQueriesLoaded();
-
     render(<Statistics />);
 
     const checkbox = await screen.findByTestId("checkbox");
 
-    expect(checkbox).toHaveTextContent("Switch to Chart view");
+    expect(checkbox).toHaveTextContent("switchStatCharts");
   });
 
   it("calls API functions via react-query", async () => {
-    getStatisticPosts.mockResolvedValue(mockPosts);
-    getStatisticLikes.mockResolvedValue(mockLikes);
-    getStatisticComments.mockResolvedValue(mockComments);
+    getStatisticPosts.mockResolvedValue(mockStatPosts);
+    getStatisticLikes.mockResolvedValue(mockStatLikes);
+    getStatisticComments.mockResolvedValue(mockStatComments);
 
-    (useQuery as any).mockImplementation(
+    (useQuery as Mock).mockImplementation(
       ({ queryFn }: { queryFn: () => any }) => {
         queryFn();
         return {
