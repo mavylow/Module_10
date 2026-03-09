@@ -1,19 +1,50 @@
-import { useContext, useEffect, useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
+import DOMPurify from "dompurify";
 import CommentIcon from "@assets/CommentIcon";
 import ChevronIcon from "@assets/ChevronIcon";
-import HeartIcon from "@assets/HeartIcon";
 import Comment from "@components/Comment";
-import "./style.css";
 import EditPenIcon from "@assets/EditPenIcon";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@providers/AuthProvider";
+
 import type { IUser, IComment, IPost } from "@/interfaces";
 import { formattedDate } from "@utils/dateFormatter";
 import React from "react";
-import { fetchData } from "@utils/apiUtil";
+import {
+  addComment,
+  deleteComment,
+  dislikePost,
+  likePost,
+  loadPostComments,
+  loadUser,
+} from "@utils/apiUtil";
 import ChevronIconExpanded from "@assets/ChevronIconExpanded";
+import HeartLikeIcon from "@assets/HeartLikeIcon";
+import HeartDislikeIcon from "@assets/HeartDislikeIcon";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { Box, Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
+
+import FrameWrapper from "@components/FrameWrapper";
+import {
+  AddComment,
+  Comments,
+  Figure,
+  Likes,
+  PostArticle,
+  PostAvatar,
+  PostComments,
+  PostHeader,
+  PostInfo,
+  WithoutComment,
+} from "./index.styled";
 
 interface PostProps {
   post: IPost;
@@ -21,71 +52,83 @@ interface PostProps {
 }
 
 function Post({ post, onLike }: PostProps) {
-  const {
-    id,
-    authorId,
-    title,
-    content,
-    image,
-    likesCount,
-    likedByUsers,
-    creationDate,
-  } = post;
+  const { t } = useTranslation();
 
-  const { user } = useContext(AuthContext);
+  const { id, authorId, title, content, image, likedByUsers, creationDate } =
+    post;
+  const date = formattedDate(creationDate);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const queryClient = useQueryClient();
 
-  const [author, setAuthor] = useState<IUser | null>(null);
-  const [comments, setComments] = useState<IComment[] | null>(null);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comment, setComment] = useState("");
+
+  const { data: author } = useSuspenseQuery<IUser>({
+    queryKey: ["users", authorId],
+    queryFn: () => loadUser(authorId),
+  });
+
+  const { data: comments, refetch: refetchComments } = useQuery<IComment[]>({
+    queryKey: ["posts", id, "comments"],
+    queryFn: () => loadPostComments(id),
+    enabled: !!user,
+  });
+
+  const dislikeAndLikeMutation = useMutation({
+    mutationFn: async (action: "like" | "dislike") => {
+      if (action === "like") {
+        return likePost(id);
+      }
+
+      if (action === "dislike") {
+        return dislikePost(id);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      onLike();
+    },
+  });
+
+  const deleteCommentMutation = useMutation({
+    mutationFn: (commentId: number) => deleteComment(commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", id, "comments"] });
+      refetchComments();
+    },
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: (commentData: string) => addComment(commentData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", id, "comments"] });
+      refetchComments();
+    },
+  });
 
   const handleExpand = () => {
     setIsCommentsExpanded((prev) => !prev);
   };
 
-  useEffect(() => {
-    if (user) {
-      getComments();
-    }
-    getAuthor();
-  }, []);
-
-  const getComments = async () => {
-    const commentsData = await fetchData(`/api/posts/${id}/comments`, "GET");
-    setComments(commentsData);
-  };
-
-  const getAuthor = async () => {
-    const postAuthor = await fetchData(`api/users/${authorId}`, "GET");
-    setAuthor(postAuthor);
-  };
-
-  const handleDislike = async () => {
-    await fetchData("api/dislike", "POST", { postId: id });
-    onLike();
-  };
-
-  const handleLike = async () => {
-    await fetchData("api/like", "POST", { postId: id });
-    onLike();
+  const handleLikeAndDislike = async (action: "like" | "dislike") => {
+    dislikeAndLikeMutation.mutate(action);
   };
 
   const handleAddComment = async () => {
     if (comment) {
-      await fetchData("api/comments", "POST", {
-        postId: post.id,
-        text: comment,
-      });
+      addCommentMutation.mutate(
+        JSON.stringify({
+          postId: post.id,
+          text: DOMPurify.sanitize(comment),
+        })
+      );
     }
-    getComments();
+    refetchComments();
     setComment("");
   };
 
   const handleDeleteComment = async (commentId: number) => {
-    await fetchData(`/api/comments/${commentId}`, "DELETE");
-    setComments((prev) =>
-      prev ? prev.filter((c) => c.id !== commentId) : prev
-    );
+    deleteCommentMutation.mutate(commentId);
   };
 
   const handleSetComment = (e: ChangeEvent<HTMLInputElement>) => {
@@ -93,13 +136,13 @@ function Post({ post, onLike }: PostProps) {
   };
 
   return (
-    <article className="post">
+    <PostArticle data-testid="post">
       <FrameWrapper>
-        <div className="without-comment">
-          <div className="post-header">
-            <img
+        <WithoutComment>
+          <PostHeader>
+            <PostAvatar
               src={author?.profileImage}
-              alt={`Profile picture of ${authorId}`}
+              alt={`Profile picture of ${author?.username}`}
               className="post-avatar"
               loading="lazy"
             />
@@ -109,38 +152,48 @@ function Post({ post, onLike }: PostProps) {
               className="post-timestamp"
               title={creationDate}
             >
-              {formattedDate(creationDate)}
+              {t(date.key, { count: date.count, date: date.date })}
             </time>
-          </div>
+          </PostHeader>
           {image && (
-            <figure>
+            <Figure>
               <img src={image} />
-            </figure>
+            </Figure>
           )}
           <div className="post-text">
             <h3>{title}</h3>
             <p> {content}</p>
           </div>
-          <div className="post-info">
-            <div className="likes">
+          <PostInfo>
+            <Likes>
               {user && likedByUsers?.some((u) => u.email === user.email) ? (
-                <button className="like" onClick={handleDislike}>
-                  <HeartIcon className="liked" />
-                </button>
+                <Button
+                  type="button"
+                  Icon={HeartLikeIcon}
+                  onButtonClick={() => handleLikeAndDislike("dislike")}
+                />
               ) : (
-                <button className="like" onClick={handleLike}>
-                  <HeartIcon className="disliked" />
-                </button>
+                <Button
+                  type="button"
+                  Icon={HeartDislikeIcon}
+                  onButtonClick={() => handleLikeAndDislike("like")}
+                />
               )}
 
-              <span>{likesCount} likes</span>
-            </div>
-            <div className="comments">
+              <span>{t("like", { count: likedByUsers.length })}</span>
+            </Likes>
+            <Comments>
               <CommentIcon />
               {user ? (
-                <span>{comments?.length} comments</span>
+                <>
+                  {comments ? (
+                    <span>{t("comment", { count: comments.length })}</span>
+                  ) : (
+                    <Skeleton variant="text" width={10} />
+                  )}
+                </>
               ) : (
-                <span>You have to login to see the comments </span>
+                <span>{t("hiddenComments")} </span>
               )}
               {user && (
                 <Button
@@ -149,44 +202,80 @@ function Post({ post, onLike }: PostProps) {
                   onButtonClick={handleExpand}
                 />
               )}
-            </div>
-          </div>
-        </div>
+            </Comments>
+          </PostInfo>
+        </WithoutComment>
 
         {user && isCommentsExpanded && (
-          <ul className="post-comments">
-            {comments?.map((comment, i) => (
-              <Comment
-                key={comment.id}
-                number={i + 1}
-                comment={comment}
-                onDelete={() => handleDeleteComment(comment.id)}
-              />
-            ))}
-          </ul>
+          <PostComments>
+            {!comments ? (
+              <CommentsSkeleton />
+            ) : (
+              comments.map((comment, i) => (
+                <Comment
+                  key={comment.id}
+                  number={i + 1}
+                  comment={comment}
+                  onDelete={() => handleDeleteComment(comment.id)}
+                />
+              ))
+            )}
+          </PostComments>
         )}
         {user && (
-          <div className="add-comment">
+          <AddComment>
             <Input
               id="comment"
-              description="Add a comment"
+              description={t("addAComment")}
               name="comment"
-              placeholder="Write description here..."
+              placeholder={t("addCommentPlaceholder")}
               type="text"
               Icon={EditPenIcon}
               value={comment}
               onChange={handleSetComment}
             />
             <Button
-              description="Add a comment"
+              description={t("addAComment")}
               type="button"
               onButtonClick={handleAddComment}
             />
-          </div>
+          </AddComment>
         )}
       </FrameWrapper>
-    </article>
+    </PostArticle>
   );
 }
+
+const CommentsSkeleton = () => (
+  <Box sx={{ p: 2 }}>
+    {[1, 2, 3].map((i) => (
+      <Box key={i} sx={{ display: "flex", gap: 2, mb: 2 }}>
+        <Skeleton
+          variant="circular"
+          width={32}
+          height={32}
+          animation="wave"
+          sx={{ bgcolor: "var(--border-color)" }}
+        />
+        <Box sx={{ flex: 1 }}>
+          <Skeleton
+            variant="text"
+            width="40%"
+            height={20}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
+          <Skeleton
+            variant="text"
+            width="80%"
+            height={16}
+            animation="wave"
+            sx={{ bgcolor: "var(--border-color)" }}
+          />
+        </Box>
+      </Box>
+    ))}
+  </Box>
+);
 
 export default React.memo(Post);

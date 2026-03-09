@@ -21,13 +21,14 @@ function Textarea({
   onChange,
 }: TextareaProps) {
   return (
-    <>
+    <div className="input-wrapper">
       <label htmlFor={id} className="default-label">
         <Icon />
         {description}
       </label>
 
       <textarea
+        data-testid="textarea"
         className="default-textarea"
         id={id}
         name={name}
@@ -35,7 +36,7 @@ function Textarea({
         onChange={onChange}
         value={value}
       />
-    </>
+    </div>
   );
 }
 

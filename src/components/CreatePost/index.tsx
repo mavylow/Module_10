@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import FrameWrapper from "@components/FrameWrapper";
-import { AuthContext } from "@/providers/AuthProvider";
 import { useFormik } from "formik";
 import "./style.css";
 import Button from "@components/Button";
@@ -11,11 +10,17 @@ import UploadFileIcon from "@assets/UploadFileIcon";
 import ErrorIcon from "@assets/CrossIcon";
 import Textarea from "@components/Textarea";
 import * as Yup from "yup";
-import { fetchData } from "@utils/apiUtil";
+import { addPostsAxios } from "@utils/apiUtil";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import InputMessage from "@components/InputMessage";
+import ErrorWarningIcon from "@/assets/ErrorWarningIcon";
+import DOMPurify from "dompurify";
+import { useTranslation } from "react-i18next";
 
 const postFormInitial = {
   title: "",
-  description: "",
+  content: "",
 };
 const MAX_FILE_SIZE = 1_048_576;
 const SUPPORTED_FORMATS = [
@@ -25,32 +30,9 @@ const SUPPORTED_FORMATS = [
   "image/webp",
 ];
 
-const FormSchema = Yup.object({
-  title: Yup.string()
-    .required("Title is required")
-    .max(20, "Max 20 characters"),
-
-  description: Yup.string()
-    .required("Description is required")
-    .max(200, "Max 200 characters"),
-
-  image: Yup.mixed<File>()
-    .nullable()
-    .test(
-      "fileSize",
-      "Max allowed size is 10MB",
-      (value) => !value || value.size <= MAX_FILE_SIZE
-    )
-    .test(
-      "fileFormat",
-      "Unsupported file format",
-      (value) => !value || SUPPORTED_FORMATS.includes(value.type)
-    ),
-});
-
 interface IPostForm {
   title: string;
-  description?: string;
+  content?: string;
   image?: Blob;
 }
 
@@ -59,7 +41,26 @@ interface ICreatePostProps {
 }
 
 function CreatePost({ onAdd }: ICreatePostProps) {
-  const { user } = useContext(AuthContext);
+  const { t } = useTranslation();
+  const FormSchema = Yup.object({
+    title: Yup.string().required(t("titleRequired")).max(20, t("max20chars")),
+
+    content: Yup.string().max(200, t("max200chars")),
+
+    image: Yup.mixed<File>()
+      .nullable()
+      .test(
+        "fileSize",
+        t("imageMaxSize"),
+        (value) => !value || value.size <= MAX_FILE_SIZE
+      )
+      .test(
+        "fileFormat",
+        t("wrongFileFormat"),
+        (value) => !value || SUPPORTED_FORMATS.includes(value.type)
+      ),
+  });
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -75,94 +76,126 @@ function CreatePost({ onAdd }: ICreatePostProps) {
 
   const addPost = async (data: IPostForm) => {
     const newPost = {
-      ...data,
+      title: DOMPurify.sanitize(data.title),
+      content: data.content && DOMPurify.sanitize(data.content),
       image: data.image ? URL.createObjectURL(data.image) : null,
     };
-    await fetchData("/api/posts", "POST", newPost);
+
+    await addPostsAxios(JSON.stringify(newPost));
     postForm.resetForm();
     handleDisplayAddMenu();
     onAdd();
   };
 
+  const addFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0];
+    if (!file) {
+      return;
+    }
+    postForm.setFieldValue("image", file);
+  };
+
   return (
     <>
       {isModalOpen && (
-        <form className="add-post" onSubmit={postForm.handleSubmit}>
+        <form
+          data-testid="add-post-form"
+          className="add-post"
+          onSubmit={postForm.handleSubmit}
+        >
           <div className="post-form-header">
-            <h2>Create a new post</h2>{" "}
-            <button
-              id="close-modal"
+            <h2>{t("createPost")}</h2>
+            <Button
               type="button"
-              onClick={handleDisplayAddMenu}
-            >
-              <ErrorIcon />
-            </button>
+              Icon={ErrorIcon}
+              onButtonClick={handleDisplayAddMenu}
+            />
           </div>
+          <div className="inputs">
+            <Input
+              id="post-title"
+              description={t("postTitle")}
+              name="title"
+              placeholder={t("postTitlePlaceholder")}
+              type="text"
+              Icon={MailIcon}
+              value={postForm.values.title}
+              onChange={postForm.handleChange}
+            />
+            {postForm.errors.title && (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.title}
+              />
+            )}
+            <Textarea
+              id="post-description"
+              description={t("description")}
+              name="content"
+              placeholder={t("descriptionPlaceholder")}
+              Icon={EditPenIcon}
+              value={postForm.values.content || ""}
+              onChange={postForm.handleChange}
+            />
+            {postForm.errors.content && (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.content}
+              />
+            )}
 
-          <Input
-            id="post-title"
-            description="Post title"
-            name="title"
-            placeholder="Enter post title"
-            type="text"
-            Icon={MailIcon}
-            value={postForm.values.title}
-            onChange={postForm.handleChange}
-          />
-          {postForm.errors.title && <span>{postForm.errors.title}</span>}
-          <Textarea
-            id="post-description"
-            description="Description"
-            name="description"
-            placeholder="Write description here..."
-            Icon={EditPenIcon}
-            value={postForm.values.description || ""}
-            onChange={postForm.handleChange}
-          />
-          {postForm.errors.description && (
-            <span>{postForm.errors.description}</span>
-          )}
-          <label htmlFor="image" className="postImg-label">
-            <UploadFileIcon />
-            <div>
-              <p>Select a file or drag and drop here</p>
-              <span>JPG, PNG or PDF, file size no more than 10MB</span>
-            </div>
-          </label>
-          <input
-            id="image"
-            name="image"
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(event) => {
-              const file = event.currentTarget.files?.[0];
-              if (!file) {
-                return;
-              }
-              console.log(file);
-              postForm.setFieldValue("image", file);
-            }}
-          />
-          {postForm.errors.image && <span>{postForm.errors.image}</span>}
-          <Button type="submit" description="Create" />
+            <label htmlFor="image" className="postImg-label">
+              <UploadFileIcon />
+              <div>
+                <p>{t("selectFile")}</p>
+                <span>{t("imagePlaceholder")}</span>
+              </div>
+            </label>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={addFile}
+            />
+            {postForm.errors.image ? (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="error"
+                message={postForm.errors.image}
+              />
+            ) : (
+              <InputMessage
+                Icon={ErrorWarningIcon}
+                status="warning"
+                message={t("imageMaxSize")}
+              />
+            )}
+          </div>
+          <Button type="submit" description={t("create")} />
         </form>
       )}
       <FrameWrapper>
         <div className="create-post">
           <div>
-            <img src={user?.profileImage} />
-            <span>What’s happening?</span>
+            <img src={user?.profileImage} alt="profile-image" />
+            <span>{t("whatHappening")}</span>
           </div>
 
           <Button
             type="button"
-            description="Tell everyone"
+            description={t("tellEveryone")}
             onButtonClick={handleDisplayAddMenu}
+            data-testid="button"
           />
         </div>
       </FrameWrapper>
-      {isModalOpen && <div className="overlay"> </div>}
+      {isModalOpen && (
+        <div className="overlay" onClick={handleDisplayAddMenu}></div>
+      )}
     </>
   );
 }

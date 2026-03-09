@@ -1,11 +1,11 @@
 .profile h2 {
   font-size: clamp(18px, 2.5vw, 28px);
   font-weight: 600;
-  margin: 0;
+  height: 30px;
 }
 
 .profile h3 {
-  margin: 0;
+  font-size: 16px;
 }
 
 .profile-info {
@@ -33,12 +33,25 @@
   width: min(40vw, 575px);
 }
 
-.edit-profile input {
-  width: min(327px, 100%);
+.profile .description label {
+  height: 24px;
 }
 
-.edit-profile label {
-  padding-bottom: 12px;
+.language select {
+  border: 1px solid var(--border-color);
+  outline: 1px solid var(--border-color);
+  width: 90px;
+}
+
+.language select option {
+  all: unset;
+  background-color: var(--background-main);
+  color: var(--text-color);
+  padding: 8px;
+}
+
+.edit-profile input {
+  width: min(327px, 100%);
 }
 
 .edit-profile textarea {
@@ -63,11 +76,11 @@
   grid-template-rows: 32px 1fr;
   column-gap: 24px;
   align-items: center;
+  position: relative;
 }
 
-.profile-photo h2,
-.profile-photo p {
-  margin: 0;
+#change-profile-photo {
+  display: none;
 }
 
 .profile-photo img {
@@ -76,17 +89,6 @@
   object-fit: cover;
   border-radius: 50%;
   grid-row: 1 / span 2;
-}
-
-.info-warning {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--light-text-color);
-  padding-top: 8px;
-}
-.info-warning svg path {
-  fill: var(--light-text-color);
 }
 
 .theme {

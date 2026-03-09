@@ -6,13 +6,12 @@ aside .frame {
 aside {
   position: fixed;
   right: calc(50vw - 700px);
-  top: 4em;
+  top: 88px;
   width: 341px;
   font-size: 16px;
 }
 
 aside h3 {
-  margin: 0;
   font-size: 16px;
 }
 

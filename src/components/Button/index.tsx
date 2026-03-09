@@ -22,7 +22,13 @@ function Button(props: ButtonProps) {
 
   if (type === "submit") {
     return (
-      <button className="default-button" type={type} disabled={props.disabled}>
+      <button
+        data-testid="submit-button"
+        className="default-button"
+        type={type}
+        aria-label={description}
+        disabled={props.disabled}
+      >
         {description}
       </button>
     );
@@ -32,6 +38,8 @@ function Button(props: ButtonProps) {
         className={Icon ? "icon-button" : "default-button"}
         onClick={props.onButtonClick}
         type={props.type}
+        aria-label={description}
+        data-testid="button"
       >
         {Icon ? <Icon /> : description}
       </button>

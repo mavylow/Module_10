@@ -10,11 +10,10 @@ main {
   justify-content: center;
   flex-direction: column;
   width: min(700px, 100%);
-  margin: 1em 0;
   position: relative;
+  margin: 20px 0;
 }
 
 a {
   color: var(--text-color);
-  text-decoration: none;
 }

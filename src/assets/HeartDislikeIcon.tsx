@@ -1,13 +1,9 @@
 import "./svg.css";
 
-interface HeartIconProps {
-  className: "liked" | "disliked";
-}
-
-const HeartIcon = ({ className }: HeartIconProps) => {
+const HeartDislikeIcon = () => {
   return (
     <svg
-      className={`svg-heart-${className}`}
+      className="svg-heart-disliked"
       xmlns="http://www.w3.org/2000/svg"
       width="22"
       height="22"
@@ -24,4 +20,4 @@ const HeartIcon = ({ className }: HeartIconProps) => {
   );
 };
 
-export default HeartIcon;
+export default HeartDislikeIcon;

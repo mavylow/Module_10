@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import "./style.css";
+import { Frame } from "./index.styled";
 
 interface FrameWrapperProps {
   children: ReactNode;
 }
 
 export default function FrameWrapper({ children }: FrameWrapperProps) {
-  return <div className="frame">{children}</div>;
+  return <Frame className="frame">{children}</Frame>;
 }

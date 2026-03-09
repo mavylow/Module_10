@@ -1,6 +1,10 @@
-import type { IComment, ILike, IPost, MonthStat, YearStats } from "@/interfaces";
-
-
+import type {
+  IComment,
+  ILike,
+  IPost,
+  MonthStat,
+  YearStats,
+} from "@/interfaces";
 
 export const calculateFullStats = (
   data: IComment[] | ILike[] | IPost[]

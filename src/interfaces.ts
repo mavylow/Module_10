@@ -7,7 +7,7 @@ export interface IPost {
   likesCount: number;
   commentsCount: number;
   creationDate: string;
-  modifiedDate: Date;
+  modifiedDate: string;
   authorPhoto: string;
   likedByUsers: IUser[];
 }
@@ -90,3 +90,12 @@ export interface MonthStat {
   count: number;
   previousCount: number;
 }
+
+export type TProfilePages = "info" | "statistics";
+
+export type IModal = {
+  message: string;
+  status: modalStatus;
+};
+
+export type modalStatus = "success" | "error" | "warning" | null;

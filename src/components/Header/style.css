@@ -10,14 +10,33 @@
 .mobile {
   width: 100%;
   background-color: var(--background-main);
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 0 1.5em;
+  padding: clamp(6px, 0.8vw, 12px) clamp(12px, 1.5vw, 24px);
   position: relative;
   z-index: 1001;
+}
+.desktop {
+  height: 68px;
+}
+
+.mobile {
+  height: 30px;
+}
+
+.auth-page {
+  height: 48px;
+}
+
+.mobile.auth-page {
+  height: 24px;
+}
+
+header a {
+  text-decoration: none;
+  display: flex;
 }
 
 .desktop nav {
@@ -149,12 +168,14 @@
   width: 48px;
   background-color: transparent;
   border: none;
-  padding: 0;
   position: absolute;
   top: 0.4em;
-  right: 0.2em;
+  right: clamp(12px, 1.5vw, 24px);
   z-index: 1001;
   transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hamburger-menu:hover {

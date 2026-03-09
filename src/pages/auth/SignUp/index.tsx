@@ -1,118 +1,165 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import MailIcon from "@assets/MailIcon";
 import EyeOpenIcon from "@assets/EyeOpenIcon";
+import EyeCrossedIcon from "@/assets/EyeCrossedIcon";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import "../style.css";
-import { AuthContext } from "@providers/AuthProvider";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorWarningIcon from "@assets/ErrorWarningIcon";
 import ThumbUpIcon from "@assets/ThumbUpIcon";
 import { useForm } from "react-hook-form";
-import type { IForm } from "@/interfaces";
-import { useNavigate } from "react-router";
-
-const FromSchema = z.object({
-  email: z.email(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(14, "Password cannot exceed 14 characters")
-    .regex(/[0-9]/, "Password must contain at least one number"),
-});
+import { NavLink, useNavigate } from "react-router";
+import CrossIcon from "@/assets/CrossIcon";
+import CheckIcon from "@/assets/CheckIcon";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { signUp } from "@/slices/authSlice";
+import InputMessage from "@/components/InputMessage";
+import { useTranslation } from "react-i18next";
 
 function SignUp() {
+  const { t } = useTranslation();
+
+  const FormSchema = z.object({
+    email: z.email(t("emailNotValid")),
+    password: z
+      .string()
+      .min(8, t("shortPassword"))
+      .max(14, t("longPassword"))
+      .regex(/[0-9]/, t("passwordContainNumber")),
+  });
+
+  type FormData = z.infer<typeof FormSchema>;
+
   const {
     register,
     handleSubmit,
-    formState: { errors, submitCount },
-  } = useForm<IForm>({
-    defaultValues: { email: "helena.hills@social.com" },
-    resolver: zodResolver(FromSchema),
+    formState: { errors, touchedFields, submitCount },
+  } = useForm<FormData>({
+    defaultValues: {
+      email: "helena.hills@social.com",
+      password: "",
+    },
+    resolver: zodResolver(FormSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
-  let navigate = useNavigate();
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuth = useSelector<RootState>((state) => state.auth.isAuth);
+  const navigate = useNavigate();
+  const showEmailValidation = touchedFields.email || submitCount > 0;
 
-  const handleNavigate = (path: string) => {
-    navigate(path);
-  };
+  const showPasswordValidation = touchedFields.password || submitCount > 0;
 
-  const { signUp } = useContext(AuthContext);
-
-  const onSubmit = handleSubmit(async (data) => {
-    signUp(data);
+  const onSubmit = handleSubmit((data) => {
+    dispatch(signUp(data));
   });
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
 
   return (
     <main>
       <form className="sing-up" onSubmit={onSubmit}>
         <div className="form-header">
-          <h1>Create an account</h1>
-          <p>Enter your email and password to sign up for this app</p>
+          <h1>{t("createAccount")}</h1>
+          <p>
+            {t("enterFields", { sign: t("toSignUp"), appPreposition: "ом" })}
+          </p>
         </div>
-        <div className="input-container">
-          <Input
-            id="email"
-            description="Email"
-            placeholder="Enter email"
-            type="email"
-            Icon={MailIcon}
-            register={register}
-          />
-          {errors.email && (
-            <div className="input-message">
-              <ErrorWarningIcon />
-              <p className="error">Email is not valid</p>
-            </div>
-          )}
-        </div>
-        <div className="input-container">
-          <Input
-            id="password"
-            description="Password"
-            placeholder="Enter password"
-            type="password"
-            Icon={EyeOpenIcon}
-            register={register}
-          />
-          {errors.password ? (
-            <div className="input-message">
-              <ErrorWarningIcon />
-              <p className="error">{errors.password.message}</p>
-            </div>
-          ) : (
-            submitCount > 0 && (
-              <div className="input-message">
-                <ThumbUpIcon />
-                <p className="correct">Your password is strong</p>
-              </div>
-            )
-          )}
-        </div>
+        <div className="inputs">
+          <div className="input-container">
+            <Input
+              id="email"
+              description={t("email")}
+              placeholder={t("emailPlaceholder")}
+              type="email"
+              Icon={MailIcon}
+              register={register}
+            />
 
-        <Button description="Sing In" type="submit" />
+            {showEmailValidation &&
+              (errors.email ? (
+                <>
+                  <div className="input-message">
+                    <InputMessage
+                      message={errors.email.message!}
+                      Icon={ErrorWarningIcon}
+                      status="error"
+                    />
+                  </div>
+                  <div className="error email-warning">
+                    <CrossIcon />
+                  </div>
+                </>
+              ) : (
+                <div className="correct email-warning">
+                  <CheckIcon />
+                </div>
+              ))}
+          </div>
+
+          <div className="input-container">
+            <div
+              data-testid="password-icon"
+              className="password-icon"
+              onClick={() => setIsPasswordOpen((p) => !p)}
+            >
+              {isPasswordOpen ? <EyeCrossedIcon /> : <EyeOpenIcon />}
+            </div>
+
+            <Input
+              id="password"
+              description={t("password")}
+              placeholder={t("passwordPlaceholder")}
+              type={isPasswordOpen ? "text" : "password"}
+              Icon={EyeOpenIcon}
+              register={register}
+            />
+
+            {showPasswordValidation &&
+              (errors.password ? (
+                <InputMessage
+                  message={errors.password.message!}
+                  Icon={ErrorWarningIcon}
+                  status="error"
+                />
+              ) : (
+                <InputMessage
+                  message="Your password is strong"
+                  Icon={ThumbUpIcon}
+                  status="success"
+                />
+              ))}
+          </div>
+
+          <Button description={t("signUp")} type="submit" />
+        </div>
         <p className="legal-disclaimer">
-          By clicking continue, you agree to our{" "}
+          {t("termsAgreement")}{" "}
           <a href="/terms" className="legal-link" rel="nofollow">
-            Terms of Service
+            {t("termsOfService")}
           </a>{" "}
-          and{" "}
+          {t("and")}{" "}
           <a href="/privacy" className="legal-link" rel="nofollow">
-            Privacy Policy
+            {t("privacyPolicy")}
           </a>
         </p>
       </form>
 
       <span>
-        Already have an account?{" "}
-        <a
-          onClick={() => handleNavigate("/signin")}
-          className="nav-link"
-          rel="nofollow"
-        >
-          Sign in
-        </a>
+        {t("alreadyHaveAccount")}{" "}
+        <NavLink to={"/signin"} className="nav-link">
+          {t("signIn")}
+        </NavLink>
       </span>
     </main>
   );

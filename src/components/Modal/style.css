@@ -1,7 +1,7 @@
 .modal {
   position: fixed;
-  top: 15%;
-  right: 2em;
+  bottom: 15%;
+  right: 3em;
   background-color: var(--primary-orange);
   height: fit-content;
   width: fit-content;
@@ -25,6 +25,9 @@
 }
 
 .modal--close {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px;
   transform: translateX(120%);
   opacity: 0;
 }
@@ -32,6 +35,10 @@
 .modal svg {
   height: 8px;
   width: 8px;
+}
+
+.modal .svg-x path {
+  fill: rgb(var(--text-color-night));
 }
 
 #modal .error {
@@ -43,11 +50,8 @@
 #modal .success {
   background-color: var(--primary-orange);
 }
+
 .close-modal {
   background-color: transparent;
   border: none;
-}
-
-.close-modal svg path {
-  fill: var(--background-main);
 }

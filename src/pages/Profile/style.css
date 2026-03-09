@@ -8,20 +8,22 @@
 }
 
 .profile nav {
-  width: 211px;
+  min-width: 211px;
   height: 40px;
   padding: 4px;
   background-color: var(--background-main);
   color: var(--text-color);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 
 .profile a {
   display: inline-block;
   height: 32px;
-  padding: 0 12px;
+  width: fit-content;
+  padding: 0 10px;
   display: flex;
   justify-content: center;
   align-items: center;

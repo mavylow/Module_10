@@ -1,20 +1,21 @@
 import Modal from "@/components/Modal";
-import { createContext, useRef, useState, type ReactNode } from "react";
+import type { RootState } from "@/store";
+import {
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { useSelector } from "react-redux";
 
 interface IPopUpContext {
   isOpen: boolean;
-  handleShowModal: (newModal: IModal) => void;
   handleCloseModal: () => void;
-}
-
-interface IModal {
-  message: string;
-  status: "error" | "warning" | "success";
 }
 
 export const PopUpContext = createContext<IPopUpContext>({
   isOpen: false,
-  handleShowModal: () => {},
   handleCloseModal: () => {},
 });
 
@@ -24,15 +25,18 @@ interface IPopUpProvider {
 
 function PopUpProvider({ children }: IPopUpProvider) {
   const [isOpen, setIsOpen] = useState(false);
-  const [modal, setModal] = useState<IModal>({
-    message: "",
-    status: "success",
-  });
+
+  const modal = useSelector((state: RootState) => state.modal);
 
   const timeoutRef = useRef<number | null>(null);
 
-  const handleShowModal = (newModal: IModal) => {
-    setModal(newModal);
+  useEffect(() => {
+    if (modal.message) {
+      handleShowModal();
+    }
+  }, [modal]);
+
+  const handleShowModal = () => {
     setIsOpen(true);
 
     if (timeoutRef.current) {
@@ -49,9 +53,7 @@ function PopUpProvider({ children }: IPopUpProvider) {
   };
 
   return (
-    <PopUpContext.Provider
-      value={{ isOpen, handleShowModal, handleCloseModal }}
-    >
+    <PopUpContext.Provider value={{ isOpen, handleCloseModal }}>
       {children}
       <Modal {...modal} />
     </PopUpContext.Provider>

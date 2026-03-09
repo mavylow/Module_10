@@ -16,5 +16,4 @@ span {
 .card p {
   font-size: clamp(20px, 1.5vw, 30px);
   font-weight: 600;
-  margin: 0;
 }

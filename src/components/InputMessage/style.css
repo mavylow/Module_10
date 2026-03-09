@@ -1,0 +1,25 @@
+.input-message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-message svg {
+  height: clamp(14px, 2vw, 16px);
+  width: clamp(14px, 2vw, 16px);
+}
+
+.warning svg path {
+  fill: var(--light-text-color);
+}
+
+.error-text {
+  color: var(--primary-red);
+}
+.success-text {
+  color: var(--primary-orange);
+}
+.warning-text {
+  color: var(--light-text-color);
+}

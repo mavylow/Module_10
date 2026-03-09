@@ -1,20 +1,23 @@
 import SidekickLogoText from "@assets/SidekickLogoText";
 import SidekickLogo from "@assets/SidekickLogo";
 import "./style.css";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@providers/AuthProvider";
+import { useEffect, useState } from "react";
 import Hamburger from "@assets/HamburgerMenuIcon";
 import { NavLink, useLocation, useNavigate } from "react-router";
+
+import { useSelector } from "react-redux";
+import { type RootState } from "@/store";
+import { useProfilePage } from "@/store/profileStore";
 
 function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-
   const [isPageAuth, setIsPageAuth] = useState(false);
   const location = useLocation();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const { changePage } = useProfilePage((state) => state);
 
   useEffect(() => {
     handleResize();
@@ -31,7 +34,6 @@ function Header() {
     } else {
       setIsPageAuth(false);
     }
-    console.log(isPageAuth);
   }, [location]);
 
   const handleResize = () => {
@@ -69,8 +71,11 @@ function Header() {
         className={
           (isMobile ? "mobile" : "desktop") +
           " " +
-          (isExpanded ? "expanded" : "")
+          (isExpanded ? "expanded" : "") +
+          " " +
+          (!isPageAuth ? "auth-page" : "")
         }
+        data-testid="header"
       >
         <div className="logo" onClick={() => handleNavigate("/")}>
           <SidekickLogo />
@@ -86,13 +91,31 @@ function Header() {
               >
                 {isExpanded ? (
                   <>
-                    <NavLink to={"/profile/info"}> Profile info</NavLink>
-                    <NavLink to={"/profile/statistics"}> Statistics</NavLink>
+                    <NavLink
+                      data-testid="profile-info"
+                      to={"/profile"}
+                      onClick={() => changePage("info")}
+                    >
+                      Profile info
+                    </NavLink>
+                    <NavLink
+                      data-testid="statistics"
+                      to={"/profile"}
+                      onClick={() => changePage("statistics")}
+                    >
+                      Statistics
+                    </NavLink>
                   </>
                 ) : (
                   <>
-                    <img src={user.profileImage} className="avatar" />
-                    <NavLink to={"/profile/info"}>
+                    <NavLink to={"/profile"}>
+                      <img
+                        src={user.profileImage}
+                        className="avatar"
+                        alt="profile-image"
+                      />
+                    </NavLink>
+                    <NavLink to={"/profile"}>
                       {user.firstName} {user.secondName}
                     </NavLink>
                   </>
@@ -111,12 +134,17 @@ function Header() {
           </>
         )}
         {isPageAuth && (
-          <button className="hamburger-menu" onClick={handleChangeMenuExpanded}>
+          <button
+            className="hamburger-menu"
+            onClick={handleChangeMenuExpanded}
+            aria-label="hamburger menu button"
+          >
             {user && isExpanded ? (
               <img
                 key={user?.profileImage}
                 src={user?.profileImage || "/image/default-avatar.webp"}
                 className="avatar"
+                alt="Hide menu profile image"
               />
             ) : (
               <Hamburger />
@@ -125,9 +153,11 @@ function Header() {
         )}
       </header>
       {isMobile && isExpanded && (
-        <div className="overlay" onClick={handleChangeMenuExpanded}>
-          {" "}
-        </div>
+        <div
+          className="overlay"
+          data-testid="overlay"
+          onClick={handleChangeMenuExpanded}
+        ></div>
       )}
     </>
   );

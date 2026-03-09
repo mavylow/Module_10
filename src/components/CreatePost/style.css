@@ -18,7 +18,7 @@
 
 .home > .frame {
   padding: 0;
-  margin-bottom: 12px;
+  margin-bottom: 32px;
 }
 
 .create-post img {
@@ -43,15 +43,25 @@
   width: min(800px, 95vw);
   max-height: 90vh;
   height: auto;
-  gap: 12px;
+  gap: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 24px;
   border: 1px solid var(--border-color);
   z-index: 1001;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .add-post button {
   align-self: flex-end;
   width: 144px;
@@ -68,14 +78,13 @@
 }
 
 .add-post svg {
-  height: clamp(16px, 2vw, 24px);
-  width: clamp(16px, 2vw, 24px);
+  height: clamp(16px, 2vw, 20px);
+  width: clamp(16px, 2vw, 20px);
 }
 
 .add-post h2 {
-  font-size: clamp(16px, 2vw, 32px);
+  font-size: clamp(16px, 3vw, 32px);
   font-weight: 400;
-  margin: 0;
 }
 
 .postImg-label {
@@ -86,7 +95,6 @@
   align-items: center;
   gap: 24px;
   height: clamp(68px, 5vw, 84px);
-  height: fit-content;
 }
 
 .postImg-label div {
@@ -95,9 +103,6 @@
   justify-content: center;
   gap: clamp(8px, 1vw, 12px);
   font-size: 12px;
-}
-.postImg-label p {
-  margin: 0;
 }
 
 .postImg-label span {
@@ -113,17 +118,19 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: clamp(24px, 3vw, 52px);
+  height: clamp(24px, 4vw, 52px);
 }
 
 #postImg {
   display: none;
 }
 
-#close-modal {
-  height: clamp(24px, 3vw, 52px);
-  align-items: start;
-  width: 24px;
+.post-form-header button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: clamp(24px, 3vw, 52px);
 }
 
 @media (max-width: 700px) {
@@ -138,7 +145,6 @@
     width: 100vw;
     max-height: 100vh;
     border-radius: 0;
-    margin: 0;
     padding: 16px;
   }
 }
